@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio - Nichole Walteros</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* =========================================
+           FUENTES LOCALES
+           ========================================= */
+        @font-face {
+            font-family: 'StartSignal';
+            src: url('fonts/StartSignal.ttf') format('truetype'),
+                 url('fonts/StartSignal.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TBJFeliumMonoDemo';
+            src: url('fonts/TBJFeliumMonoDemo-Medium.ttf') format('truetype'),
+                 url('fonts/TBJFeliumMonoDemo-Medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* =========================================
+           RESETEO Y CONTENEDOR PRINCIPAL
+           ========================================= */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", sans-serif;
+            background-color: #fff;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .portfolio-container { 
+            display: flex; 
+            width: 100vw; 
+            min-height: 100vh;
+            background: #fff; 
+        }
+
+        /* =========================================
+           MENÚ LATERAL (MÁRGENES PERFECTOS)
+           ========================================= */
+        .sidebar { 
+            width: 300px; 
+            height: 100vh; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            position: sticky; 
+            top: 0;
+            background: #fff; 
+            flex-shrink: 0;
+            border-right: 1px solid #f0f0f0;
+        }
+        
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); border-radius: 10px; margin: 10px 0; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.4); }
+
+        .sticky-header { 
+            position: sticky; 
+            top: 0; 
+            background: #fff; 
+            z-index: 100; 
+            padding: 20px 20px 10px 30px; 
+        }
+        
+        .brand h2 { 
+            margin-top: 0; 
+            margin-bottom: 40px; 
+            font-family: "Inter", sans-serif; 
+            font-size: 15px; 
+            font-weight: 500;
+            color: #999; 
+            line-height: 1; 
+        }
+        
+        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
+        .nav-menu > ul > li { margin-bottom: 12px; }
+        
+        .nav-menu a { 
+            text-decoration: none; 
+            color: #666; 
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .dropdown-toggle:hover { color: #000; }
+        .dropdown-toggle.active { 
+            color: #000; 
+            font-weight: bold; 
+        }
+        
+        .arrow { font-size: 9px; color: #aaa; transition: transform 0.3s ease; }
+        .arrow.open { transform: rotate(180deg); }
+
+        .submenu {
+            padding: 0 0 0 15px !important;
+            margin: 10px 0 5px 0 !important;
+            display: none; 
+            flex-direction: column;
+            gap: 12px;
+        }
+        .submenu.open { display: flex; }
+        .submenu a { font-size: 0.75rem !important; color: #999; }
+        .submenu a:hover { color: #111; font-weight: 600; }
+
+        /* =========================================
+           COLUMNA DERECHA (CONTENIDO BIO)
+           ========================================= */
+        .bio-content {
+            flex: 1;
+            padding: 40px 60px 100px 40px;
+            max-width: calc(100vw - 300px);
+            box-sizing: border-box;
+            margin-bottom: 40vh;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 450px; 
+            gap: 50px;
+            align-items: start; 
+        }
+
+        .grid-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title-container {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .name-title { 
+            font-family: 'StartSignal', "Inter Tight", sans-serif !important; 
+            font-size: 7.5rem; 
+            color: #111; 
+            line-height: 0.85; 
+            margin: 0; 
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .text-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            background-color: #fafafa;
+            position: relative;
+            z-index: 10;
+            margin-top: 60px;
+        }
+
+        .text-box p {
+            font-family: 'TBJFeliumMonoDemo', monospace !important; 
+            font-size: 14.5px; 
+            line-height: 1.8; 
+            color: #111;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-align: justify; 
+        }
+
+        /* =========================================
+           CAJA DE IMAGEN ASCII (FONDO NEGRO, SIN MARCO)
+           ========================================= */
+        .image-box {
+            height: 650px; 
+            position: sticky;
+            top: 40px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #000; /* Fondo negro */
+        }
+
+        .reveal-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #000; /* Fondo negro */
+        }
+
+        #ascii-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        /* =========================================
+           SECCIONES INFERIORES
+           ========================================= */
+        .bottom-sections {
+            margin-top: 60px;
+            display: flex;
+            gap: 50px;
+        }
+
+        .list-section { flex: 1; }
+        .list-section h3 {
+            font-family: "Inter Tight", sans-serif;
+            color: #999; 
+            font-size: 14px; 
+            font-weight: 600; 
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .list-section ul { list-style: none; padding: 0; margin: 0; }
+        .list-section li { 
+            font-family: 'TBJFeliumMonoDemo', monospace !important;
+            font-size: 13.5px; 
+            line-height: 1.6; 
+            color: #111; 
+            margin-bottom: 25px; 
+        }
+        .list-section .year { font-family: "Inter", sans-serif; font-weight: 800; display: block; margin-bottom: 5px; }
+
+        /* Clases para animación 3D */
+        .flip-container { perspective: 800px; display: inline-block; }
+        .flip-char { 
+            display: inline-block; 
+            will-change: transform, opacity; 
+            transform-style: preserve-3d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-container">
+        
+        <!-- BARRA LATERAL (MENÚ ACORDEÓN) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sticky-header">
+                <div class="brand">
+                    <h2>Nichole Walteros</h2>
+                </div>
+                
+                <nav class="nav-menu">
+                    <ul>
+                        <li>
+                            <a href="#" class="dropdown-toggle">ARTE <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
+                                <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
+                                <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
+                                <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="#" class="dropdown-toggle">FOTOGRAFÍA <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="ciudad-bn.html">CIUDAD A BLANCO Y NEGRO</a></li>
+                                <li><a href="foto-experimental.html">EXPERIMENTAL</a></li>
+                                <li><a href="foto-color.html">A COLOR</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">ILUSTRACIÓN <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="ilustracion-digital.html">ILUSTRACIÓN DIGITAL</a></li>
+                                <li><a href="ilustracion-tradicional.html">ILUSTRACIÓN TRADICIONAL</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">3D <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="canto-quetzal.html">EL CANTO DE QUETZAL</a></li>
+                                <li><a href="princesa-humayun.html">LA PRINCESA DE HUMAYUN</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">DISEÑO <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="diseno-proyectos.html">PROYECTOS DE DISEÑO</a></li>
+                            </ul>
+                        </li>
+
+                        <br>
+                        <li><a href="bio.html" style="font-weight: bold; color: #000; text-decoration: underline; text-underline-offset: 4px;">BIO</a></li>
+                        <br><br>
+                        <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
+                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO BIO -->
+        <main class="bio-content">
+            
+            <div class="content-grid">
+                
+                <div class="grid-left">
+                    <div class="title-container">
+                        <h1 class="name-title">NICHOLE</h1>
+                        <h1 class="name-title">WALTEROS</h1>
+                        <h1 class="name-title">BIO</h1>
+                    </div>
+
+                    <div class="text-box">
+                        <p>I am a multi-disciplinary Digital Artist with over three years of experience, bridging the gap between imagination and interactive reality. My core expertise lies in working as a 3D Generalist and Concept Artist, where I specialize in creating highly optimized, stylized assets for real-time applications.</p>
+                        <p>My practice extends beyond simple asset creation into the realms of illustration and visual design. I am deeply passionate about illustrative storytelling and focus on creating cohesive visual worlds, from initial concept art to final implementation.</p>
+                        <p>Possessing an advanced, end-to-end understanding of full production pipelines, I am skilled in comprehensive modeling (sculpting and retopology), PBR texturing, and integrating complex assets into the Unity engine. As an interactive artist, I design and build immersive experiences, particularly within Augmented Reality (AR) and Extended Reality (XR) platforms.</p>
+                        <p>I am driven by a passion for crafting engaging visual content for games and diverse digital media, maintaining a fierce commitment to balancing high visual quality with optimized, high-performance execution.</p>
+                    </div>
+                </div>
+
+                <!-- IMAGEN ASCII -->
+                <div class="grid-right">
+                    <div class="image-box">
+                        <div class="reveal-container" id="reveal-container">
+                            <canvas id="ascii-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECCIONES INFERIORES -->
+            <div class="bottom-sections">
+                <div class="list-section">
+                    <h3>Educación</h3>
+                    <ul>
+                        <li>
+                            <span class="year">1996 - 2009</span>
+                            IPARM (Instituto Pedagógico Arturo Ramírez Montufar)<br>Escuela primaria y bachillerato
+                        </li>
+                        <li>
+                            <span class="year">2012 - 2013</span>
+                            Gilberto Alzate Avendaño<br>Curso especializado en postproducción de video
+                        </li>
+                        <li>
+                            <span class="year">2010 - 2016</span>
+                            Universidad Nacional de Colombia<br>Carrera profesional en artes plásticas
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="list-section">
+                    <h3>Exposiciones (Individuales)</h3>
+                    <ul>
+                        <li><span class="year">2035</span>Añadir nombre de la exposición<br>Añadir nombre del lugar</li>
+                        <li><span class="year">2035</span>Añadir nombre de la exposición<br>Añadir nombre del lugar</li>
+                    </ul>
+                </div>
+                
+                <div class="list-section">
+                    <h3>Exposiciones (Grupales)</h3>
+                    <ul>
+                        <li><span class="year">2035</span>Añadir nombre de la exposición<br>Añadir nombre del lugar</li>
+                        <li><span class="year">2035</span>Añadir nombre de la exposición<br>Añadir nombre del lugar</li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT DEL MENÚ ACORDEÓN -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    
+                    const parentLi = this.closest('li');
+                    const submenu = parentLi.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow');
+                    
+                    if(!submenu) return;
+
+                    document.querySelectorAll('.submenu').forEach(sub => {
+                        if(sub !== submenu && sub.classList.contains('open')) {
+                            sub.classList.remove('open');
+                            const otherArrow = sub.closest('li').querySelector('.arrow');
+                            if(otherArrow) otherArrow.classList.remove('open');
+                        }
+                    });
+
+                    submenu.classList.toggle('open');
+                    arrow.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+
+    <!-- SCRIPTS DE ANIMACIÓN Y ASCII REVEAL -->
+    <script type="module">
+        import { gsap } from "https://esm.sh/gsap@3.12.5";
+
+        // Función SEGURA de animación
+        function splitTextForFlip(el) {
+            const textNodes = Array.from(el.childNodes).filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '');
+            const chars = [];
+            
+            textNodes.forEach(node => {
+                const wrapper = document.createElement('span');
+                wrapper.className = 'flip-container';
+                
+                node.textContent.split('').forEach(char => {
+                    const span = document.createElement('span');
+                    span.className = 'flip-char';
+                    span.innerHTML = char === ' ' ? '&nbsp;' : char;
+                    wrapper.appendChild(span);
+                    chars.push(span);
+                });
+                
+                el.replaceChild(wrapper, node);
+            });
+            return chars;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ANIMACIÓN RÁPIDA DE ENTRADA (0.3s)
+            const elementsToAnimate = document.querySelectorAll('.brand h2, .nav-menu a, .name-title, .text-box p, .list-section h3, .list-section li');
+            let allAnimatedChars = [];
+
+            elementsToAnimate.forEach(el => {
+                allAnimatedChars = allAnimatedChars.concat(splitTextForFlip(el));
+            });
+
+            if(allAnimatedChars.length > 0) {
+                gsap.from(allAnimatedChars, {
+                    rotationX: -90,
+                    opacity: 0,
+                    transformOrigin: "50% 0%",
+                    duration: 0.3,
+                    stagger: 0.005, 
+                    ease: "power2.out"
+                });
+            }
+        });
+
+        // EFECTO ASCII REVEAL (Fondo Negro, Letras Blancas)
+        function setupAsciiReveal() {
+            const canvas = document.getElementById('ascii-canvas');
+            const container = document.getElementById('reveal-container');
+            if (!canvas || !container) return;
+            
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const imgSrc = "images/cv.jpg"; 
+            
+            const columns = 160; 
+            const ramp = " .:-=+*#%@"; 
+            
+            let img = new Image();
+            img.crossOrigin = "anonymous"; 
+            
+            let pointer = { x: -1000, y: -1000, active: false };
+            let rafId;
+
+            const textCanvas = document.createElement('canvas');
+            const textCtx = textCanvas.getContext('2d');
+            
+            const photoCanvas = document.createElement('canvas');
+            const photoCtx = photoCanvas.getContext('2d');
+            
+            const maskCanvas = document.createElement('canvas');
+            const maskCtx = maskCanvas.getContext('2d');
+
+            function processImage() {
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                canvas.width = textCanvas.width = photoCanvas.width = maskCanvas.width = w;
+                canvas.height = textCanvas.height = photoCanvas.height = maskCanvas.height = h;
+
+                const scale = Math.min(w / img.width, h / img.height);
+                const dw = img.width * scale;
+                const dh = img.height * scale;
+                const dx = (w - dw) / 2;
+                const dy = (h - dh) / 2;
+
+                photoCtx.clearRect(0, 0, w, h);
+                photoCtx.drawImage(img, dx, dy, dw, dh);
+
+                const cellW = w / columns;
+                const cellH = cellW * 1.5; 
+                const rows = Math.ceil(h / cellH);
+
+                const sampler = document.createElement('canvas');
+                sampler.width = columns;
+                sampler.height = rows;
+                const sCtx = sampler.getContext('2d');
+                sCtx.drawImage(img, dx/cellW, dy/cellH, dw/cellW, dh/cellH);
+                
+                let imgData;
+                try {
+                    imgData = sCtx.getImageData(0, 0, columns, rows).data;
+                } catch(e) {
+                    console.warn("Imagen bloqueada. Sube a servidor o usa Live Server.");
+                    return;
+                }
+
+                // FONDO NEGRO Y LETRAS BLANCAS
+                textCtx.fillStyle = '#000000';
+                textCtx.fillRect(0, 0, w, h);
+                textCtx.fillStyle = '#ffffff'; 
+                textCtx.font = `bold ${cellH}px monospace`;
+                textCtx.textBaseline = 'top';
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < columns; c++) {
+                        const i = (r * columns + c) * 4;
+                        const rr = imgData[i], gg = imgData[i + 1], bb = imgData[i + 2], a = imgData[i + 3];
+                        
+                        if(a < 128) continue; 
+                        
+                        let lum = (0.299 * rr + 0.587 * gg + 0.114 * bb) / 255;
+                        
+                        // SIN INVERTIR: Las zonas brillantes (fondo de tu foto) serán densas (@), y las sombras serán espacios
+                        lum = (lum - 0.5) * 2.0 + 0.5;
+                        lum = Math.max(0, Math.min(1, lum));
+                        
+                        const charIndex = Math.floor(lum * (ramp.length - 1));
+                        const char = ramp[charIndex];
+                        if(char !== ' ') textCtx.fillText(char, c * cellW, r * cellH);
+                    }
+                }
+                draw();
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(textCanvas, 0, 0);
+
+                if (pointer.active) {
+                    maskCtx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    const grad = maskCtx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 280);
+                    grad.addColorStop(0, 'rgba(255,255,255,1)');
+                    grad.addColorStop(1, 'rgba(255,255,255,0)');
+                    maskCtx.fillStyle = grad;
+                    maskCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = canvas.width; 
+                    tempCanvas.height = canvas.height;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    
+                    tempCtx.drawImage(photoCanvas, 0, 0);
+                    tempCtx.globalCompositeOperation = 'destination-in';
+                    tempCtx.drawImage(maskCanvas, 0, 0);
+
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.drawImage(tempCanvas, 0, 0);
+                }
+            }
+
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                pointer.x += ((e.clientX - rect.left) - pointer.x) * 0.25;
+                pointer.y += ((e.clientY - rect.top) - pointer.y) * 0.25;
+                pointer.active = true;
+                if(!rafId) loop();
+            });
+
+            container.addEventListener('mouseleave', () => { 
+                pointer.active = false; 
+                draw(); 
+            });
+
+            function loop() {
+                
+                if(pointer.active) { 
+                    draw(); 
+                    rafId = requestAnimationFrame(loop); 
+                } else { 
+                    cancelAnimationFrame(rafId); 
+                    rafId = null; 
+                }
+            }
+
+            img.onload = () => processImage();
+            img.src = imgSrc;
+            
+            window.addEventListener('resize', () => {
+                if(img.complete) processImage();
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setupAsciiReveal();
+        });
+    </script>
+</body>
+</html>

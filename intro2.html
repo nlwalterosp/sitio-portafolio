@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichole Art - Intro</title>
+    <style>
+        /* Cursor normal por defecto */
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #fff; cursor: default; }
+        
+        .split-screen { display: flex; height: 100vh; width: 100vw; padding: 20px; box-sizing: border-box; gap: 20px; }
+        
+        /* Caja Izquierda: Gravedad y clics normales */
+        .left-side { width: 350px; flex-shrink: 0; position: relative; border: 1px solid #000; overflow: hidden; background: #fff; }
+        
+        /* Caja Derecha: Contenedor WebGL (Cursor interactivo) */
+        .right-side { 
+            flex: 1; position: relative; border: 1px solid #000; background: #fff; overflow: hidden; 
+            cursor: crosshair; 
+        }
+
+        .menu-btn { position: absolute; top: 0; left: 0; width: 155px; height: 48px; background: transparent; border: 1px solid #000; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: #000; font-family: "Times New Roman", Times, serif; font-size: 0.9rem; user-select: none; pointer-events: none; }
+
+        .back-to-start-btn {
+            position: absolute; top: 30px; right: 40px; text-decoration: none; color: #999;
+            font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; font-weight: bold;
+            z-index: 10005; transition: color 0.3s, transform 0.3s; pointer-events: auto;
+        }
+        .back-to-start-btn:hover { color: #000; transform: translateX(-5px); }
+
+        /* LENTE SEGUIDORA DE COLOR (Flota sobre el texto distorsionado) */
+        #cursor-lens {
+            position: fixed; left: 0; top: 0; width: 0; height: 0; pointer-events: none; z-index: 9999;
+            will-change: transform, opacity; isolation: isolate; opacity: 0; transition: opacity 0.3s ease; 
+        }
+        #cursor-lens.show-lens { opacity: 1; }
+        #cursor-lens::before { 
+            content: ""; position: absolute; width: 300px; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; 
+            background: radial-gradient(circle, #ff5c7a2e 0, #7b5cff20 35%, #3fd6c810 52%, transparent 72%); 
+        }
+        #cursor-lens::after { 
+            content: ""; position: absolute; width: 150px; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; 
+            backdrop-filter: blur(4px) saturate(1.9) contrast(1.15) hue-rotate(14deg); 
+            -webkit-backdrop-filter: blur(4px) saturate(1.9) contrast(1.15) hue-rotate(14deg); 
+            mask: radial-gradient(circle, #000 38%, rgba(0,0,0,0.8) 57%, rgba(0,0,0,0.4) 73%, rgba(0,0,0,0.1) 87%, transparent); 
+            -webkit-mask: radial-gradient(circle, #000 38%, rgba(0,0,0,0.8) 57%, rgba(0,0,0,0.4) 73%, rgba(0,0,0,0.1) 87%, transparent); 
+        }
+
+        /* Contenedor del lienzo 3D de Fluidos */
+        #webgl-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-lens"></div>
+
+    <div class="split-screen">
+        <div class="left-side" id="physics-container">
+            <div class="menu-btn" id="btn-fotografia">FOTOGRAFIA</div>
+            <div class="menu-btn" id="btn-ilustracion">ILUSTRACION</div>
+            <div class="menu-btn" id="btn-3d">3D</div>
+            <div class="menu-btn" id="btn-design">DESIGN</div>
+            <div class="menu-btn" id="btn-art">ART</div>
+        </div>
+        
+        <div class="right-side" id="right-side-area">
+            <a href="intro.html" class="back-to-start-btn">&#8592; INICIO</a>
+            
+            <!-- Aquí adentro ocurre la magia de la distorsión líquida -->
+            <div id="webgl-container"></div>
+        </div>
+    </div>
+
+    <!-- Librerías: Matter.js (Físicas Izquierda) y Three.js (Fluidos Derecha) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // ========================================================
+        // 1. SISTEMA WEBGL DE FLUIDOS Y TEXTO (Originkit Effect)
+        // ========================================================
+        const rightArea = document.getElementById('right-side-area');
+        const containerGL = document.getElementById('webgl-container');
+        const lens = document.getElementById('cursor-lens');
+
+        let width = rightArea.clientWidth;
+        let height = rightArea.clientHeight;
+
+        // Configuración 3D
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 0.1, 10);
+        camera.position.z = 1;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        containerGL.appendChild(renderer.domElement);
+
+        // TEXTO A IMAGEN: Convertimos "NICHOLE ART" a un Canvas para poder deformarlo
+        const tCanvas = document.createElement('canvas');
+        const tCtx = tCanvas.getContext('2d');
+        const texture = new THREE.CanvasTexture(tCanvas);
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+
+        function renderTextToCanvas() {
+            const pr = Math.min(window.devicePixelRatio || 1, 2);
+            tCanvas.width = width * pr;
+            tCanvas.height = height * pr;
+            tCtx.scale(pr, pr);
+            
+            tCtx.fillStyle = '#fff';
+            tCtx.fillRect(0, 0, width, height);
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            
+            const vw = window.innerWidth / 100;
+            const startY = height / 2 + (vw * 3); 
+
+            // "NICHOLE" gigante y estirado
+            tCtx.save();
+            tCtx.translate(width / 2, startY - (8 * vw));
+            tCtx.scale(1, 1.4); 
+            tCtx.font = '900 ' + (19 * vw) + 'px Impact, "Arial Black", sans-serif';
+            tCtx.fillStyle = '#000';
+            if('letterSpacing' in tCtx) tCtx.letterSpacing = '-1px';
+            tCtx.fillText('NICHOLE', 0, 0);
+            tCtx.restore();
+
+            // "ART" gris abajo
+            tCtx.font = (8 * vw) + 'px Arial, Helvetica, sans-serif';
+            tCtx.fillStyle = '#999';
+            if('letterSpacing' in tCtx) tCtx.letterSpacing = '1px';
+            tCtx.fillText('ART', width / 2, startY + (7 * vw));
+            
+            texture.needsUpdate = true;
+        }
+
+        // SIMULACIÓN DE FLUIDOS (La cuadrícula que registra la fuerza de la ola)
+        const gridSize = 45; // El tamaño de la cuadrícula (como en Originkit)
+        const velocities = new Float32Array(gridSize * gridSize * 2);
+        const dataArray = new Uint8Array(gridSize * gridSize * 4);
+        
+        const dataTexture = new THREE.DataTexture(dataArray, gridSize, gridSize, THREE.RGBAFormat, THREE.UnsignedByteType);
+        dataTexture.magFilter = THREE.LinearFilter;
+        dataTexture.minFilter = THREE.LinearFilter;
+        dataTexture.needsUpdate = true;
+
+        // SHADER: Aquí se empujan los píxeles de la imagen según la velocidad de la ola
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTexture: { value: texture },
+                uDataTexture: { value: dataTexture },
+                uStrength: { value: 0.15 } // <--- ESTO CONTROLA LA FUERZA EXTREMA DE LA OLA
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+            `,
+            fragmentShader: `
+                uniform sampler2D uTexture;
+                uniform sampler2D uDataTexture;
+                uniform float uStrength;
+                varying vec2 vUv;
+                void main() {
+                    vec4 offset = texture2D(uDataTexture, vUv);
+                    vec2 dir = (offset.rg - 0.5) * 2.0; // Extrae la dirección y fuerza
+                    vec2 smeared = vUv - uStrength * dir; // Arrastra la letra
+                    smeared = clamp(smeared, 0.001, 0.999);
+                    gl_FragColor = texture2D(uTexture, smeared);
+                }
+            `
+        });
+
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
+        scene.add(plane);
+        renderTextToCanvas();
+
+        // Controladores del ratón
+        let mX = 0.5, mY = 0.5;
+        let pMx = 0.5, pMy = 0.5;
+        let lensX = window.innerWidth / 2, lensY = window.innerHeight / 2;
+        let isInside = false;
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = rightArea.getBoundingClientRect();
+            mX = (e.clientX - rect.left) / rect.width;
+            mY = 1.0 - ((e.clientY - rect.top) / rect.height);
+            
+            // Inercia de la lente de color
+            lensX += (e.clientX - lensX) * 0.15; 
+            lensY += (e.clientY - lensY) * 0.15;
+            lens.style.transform = `translate(${lensX}px, ${lensY}px)`; 
+        });
+
+        rightArea.addEventListener('mouseenter', () => { isInside = true; lens.classList.add('show-lens'); });
+        rightArea.addEventListener('mouseleave', () => { isInside = false; lens.classList.remove('show-lens'); });
+
+        // Calcula la fuerza de propagación y el rastro que deja el mouse
+        function updateFluid() {
+            let vX = isInside ? (mX - pMx) : 0;
+            let vY = isInside ? (mY - pMy) : 0;
+            pMx = mX; pMy = mY;
+
+            // ESTELA: Hace que la deformación tarde en curarse (0.96 = rastro muy largo)
+            for (let i = 0; i < velocities.length; i++) {
+                velocities[i] *= 0.96; 
+            }
+
+            const gX = Math.floor(mX * gridSize);
+            const gY = Math.floor(mY * gridSize);
+            const radius = 8; // Grosor del pincel que deforma el agua
+
+            if (Math.abs(vX) > 0 || Math.abs(vY) > 0) {
+                for (let i = Math.max(0, gX - radius); i <= Math.min(gridSize - 1, gX + radius); i++) {
+                    for (let j = Math.max(0, gY - radius); j <= Math.min(gridSize - 1, gY + radius); j++) {
+                        const dx = i - gX; const dy = j - gY;
+                        const distSq = dx*dx + dy*dy;
+                        if (distSq < radius*radius) {
+                            const power = 1.0 - Math.sqrt(distSq)/radius;
+                            const idx = (j * gridSize + i) * 2;
+                            // Empuje brutal para que las letras se rasguen y deformen notoriamente
+                            velocities[idx] += vX * power * 350;
+                            velocities[idx+1] += vY * power * 350;
+                        }
+                    }
+                }
+            }
+
+            // Pasa la física de los fluidos al sistema de colores del Shader
+            for(let i=0; i<gridSize*gridSize; i++) {
+                let vx = Math.max(-1, Math.min(1, velocities[i*2]));
+                let vy = Math.max(-1, Math.min(1, velocities[i*2+1]));
+                dataArray[i*4] = (vx * 0.5 + 0.5) * 255;
+                dataArray[i*4+1] = (vy * 0.5 + 0.5) * 255;
+                dataArray[i*4+3] = 255;
+            }
+            dataTexture.needsUpdate = true;
+        }
+
+        // Bucle de renderizado 60FPS
+        function animateWebGL() {
+            updateFluid();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animateWebGL);
+        }
+        animateWebGL();
+
+        // Responsive del Lienzo WebGL
+        window.addEventListener('resize', () => {
+            width = rightArea.clientWidth; height = rightArea.clientHeight;
+            renderer.setSize(width, height);
+            camera.left = width / -2; camera.right = width / 2;
+            camera.top = height / 2; camera.bottom = height / -2;
+            camera.updateProjectionMatrix();
+            plane.geometry.dispose();
+            plane.geometry = new THREE.PlaneGeometry(width, height);
+            renderTextToCanvas();
+        });
+
+
+        // ========================================================
+        // 2. SISTEMA MATTER.JS (Gravedad de botones izquierda)
+        // ========================================================
+        const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint, Events } = Matter;
+        const engine = Engine.create(); const world = engine.world;
+        const container = document.getElementById('physics-container');
+
+        const btnWidth = 155; const btnHeight = 48; const startX = container.clientWidth / 2;
+        
+        const fotografiaBody = Bodies.rectangle(startX - 15, -100, btnWidth, btnHeight, { frictionAir: 0.04, restitution: 0.5, angle: 0.1 });
+        const ilustracionBody = Bodies.rectangle(startX + 10, -500, btnWidth, btnHeight, { frictionAir: 0.04, restitution: 0.5, angle: -0.2 });
+        const t3dBody = Bodies.rectangle(startX - 5, -900, btnWidth, btnHeight, { frictionAir: 0.04, restitution: 0.5, angle: 0.15 });
+        const designBody = Bodies.rectangle(startX + 20, -1300, btnWidth, btnHeight, { frictionAir: 0.04, restitution: 0.5, angle: -0.1 });
+        const artBody = Bodies.rectangle(startX - 20, -1700, btnWidth, btnHeight, { frictionAir: 0.04, restitution: 0.5, angle: 0.25 });
+
+        fotografiaBody.url = "foto.html"; ilustracionBody.url = "Ilustracion.html"; t3dBody.url = "index.html"; designBody.url = "index.html"; artBody.url = "index.html";      
+
+        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 25, container.clientWidth, 50, { isStatic: true });
+        const leftWall = Bodies.rectangle(-25, container.clientHeight / 2, 50, container.clientHeight, { isStatic: true });
+        const rightWall = Bodies.rectangle(container.clientWidth + 25, container.clientHeight / 2, 50, container.clientHeight, { isStatic: true });
+
+        World.add(world, [artBody, designBody, t3dBody, ilustracionBody, fotografiaBody, ground, leftWall, rightWall]);
+
+        const renderPhysics = Render.create({
+            element: container, engine: engine,
+            options: { width: container.clientWidth, height: container.clientHeight, background: 'transparent', wireframes: false }
+        });
+        
+        renderPhysics.canvas.style.position = 'absolute'; renderPhysics.canvas.style.top = '0'; renderPhysics.canvas.style.left = '0';
+        renderPhysics.canvas.style.zIndex = '10'; renderPhysics.canvas.style.opacity = '0'; 
+
+        const physicsMouse = Mouse.create(renderPhysics.canvas);
+        const mConstraint = MouseConstraint.create(engine, { mouse: physicsMouse, constraint: { stiffness: 0.2, render: { visible: false } } });
+        World.add(world, mConstraint); renderPhysics.mouse = physicsMouse;
+
+        Runner.run(engine); Render.run(renderPhysics);
+
+        const domFotografia = document.getElementById('btn-fotografia'); const domIlustracion = document.getElementById('btn-ilustracion');
+        const dom3d = document.getElementById('btn-3d'); const domDesign = document.getElementById('btn-design'); const domArt = document.getElementById('btn-art');
+
+        Events.on(engine, 'afterUpdate', function() {
+            domFotografia.style.transform = `translate(${fotografiaBody.position.x - btnWidth/2}px, ${fotografiaBody.position.y - btnHeight/2}px) rotate(${fotografiaBody.angle}rad)`;
+            domIlustracion.style.transform = `translate(${ilustracionBody.position.x - btnWidth/2}px, ${ilustracionBody.position.y - btnHeight/2}px) rotate(${ilustracionBody.angle}rad)`;
+            dom3d.style.transform = `translate(${t3dBody.position.x - btnWidth/2}px, ${t3dBody.position.y - btnHeight/2}px) rotate(${t3dBody.angle}rad)`;
+            domDesign.style.transform = `translate(${designBody.position.x - btnWidth/2}px, ${designBody.position.y - btnHeight/2}px) rotate(${designBody.angle}rad)`;
+            domArt.style.transform = `translate(${artBody.position.x - btnWidth/2}px, ${artBody.position.y - btnHeight/2}px) rotate(${artBody.angle}rad)`;
+        });
+
+        let mousedownPosition = null;
+        Events.on(mConstraint, 'mousedown', function(event) { mousedownPosition = { x: event.mouse.position.x, y: event.mouse.position.y }; });
+        Events.on(mConstraint, 'mouseup', function(event) {
+            if (!mousedownPosition) return;
+            const dx = event.mouse.position.x - mousedownPosition.x; const dy = event.mouse.position.y - mousedownPosition.y;
+            if (Math.sqrt(dx * dx + dy * dy) < 5) {
+                const clickedBody = Matter.Query.point([artBody, designBody, t3dBody, ilustracionBody, fotografiaBody], event.mouse.position)[0];
+                if (clickedBody && clickedBody.url !== "") { window.location.href = clickedBody.url; }
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            renderPhysics.canvas.width = container.clientWidth; renderPhysics.canvas.height = container.clientHeight;
+            Matter.Body.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight + 25 });
+            Matter.Body.setPosition(rightWall, { x: container.clientWidth + 25, y: container.clientHeight / 2 });
+        });
+    </script>
+</body>
+</html>

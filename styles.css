@@ -1,0 +1,235 @@
+* { box-sizing: border-box; }
+
+@font-face {
+  font-family: 'Soltyer DEMO';
+  src: url('fonts/SoltyerDEMO-Regular-BF6a807d1c4ce98.ttf') format('truetype'); 
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.portfolio-container { display: flex; width: 100vw; height: 100vh; }
+
+/* Barra lateral ensanchada */
+.sidebar {
+  width: 380px; /* Antes 320px, ahora más ancha */
+  min-width: 340px; 
+  height: 100vh;
+  background-color: #fff;
+  display: flex; flex-direction: column;
+  position: relative;
+  border-right: 1px solid #eaeaea;
+}
+
+/* Encabezado empujado más hacia abajo */
+.brand { 
+  padding: 70px 35px 0 35px; /* Empuja todo el menú hacia abajo */
+  background: #fff; 
+  z-index: 20; 
+}
+
+/* Nombre en la parte superior: Gris claro */
+.brand h2 { 
+  font-size: 15px; 
+  font-weight: 500; 
+  color: #b3b3b3; 
+  margin: 0 0 25px 0; 
+  white-space: nowrap; 
+}
+/* 1. LA CAJA RÍGIDA (EL MENÚ) */
+.nav-menu { 
+  padding: 0 35px 20px 35px; 
+  background: #fff; /* Fondo blanco sólido para tapar el texto que sube */
+  position: relative; 
+  z-index: 20; /* Asegura que el menú esté por encima del texto */
+  
+  /* ESTA ES LA MAGIA: Le dice a la caja que calcule su tamaño y se congele. Cero crecimiento, cero encogimiento. */
+  flex: 0 0 auto; 
+}
+
+/* 2. LA CAJA FLEXIBLE CON SCROLL (EL TEXTO) */
+.category-title {
+  /* Le dice a la caja: "Toma absolutamente todo el espacio en blanco que sobró hacia abajo" */
+  flex: 1 1 auto; 
+  
+  /* Convierte a esta caja en el ÚNICO elemento de la pantalla que puede hacer scroll */
+  overflow-y: auto; 
+  
+  margin-top: 10px; 
+  padding: 10px 35px 150px 35px; /* Buen espacio abajo para que no quede cortado el final */
+  
+  position: relative;
+  z-index: 10;
+  
+  /* Ocultar barra gris fea */
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  
+  /* Tu desvanecimiento */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black 100%);
+}
+
+/* Limpieza del scroll en navegadores Webkit */
+.category-title::-webkit-scrollbar { 
+  display: none; 
+}
+
+/* 1. Quitamos los puntos negros y márgenes por defecto */
+.nav-menu ul {
+  list-style: none !important;
+  padding: 0;
+  padding-left: 35px; /* Esto empuja el menú hacia la derecha */
+  margin: 0;
+}
+
+/* 2. Damos espacio entre cada proyecto */
+.nav-menu li {
+  margin-bottom: 15px;
+}
+
+/* 3. Estilos de la tipografía, color y sin líneas */
+.nav-menu a, .nav-menu a:visited {
+  font-family: 'Soltyer DEMO', sans-serif;
+  text-decoration: none !important; 
+  color: #969292 !important; 
+  font-size: 16px; 
+  font-weight: normal;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+/* 4. Color negro puro al pasar el mouse */
+.nav-menu a:hover, .nav-menu a.active {
+  color: #000 !important;
+}
+.nav-menu a, .nav-menu a:visited {
+  font-family: 'Soltyer DEMO', sans-serif;
+  text-decoration: none; 
+  color: #696868; 
+  font-size: 16px; 
+  font-weight: normal;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+  color: #000;
+}
+.nav-menu::-webkit-scrollbar {
+  display: none;
+}
+
+/* Contenedor del texto con el desvanecimiento integrado */
+.category-title {
+  flex: 1;
+  overflow-y: auto;
+  
+  /* Agregamos margen para separarlo del menú superior */
+  margin-top: 30px; 
+  padding: 10px 35px 70vh 35px; 
+  
+  position: relative;
+  z-index: 10;
+  -ms-overflow-style: none; scrollbar-width: none;
+  
+  /* Reducimos el área transparente a 15px para no cortar las letras */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black 100%);
+}
+
+.category-title::-webkit-scrollbar { display: none; }
+
+//* --- TÍTULO (DESIGN AND ART) --- */
+.category-title h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 30px 0; 
+  line-height: 1.5; 
+  letter-spacing: 2px;
+  word-spacing: 8px;
+}
+
+/* Alineación estricta para las letras del título */
+.category-title h1 span {
+  display: inline-block;
+  vertical-align: baseline !important; /* Mantiene la N, D, A, T en línea */
+  /* transform-origin ayuda a que si rotan, lo hagan desde su base */
+  transform-origin: center bottom; 
+}
+
+
+/* --- PÁRRAFOS --- */
+.category-title p {
+  font-size: 14px;
+  line-height: 2.2 !important; 
+  color: #555;
+  
+  /* 1. SEPARACIÓN GIGANTE ENTRE PÁRRAFOS */
+  margin-bottom: 90px !important; 
+  
+  /* 2. RESERVA DE ESPACIO (El truco clave) */
+  min-height: 150px; 
+  
+  letter-spacing: 0.5px; 
+  display: block !important; 
+}
+/* Alineación para las letras de los párrafos */
+.category-title p span {
+  display: inline-block;
+  vertical-align: baseline !important;
+}
+
+/* Si tu animación usa una clase específica para los espacios, asegúrate de que exista: */
+span.space {
+    min-width: 0.4em !important;
+    display: inline-block;
+}
+.category-title::-webkit-scrollbar { display: none; }
+
+/* Visor derecho adaptado al nuevo ancho de la barra */
+.gallery-viewport {
+  flex: 1; position: relative; height: 100vh;
+  width: calc(100vw - 380px); /* Resta el nuevo ancho de la barra */
+  background-color: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallery-viewport .slide { width: 100%; height: 100%; }
+.gallery-viewport img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.controls { position: absolute; bottom: 25px; display: flex; gap: 12px; z-index: 10; }
+.controls button { width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.9); font-size: 18px; cursor: pointer; transition: 0.2s; }
+.controls button:hover { transform: scale(1.08); background: #fff; }
+/* Transición suave para la imagen del carrusel */
+#current-image {
+  /* Le decimos que cualquier cambio de opacidad debe durar 0.3 segundos y ser suave */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Clase que aplicaremos con JavaScript para ocultarla suavemente */
+.fade-out {
+  opacity: 0;
+}
+/* Asegurar que los controles siempre estén por encima de las fotos/videos para recibir clics */
+.controls {
+  position: relative;
+  z-index: 100;
+}

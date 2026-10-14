@@ -1,0 +1,77 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portafolio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+   <div class="portfolio-container">
+    
+    <!-- Barra lateral blanca -->
+    <aside class="sidebar">
+      <div class="brand">
+        <h2>Nichole Walteros</h2>
+      </div>
+      
+      <nav class="nav-menu">
+        <ul>
+          <li><a href="index.html" >PORTAFOLIO</a></li>
+          <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
+          <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
+          <li><a href="ligero-sonido.html" class="active">UN LIGERO SONIDO</a></li>
+         
+          <li><a href="#bio">BIO</a></li>
+       <!-- Tus enlaces de proyectos existentes -->
+        <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
+        
+        <!-- Botón para regresar al portafolio principal -->
+        <br><br>
+        <li>
+          <a href="index.html" style="color: #666; font-weight: bold; font-size: 0.85em;">
+            &#8592; REGRESAR AL PORTAFOLIO
+          </a>
+        </li>
+      </ul>
+    </nav>
+      <div class="category-title">
+        <h1>A LIGHT SOUND</h1>
+        <p>Deconstruction is an analytical practice that dismantles an object's initial concept. This sculpture deconstructs the structural order of the city, transforming it into a dislocated system of pipes and valves designed for the flow of sound.</p>
+        <p>The work is rooted in research into Bogotá's soundscapes and aqueduct systems, featuring in-situ audio recordings of water in different contexts. These sounds resonate deep within the pipes and can only be heard by approaching a funnel at one end, where viewers can actively modulate the volume by opening and closing the valves.</p>
+        <p>Blending geometry and color, the installation creates an abstract communication system. By requiring physical proximity to perceive the hidden audio, the piece demands an intimate engagement, shifting the viewer's traditional relationship with both the artwork and the exhibition space.</p>
+        <!-- Esto es lo que permite bajar y hacer que el texto se desvanezca -->
+        <br><br><br><br><p>Keep scrolling to see the effect...</p><br><br><br>
+      </div>
+    </aside>
+
+    <!-- Visor multimedia (Imágenes y Videos) -->
+  <main class="gallery-viewport">
+    <div class="slide active" id="media-container" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <!-- Primera imagen por defecto -->
+      <img id="current-image" src="images/tubo2.jpg" alt="Proyecto" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.3s ease-in-out;">
+    </div>
+    <div class="controls">
+      <button id="prevBtn" aria-label="Anterior">&#8592;</button>
+      <button id="nextBtn" aria-label="Siguiente">&#8594;</button>
+    </div>
+  </main>
+</div>
+
+<!-- Scripts (API de YouTube y tu script principal) -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="script.js"></script>
+
+<!-- Lista de imágenes -->
+<!-- Lista de imágenes y videos -->
+<script>
+window.pageImages = [
+  'images/tubos7.jpg',
+  'images/tubo2.jpg',
+  'images/20161107_215248.jpg',
+  'images/Suministro de agua.jpg',
+  'images/tubo.jpg',                                // <--- Le agregamos una coma aquí al final
+  'https://player.vimeo.com/video/191420473'        // <--- ¡Y aquí agregamos tu video de Vimeo!
+];
+</script>
+</body>
+</html>
