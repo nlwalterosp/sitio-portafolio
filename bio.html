@@ -75,12 +75,19 @@
             top: 0; 
             background: #fff; 
             z-index: 100; 
-            padding: 20px 20px 10px 30px; 
+            padding: 0px 20px 10px 0px; 
         }
         
+        .brand { 
+            padding: 70px 35px 0 35px; 
+            background: #fff; 
+            z-index: 20; 
+        }
+
         .brand h2 { 
             margin-top: 0; 
-            margin-bottom: 40px; 
+            margin-bottom: 50px; 
+            padding-top: 0; 
             font-family: "Inter Tight", sans-serif; 
             font-size: 15px; 
             font-weight: 500;
@@ -88,6 +95,14 @@
             line-height: 1; 
         }
         
+        .nav-menu { 
+            padding: 0 35px 20px 35px; 
+            background: #fff; 
+            position: relative; 
+            z-index: 20; 
+            flex: 0 0 auto; 
+        }
+
         .nav-menu ul { list-style: none; padding: 0; margin: 0; }
         .nav-menu > ul > li { margin-bottom: 12px; }
         
@@ -112,6 +127,8 @@
         .dropdown-toggle.active { 
             color: #000; 
             font-weight: bold; 
+            text-decoration: underline; 
+            text-underline-offset: 4px;
         }
         
         .arrow { font-size: 9px; color: #aaa; transition: transform 0.3s ease; }
@@ -265,9 +282,9 @@
                 </div>
                 
                 <nav class="nav-menu">
-                    <ul>
+                    <ul class="flip-container" data-flip>
                         <li>
-                            <a href="#" class="dropdown-toggle">ARTE <span class="arrow">▼</span></a>
+                            <a href="#" class="dropdown-toggle active">ARTE <span class="arrow">▼</span></a>
                             <ul class="submenu">
                                 <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
                                 <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
@@ -309,7 +326,7 @@
                         </li>
 
                         <br>
-                        <li><a href="bio.html" style="font-weight: bold; color: #000; text-decoration: underline; text-underline-offset: 4px;">BIO</a></li>
+                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
                         <br><br>
                         <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
                         <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
@@ -396,18 +413,13 @@
             toggles.forEach(toggle => {
                 toggle.addEventListener('click', function(e) {
                     e.preventDefault(); 
-                    
-                    const parentLi = this.closest('li');
-                    const submenu = parentLi.querySelector('.submenu');
+                    const submenu = this.nextElementSibling;
                     const arrow = this.querySelector('.arrow');
                     
-                    if(!submenu) return;
-
                     document.querySelectorAll('.submenu').forEach(sub => {
                         if(sub !== submenu && sub.classList.contains('open')) {
                             sub.classList.remove('open');
-                            const otherArrow = sub.closest('li').querySelector('.arrow');
-                            if(otherArrow) otherArrow.classList.remove('open');
+                            sub.previousElementSibling.querySelector('.arrow').classList.remove('open');
                         }
                     });
 
