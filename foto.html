@@ -43,12 +43,20 @@
         .sticky-header { position: sticky; top: 0; background: #fff; z-index: 100; padding: 20px 20px 10px 20px; }
 
         .sidebar-content { padding: 0 20px; padding-top: 8vh; }
-        .brand h2 { margin-top: 0; }
+        .brand h2 { margin-top: 0; margin-bottom: 50px; padding-top: 0; font-family: "Inter Tight", sans-serif; font-size: 15px; font-weight: 500; color: #999; line-height: 1; }
         
         .nav-menu ul { list-style: none; padding: 0; margin: 0; }
-        .nav-menu li { margin-bottom: 10px; }
-        .nav-menu a { text-decoration: none; color: #666; }
-        .nav-menu a.active { color: #000; font-weight: bold; }
+        .nav-menu > ul > li { margin-bottom: 12px; }
+        .nav-menu a { text-decoration: none; color: #666; font-family: "Inter Tight", sans-serif; font-size: 14px; text-transform: uppercase; }
+        .dropdown-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer; transition: color 0.3s; }
+        .dropdown-toggle:hover { color: #000; }
+        .dropdown-toggle.active { color: #000; font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+        .arrow { font-size: 9px; color: #aaa; transition: transform 0.3s ease; }
+        .arrow.open { transform: rotate(180deg); }
+        .submenu { padding: 0 0 0 15px !important; margin: 10px 0 5px 0 !important; display: none; flex-direction: column; gap: 12px; }
+        .submenu.open { display: flex; }
+        .submenu a { font-size: 0.75rem !important; color: #999; }
+        .submenu a:hover { color: #111; font-weight: 600; }
 
         .category-title h1 { font-size: 1.8rem; margin-bottom: 2rem; font-family: "Inter Tight", sans-serif; font-weight: 800; }
 
@@ -90,15 +98,53 @@
                 </div>
                 <nav class="nav-menu">
                     <ul>
-                        <li><a href="index.html" class="active">PORTAFOLIO</a></li>
-                        <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
-                        <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
-                        <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
-                        <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
-                        <li><a href="bio.html">BIO</a></li>
+                        <li>
+                            <a href="#" class="dropdown-toggle">ARTE <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
+                                <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
+                                <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
+                                <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="#" class="dropdown-toggle active">FOTOGRAFÍA <span class="arrow open">▼</span></a>
+                            <ul class="submenu open">
+                                <li><a href="foto.html" style="color: #000; font-weight: 600;">CIUDAD A BLANCO Y NEGRO</a></li>
+                                <li><a href="foto-experimental.html">EXPERIMENTAL</a></li>
+                                <li><a href="foto color.html">A COLOR</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">ILUSTRACIÓN <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="ilustracion-digital.html">ILUSTRACIÓN DIGITAL</a></li>
+                                <li><a href="Ilustracion.html">ILUSTRACIÓN TRADICIONAL</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">3D <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="canto-quetzal.html">EL CANTO DE QUETZAL</a></li>
+                                <li><a href="princesa-humayun.html">LA PRINCESA DE HUMAYUN</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">DISEÑO <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="diseno-proyectos.html">PROYECTOS DE DISEÑO</a></li>
+                            </ul>
+                        </li>
+
                         <br>
-                        <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px;">&#8592; INICIO</a></li>
-                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px;">&#8592; MENÚ</a></li>
+                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
+                        <br><br>
+                        <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
+                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
                     </ul>
                 </nav>
             </div>
@@ -135,6 +181,28 @@
             </div>
         </main>
     </div>
+
+    <!-- SCRIPT DEL MENÚ ACORDEÓN -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    const submenu = this.nextElementSibling;
+                    const arrow = this.querySelector('.arrow');
+                    document.querySelectorAll('.submenu').forEach(sub => {
+                        if(sub !== submenu && sub.classList.contains('open')) {
+                            sub.classList.remove('open');
+                            sub.previousElementSibling.querySelector('.arrow').classList.remove('open');
+                        }
+                    });
+                    submenu.classList.toggle('open');
+                    arrow.classList.toggle('open');
+                });
+            });
+        });
+    </script>
 
     <!-- SCRIPT DE LA GALERÍA -->
     <script>

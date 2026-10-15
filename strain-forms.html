@@ -1,75 +1,170 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portafolio</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Nichole Walteros</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        .portfolio-container { display: flex; height: 100vh; width: 100vw; background: #fff; overflow: hidden; }
+        .sidebar { width: 300px; height: 100vh; overflow-y: auto; overflow-x: hidden; position: relative; background: #fff; }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); border-radius: 10px; margin: 10px 0; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.4); }
+        .sticky-header { position: sticky; top: 0; background: #fff; z-index: 100; padding: 0px 20px 10px 0px; }
+        .sidebar-content { padding: 0 20px; padding-top: 4vh; }
+        .brand h2 { margin-top: 0; margin-bottom: 50px; padding-top: 0; font-family: "Inter Tight", sans-serif; font-size: 15px; font-weight: 500; color: #999; line-height: 1; }
+        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
+        .nav-menu > ul > li { margin-bottom: 12px; }
+        .nav-menu a { text-decoration: none; color: #666; font-family: "Inter Tight", sans-serif; font-size: 14px; text-transform: uppercase; }
+        .dropdown-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer; transition: color 0.3s; }
+        .dropdown-toggle.active { color: #000; font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+        .arrow { font-size: 9px; color: #aaa; transition: transform 0.3s ease; }
+        .arrow.open { transform: rotate(180deg); }
+        .submenu { padding: 0 0 0 15px !important; margin: 10px 0 5px 0 !important; display: none; flex-direction: column; gap: 12px; }
+        .submenu.open { display: flex; }
+        .submenu a { font-size: 0.75rem !important; color: #999; }
+        .submenu a:hover { color: #111; font-weight: 600; }
+        .category-title h1 { font-size: 1.8rem; margin-bottom: 2rem; font-family: "Inter Tight", sans-serif; font-weight: 800; color: #111; }
+        .category-title p { font-family: "Inter", sans-serif; font-size: 14px; line-height: 2.0; color: #555; margin-bottom: 30px; }
+        .gallery-viewport { flex: 1; position: relative; height: 100vh; background: #000; overflow: hidden; }
+        .gallery-viewport .slide { width: 100%; height: 100%; }
+        .gallery-viewport img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .controls { position: absolute; bottom: 25px; display: flex; gap: 12px; z-index: 100; position: relative; }
+        .controls button { width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); font-size: 18px; cursor: pointer; transition: 0.2s; }
+        .controls button:hover { transform: scale(1.08); background: #fff; }
+        #current-image { transition: opacity 0.3s ease-in-out; }
+        .fade-out { opacity: 0; }
+    </style>
 </head>
 <body>
-  <div class="portfolio-container">
-    <!-- Barra lateral izquierda -->
-    <aside class="sidebar">
-      <div class="brand">
-        <h2>Nichole Walteros</h2>
-      </div>
-      <nav class="nav-menu">
-        <ul>
-          <li><a href="index.html" >PORTAFOLIO</a></li>
-          <li><a href="strain-forms.html"class="active">STRAIN FORMS OF UNIVERSE</a></li>
-          <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
-          <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
-          
-          <li><a href="#bio">BIO</a></li>
-        <!-- Tus enlaces de proyectos existentes -->
-        <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
-        
-        <!-- Botón para regresar al portafolio principal -->
-        <br><br>
-        <li>
-          <a href="index.html" style="color: #666; font-weight: bold; font-size: 0.85em;">
-            &#8592; REGRESAR AL PORTAFOLIO
-          </a>
-        </li>
-      </ul>
-    </nav>
 
-      <!-- Zona de texto con Scroll -->
-      <div class="category-title">
-        <h1>STRAIN FORMS</h1>
-        <p>This interactive project explores the balanced, self-regulating energy of the toroid—nature's primary model for life at any scale.</p>
-        <p>By clicking the interface, users deform and reconfigure an experimental drawing on exposed photographic paper, dynamically recreating these geometric forms.</p>
-        <p>The work visualizes toroidal movement across different scales, connecting the macrocosm of Earth's electromagnetic field with the microcosm of human energy centers, bridging our internal and external worlds.</p>
-        <!-- Esto es lo que permite bajar y hacer que el texto se desvanezca -->
-        <br><br><br><br><p>Keep scrolling to see the effect...</p><br><br><br>
-      </div>
-    </aside>
+    <div class="portfolio-container">
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sticky-header">
+                <div class="brand">
+                    <h2>Nichole Walteros</h2>
+                </div>
+                
+                <nav class="nav-menu">
+                    <ul>
+                        <li>
+                            <a href="#" class="dropdown-toggle active">ARTE <span class="arrow open">▼</span></a>
+                            <ul class="submenu open">
+                                <li><a href="strain-forms.html" style="color: #000; font-weight: 600;">STRAIN FORMS OF UNIVERSE</a></li>
+                                <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
+                                <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
+                                <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="#" class="dropdown-toggle">FOTOGRAFÍA <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="foto.html">CIUDAD A BLANCO Y NEGRO</a></li>
+                                <li><a href="foto-experimental.html">EXPERIMENTAL</a></li>
+                                <li><a href="foto color.html">A COLOR</a></li>
+                            </ul>
+                        </li>
 
-    <!-- Visor de imágenes / Carrusel -->
-    <!-- Visor multimedia (Imágenes y Videos) -->
-  <main class="gallery-viewport">
-    <div class="slide active" id="media-container" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-      <!-- Primera imagen por defecto -->
-      <img id="current-image" src="images/foto11.png" alt="Proyecto" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.3s ease-in-out;">
+                        <li>
+                            <a href="#" class="dropdown-toggle">ILUSTRACIÓN <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="ilustracion-digital.html">ILUSTRACIÓN DIGITAL</a></li>
+                                <li><a href="Ilustracion.html">ILUSTRACIÓN TRADICIONAL</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">3D <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="canto-quetzal.html">EL CANTO DE QUETZAL</a></li>
+                                <li><a href="princesa-humayun.html">LA PRINCESA DE HUMAYUN</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">DISEÑO <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="diseno-proyectos.html">PROYECTOS DE DISEÑO</a></li>
+                            </ul>
+                        </li>
+
+                        <br>
+                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
+                        <br><br>
+                        <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
+                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="category-title">
+                    <h1>STRAIN FORMS</h1>
+                    <p>This interactive project explores the balanced, self-regulating energy of the toroid—nature's primary model for life at any scale.</p>
+                    <p>By clicking the interface, users deform and reconfigure an experimental drawing on exposed photographic paper, dynamically recreating these geometric forms.</p>
+                    <p>The work visualizes toroidal movement across different scales, connecting the macrocosm of Earth's electromagnetic field with the microcosm of human energy centers, bridging our internal and external worlds.</p>
+                    <!-- Esto es lo que permite bajar y hacer que el texto se desvanezca -->
+                    <br><br><br><br><p>Keep scrolling to see the effect...</p><br><br><br>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Visor multimedia (Imágenes y Videos) -->
+        <main class="gallery-viewport">
+            <div class="slide active" id="media-container" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                <!-- Primera imagen por defecto -->
+                <img id="current-image" src="images/foto11.png" alt="Proyecto" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.3s ease-in-out;">
+            </div>
+            <div class="controls">
+                <button id="prevBtn" aria-label="Anterior">&#8592;</button>
+                <button id="nextBtn" aria-label="Siguiente">&#8594;</button>
+            </div>
+        </main>
     </div>
-    <div class="controls">
-      <button id="prevBtn" aria-label="Anterior">&#8592;</button>
-      <button id="nextBtn" aria-label="Siguiente">&#8594;</button>
-    </div>
-  </main>
-</div>
 
-<!-- Scripts (API de YouTube por si acaso, y tu script principal) -->
-<script src="https://www.youtube.com/iframe_api"></script>
-<script src="script.js"></script>
+    <!-- SCRIPT DEL MENÚ ACORDEÓN -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    const submenu = this.nextElementSibling;
+                    const arrow = this.querySelector('.arrow');
+                    document.querySelectorAll('.submenu').forEach(sub => {
+                        if(sub !== submenu && sub.classList.contains('open')) {
+                            sub.classList.remove('open');
+                            sub.previousElementSibling.querySelector('.arrow').classList.remove('open');
+                        }
+                    });
+                    submenu.classList.toggle('open');
+                    arrow.classList.toggle('open');
+                });
+            });
+        });
+    </script>
 
-<!-- Lista de imágenes y el nuevo video de Vimeo -->
-<script>
-  window.pageImages = [
-    'images/foto11.png',
-    'images/foto12.png',
-    'https://player.vimeo.com/video/192418724', // <--- VIDEO DE VIMEO LISTO
-    'images/foto10.png'
-  ];
-</script>
+    <!-- Scripts (API de YouTube por si acaso, y tu script principal) -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="script.js"></script>
+
+    <!-- Lista de imágenes y el nuevo video de Vimeo -->
+    <script>
+        window.pageImages = [
+            'images/foto11.png',
+            'images/foto12.png',
+            'https://player.vimeo.com/video/192418724',
+            'images/foto10.png'
+        ];
+    </script>
 </body>
 </html>
