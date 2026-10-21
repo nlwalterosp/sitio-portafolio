@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Nichole Walteros</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        .portfolio-container { display: flex; height: 100vh; width: 100vw; background: #fff; overflow: hidden; }
+
+        /* Barra Lateral Angosta */
+        .sidebar { 
+            width: 300px; 
+            height: 100vh; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            position: relative; 
+            background: #fff; 
+        }
+        
+        /* DISEÑO DE LA BARRA DE SCROLL */
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); border-radius: 10px; margin: 10px 0; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.4); }
+
+        /* HEADER: Padding superior totalmente en 0 para pegar el nombre arriba */
+        .sticky-header { 
+            position: sticky; 
+            top: 0; 
+            background: #fff; 
+            z-index: 100; 
+            padding: 0px 20px 10px 0px; 
+        }
+        
+        /* NOMBRE EN GRIS EN LA PURA ESQUINA SUPERIOR */
+        .brand h2 { 
+            margin-top: 0; 
+            margin-bottom: 50px; /* Aumentado a 50px para dar el aire solicitado antes de ARTE */
+            padding-top: 0; 
+            font-family: "Inter Tight", sans-serif; 
+            font-size: 15px; 
+            font-weight: 500;
+            color: #999; 
+            line-height: 1; 
+        }
+        
+        /* MENÚ ACORDEÓN */
+        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
+        .nav-menu > ul > li { margin-bottom: 12px; }
+        
+        .nav-menu a { 
+            text-decoration: none; 
+            color: #666; 
+            font-family: "Inter Tight", sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .dropdown-toggle:hover { color: #000; }
+                .dropdown-toggle.active { 
+            color: #000; 
+            font-weight: bold; 
+            text-decoration: underline; 
+            text-underline-offset: 4px; 
+        }
+        
+        .arrow { 
+            font-size: 9px; 
+            color: #aaa; 
+            transition: transform 0.3s ease; 
+            display: inline-block;
+            text-decoration: none !important;
+        }
+        .arrow.open { transform: rotate(180deg); }
+        .dropdown-toggle .arrow {
+            display: inline-block;
+            text-decoration: none !important;
+        }
+
+        .submenu {
+            padding: 0 0 0 15px !important;
+            margin: 10px 0 5px 0 !important;
+            display: none; 
+            flex-direction: column;
+            gap: 12px;
+        }
+        .submenu.open { display: flex; }
+        .submenu a { font-size: 0.75rem !important; color: #999; }
+        .submenu a:hover { color: #111; font-weight: 600; }
+
+        /* =========================================
+           ESTILOS DE CONTENIDO Y GALERÍA
+           ========================================= */
+        .sidebar-content { padding: 0 20px; padding-top: 8vh; }
+        
+        .gallery-viewport { flex: 1; position: relative; height: 100vh; background: #000; overflow: hidden; }
+        #gallery-track { width: 100%; height: 100%; position: relative; }
+        
+        .slide-item { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh; 
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease, border-radius 0.8s ease; 
+            overflow: hidden; background: #000; transform-origin: center bottom; 
+        }
+        .slide-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .slide-item.inactive { opacity: 0; transform: scale(0.15) translateY(20vh); border-radius: 50%; pointer-events: none; z-index: 0; }
+        .slide-item.active { opacity: 1; transform: scale(1) translateY(0); border-radius: 0; pointer-events: auto; z-index: 1; }
+
+        .gallery-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 40px; }
+        .nav-btn { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 45px; font-weight: 300; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s, transform 0.3s; opacity: 0.6; padding: 0; text-shadow: 0px 2px 10px rgba(0,0,0,0.5); }
+        .nav-btn:hover { opacity: 1; transform: scale(1.2); }
+
+                /* =========================================
+           TEXTOS ANIMADOS (FLY-TEXT Y FLIP)
+           ========================================= */
+        .fly-text { 
+            font-family: "Inter", sans-serif; 
+            color: #333; 
+            text-align: justify; 
+            text-justify: inter-word;
+            text-align-last: left;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        }
+        h1.fly-text { 
+            font-size: 1.65rem; 
+            font-family: "Inter Tight", sans-serif; 
+            font-weight: 800; 
+            text-align: left;
+            line-height: 1.15;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        }
+        p.fly-text { 
+            font-size: 0.9rem; 
+            line-height: 1.8; 
+            margin-bottom: 280px; 
+            text-align: justify; 
+            text-justify: inter-word;
+            text-align-last: left;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        } 
+        
+        .flip-container { perspective: 800px; }
+        .flip-word {
+            display: inline-block;
+            white-space: nowrap;
+            transform-style: preserve-3d;
+        }
+        .flip-char { 
+            display: inline-block; 
+            will-change: transform, opacity; 
+            transform-style: preserve-3d;
+        }
+        
+        .scroll-cue { 
+            font-family: "Inter Tight", sans-serif; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: #999; 
+            margin-bottom: 4rem; 
+            margin-top: 2rem; 
+            animation: breathe 2.5s ease-in-out infinite; 
+            text-align: left;
+            white-space: normal;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        }
+        @keyframes breathe { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(5px); } }
+
+        .scroll-spacer { height: 25vh; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-container">
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sticky-header">
+                <div class="brand">
+                    <h2 class="flip-container" data-flip>Nichole Walteros</h2>
+                </div>
+                
+                <nav class="nav-menu">
+                    <ul class="flip-container" data-flip>
+                        <li>
+                            <a href="#" class="dropdown-toggle active">ARTE <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
+                                <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
+                                <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
+                                <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="#" class="dropdown-toggle">FOTOGRAFÍA <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="foto.html">CIUDAD A BLANCO Y NEGRO</a></li>
+                                <li><a href="foto color.html">EXPERIMENTAL Y COLOR</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">ILUSTRACIÓN <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="ilustracion-digital.html">ILUSTRACIÓN DIGITAL</a></li>
+                                <li><a href="Ilustracion.html">ILUSTRACIÓN TRADICIONAL</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">3D <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="canto-quetzal.html">EL CANTO DE QUETZAL</a></li>
+                                <li><a href="princesa-humayun.html">LA PRINCESA DE HUMAYUN</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="dropdown-toggle">DISEÑO <span class="arrow">▼</span></a>
+                            <ul class="submenu">
+                                <li><a href="diseno-proyectos.html">PROYECTOS DE DISEÑO</a></li>
+                            </ul>
+                        </li>
+
+                        <br>
+                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
+                        <br><br>
+                        <li><a href="index.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
+                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="category-title flip-container" data-flip>
+                    <h1 class="fly-text" data-wind-angle="90" data-wind-strength="120" data-scatter="40" data-max-rot="90" style="margin-bottom: 0; line-height: 1;">ART</h1>
+                    <h1 class="fly-text" data-wind-angle="90" data-wind-strength="120" data-scatter="40" data-max-rot="90" style="margin-top: 0; line-height: 1;">PORTAFOLIO</h1>
+                    
+                    <p class="scroll-cue">↓ Haz scroll hacia abajo para interactuar</p>
+
+                    <p class="fly-text" data-wind-angle="45" data-wind-strength="150" data-scatter="80" data-max-rot="180">
+                        Plastic and sculptural research focusing on the intersection of light, matter, and contemporary organic spaces. Through a deep exploration of form and void, these artworks challenge our perception of physical boundaries.
+                    </p>
+                    
+                    <p class="fly-text" data-wind-angle="-45" data-wind-strength="200" data-scatter="100" data-max-rot="360">
+                        This ongoing series investigates subtle light variations, the ephemeral nature of plant life cycles, and the intricate textures that inhabit the penumbra. It invites the viewer to reflect on the silent dialogue between shadow and illumination.
+                    </p>
+                    
+                    <p class="fly-text" data-wind-angle="90" data-wind-strength="180" data-scatter="120" data-max-rot="200">
+                        Each piece is meticulously developed through a combination of mixed media techniques, site-specific installations, and the detailed photographic recording of natural transformation processes over time, capturing the delicate decay and rebirth of organic materials.
+                    </p>
+                </div>
+                <div class="scroll-spacer"></div>
+            </div>
+        </aside>
+
+        <!-- VISOR DE LA GALERÍA -->
+        <main class="gallery-viewport">
+            <div id="gallery-track"></div>
+            <div class="gallery-controls">
+                <button id="btn-prev" class="nav-btn">&#10094;</button>
+                <button id="btn-next" class="nav-btn">&#10095;</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT DEL MENÚ ACORDEÓN -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    const submenu = this.nextElementSibling;
+                    const arrow = this.querySelector('.arrow');
+                    
+                    document.querySelectorAll('.submenu').forEach(sub => {
+                        if(sub !== submenu && sub.classList.contains('open')) {
+                            sub.classList.remove('open');
+                            sub.previousElementSibling.querySelector('.arrow').classList.remove('open');
+                        }
+                    });
+
+                    submenu.classList.toggle('open');
+                    arrow.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+
+    <!-- SCRIPT DE LA GALERÍA -->
+    <script>
+        const images = ["images/foto-principal.jpg", "images/foto-principal2.jpg", "images/foto-principal3.jpg", "images/foto-principal6.jpg", "images/foto-principal4.jpg", "images/foto5matera.jpg"];
+        let currentIndex = 0; let slideElements = []; const track = document.getElementById('gallery-track');
+        function initGallery() {
+            images.forEach((src, index) => {
+                const div = document.createElement('div'); div.className = 'slide-item';
+                const img = document.createElement('img'); img.src = src; div.appendChild(img);
+                track.appendChild(div); slideElements.push(div);
+            }); updateGallery();
+        }
+        function updateGallery() {
+            slideElements.forEach((slide, index) => {
+                if (index === currentIndex) { slide.className = 'slide-item active'; } 
+                else { slide.className = 'slide-item inactive'; }
+            });
+        }
+        document.getElementById('btn-next').onclick = () => { currentIndex = (currentIndex + 1) % images.length; updateGallery(); };
+        document.getElementById('btn-prev').onclick = () => { currentIndex = (currentIndex - 1 + images.length) % images.length; updateGallery(); };
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+
+    <!-- SCRIPT GSAP: Entrada "Mechanical Flip" ACELERADA + Dispersión en Scroll -->
+    <script type="module">
+        import { gsap } from "https://esm.sh/gsap@3.12.5";
+        import { ScrollTrigger } from "https://esm.sh/gsap@3.12.5/ScrollTrigger";
+        gsap.registerPlugin(ScrollTrigger);
+
+                function splitTextForFlip(el) {
+            function getTextNodes(node) {
+                let textNodes = [];
+                if (node.nodeType === Node.TEXT_NODE) {
+                    textNodes.push(node);
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (!node.classList.contains('flip-word') && !node.classList.contains('flip-char')) {
+                        for (let child of node.childNodes) {
+                            textNodes = textNodes.concat(getTextNodes(child));
+                        }
+                    }
+                }
+                return textNodes;
+            }
+
+            const textNodes = getTextNodes(el);
+            const chars = [];
+
+            textNodes.forEach(node => {
+                if (!node.parentNode) return;
+                const text = node.textContent;
+                if (!text.trim()) {
+                    if (node.previousSibling && node.nextSibling) {
+                        const spaceNode = document.createTextNode(' ');
+                        node.parentNode.replaceChild(spaceNode, node);
+                    } else {
+                        node.parentNode.removeChild(node);
+                    }
+                    return;
+                }
+
+                const hasLeadingSpace = /^\s/.test(text);
+                const hasTrailingSpace = /\s$/.test(text);
+                const words = text.trim().split(/\s+/);
+                const frag = document.createDocumentFragment();
+
+                if (hasLeadingSpace && node.previousSibling) {
+                    frag.appendChild(document.createTextNode(' '));
+                }
+
+                words.forEach((word, wordIdx) => {
+                    if (wordIdx > 0) {
+                        frag.appendChild(document.createTextNode(' '));
+                    }
+                    const wordSpan = document.createElement('span');
+                    wordSpan.className = 'flip-word';
+
+                    for (let i = 0; i < word.length; i++) {
+                        const charSpan = document.createElement('span');
+                        charSpan.className = 'flip-char';
+                        charSpan.textContent = word[i];
+                        wordSpan.appendChild(charSpan);
+                        chars.push(charSpan);
+                    }
+                    frag.appendChild(wordSpan);
+                });
+
+                if (hasTrailingSpace && node.nextSibling) {
+                    frag.appendChild(document.createTextNode(' '));
+                }
+
+                node.parentNode.replaceChild(frag, node);
+            });
+
+            return chars;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ANIMACIÓN DE ENTRADA (Mechanical Flip) ACELERADA
+            const allElementsToFlip = document.querySelectorAll('[data-flip]');
+            let allAnimatedChars = [];
+
+            allElementsToFlip.forEach(container => {
+                const textHolders = container.querySelectorAll('h1, h2, a, p, span.year, span.scroll-cue');
+                if(textHolders.length > 0) {
+                    textHolders.forEach(holder => {
+                        allAnimatedChars = allAnimatedChars.concat(splitTextForFlip(holder));
+                    });
+                } else {
+                    allAnimatedChars = allAnimatedChars.concat(splitTextForFlip(container));
+                }
+            });
+
+            gsap.from(allAnimatedChars, {
+                rotationX: -90,
+                opacity: 0,
+                transformOrigin: "50% 0%",
+                duration: 0.3, // ACELERADO: Antes era 0.6
+                stagger: 0.008, // ACELERADO: Las letras aparecen casi instantáneamente una tras otra
+                ease: "power2.out",
+                onComplete: () => {
+                    // DISPERSIÓN DE LETRAS VINCULADA AL SCROLL
+                    document.querySelectorAll('.fly-text').forEach((el) => {
+                        const charsToFly = el.querySelectorAll('.flip-char');
+                        const windAngle = parseFloat(el.dataset.windAngle) || 0;
+                        const windStrength = parseFloat(el.dataset.windStrength) || 150;
+                        const scatter = parseFloat(el.dataset.scatter) || 100;
+                        const maxRot = parseFloat(el.dataset.maxRot) || 180;
+                        
+                        const tl = gsap.timeline({ paused: true });
+
+                        charsToFly.forEach((char) => {
+                            const angleRad = (windAngle + (Math.random()*40 - 20)) * Math.PI / 180;
+                            const dist = windStrength * (0.5 + Math.random() * 0.5);
+                            const dx = Math.cos(angleRad) * dist + (Math.random() - 0.5) * scatter;
+                            const dy = -Math.sin(angleRad) * dist + (Math.random() - 0.5) * scatter;
+                            const rot = (Math.random() - 0.5) * maxRot;
+                            
+                            const scatteredState = { x: dx, y: dy, rotationZ: rot, opacity: 0, scale: 0.3 };
+                            const naturalState = { x: 0, y: 0, rotationZ: 0, opacity: 1, scale: 1 };
+
+                            tl.fromTo(char, naturalState, { ...scatteredState, duration: 1, ease: "power2.in" }, Math.random() * 0.5);
+                        });
+
+                        ScrollTrigger.create({
+                            trigger: el, 
+                            scroller: "#sidebar",
+                            start: "top 80%", 
+                            end: "bottom 30%",
+                            scrub: 1.5, 
+                            animation: tl
+                        });
+                    });
+                }
+            });
+            
+            // ANIMACIÓN DE ENTRADA PARA LA IMAGEN DE LA GALERÍA
+            gsap.from(".slide-item.active img", {
+                scale: 1.2,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power2.out",
+                delay: 0.3 // Reduje un poco el delay para acompañar la nueva velocidad del texto
+            });
+            
+        });
+    </script>
+</body>
+</html>

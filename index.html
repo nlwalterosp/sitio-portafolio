@@ -1,479 +1,1228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio - Nichole Walteros</title>
-    <link rel="stylesheet" href="styles.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nichole Walteros — Portafolio</title>
 
-    <style>
-        .portfolio-container { display: flex; height: 100vh; width: 100vw; background: #fff; overflow: hidden; }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* Barra Lateral Angosta */
-        .sidebar { 
-            width: 300px; 
-            height: 100vh; 
-            overflow-y: auto; 
-            overflow-x: hidden; 
-            position: relative; 
-            background: #fff; 
-        }
-        
-        /* DISEÑO DE LA BARRA DE SCROLL */
-        .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); border-radius: 10px; margin: 10px 0; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
-        .sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.4); }
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* HEADER: Padding superior totalmente en 0 para pegar el nombre arriba */
-        .sticky-header { 
-            position: sticky; 
-            top: 0; 
-            background: #fff; 
-            z-index: 100; 
-            padding: 0px 20px 10px 0px; 
-        }
-        
-        /* NOMBRE EN GRIS EN LA PURA ESQUINA SUPERIOR */
-        .brand h2 { 
-            margin-top: 0; 
-            margin-bottom: 50px; /* Aumentado a 50px para dar el aire solicitado antes de ARTE */
-            padding-top: 0; 
-            font-family: "Inter Tight", sans-serif; 
-            font-size: 15px; 
-            font-weight: 500;
-            color: #999; 
-            line-height: 1; 
-        }
-        
-        /* MENÚ ACORDEÓN */
-        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
-        .nav-menu > ul > li { margin-bottom: 12px; }
-        
-        .nav-menu a { 
-            text-decoration: none; 
-            color: #666; 
-            font-family: "Inter Tight", sans-serif;
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-        
-        .dropdown-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .dropdown-toggle:hover { color: #000; }
-                .dropdown-toggle.active { 
-            color: #000; 
-            font-weight: bold; 
-            text-decoration: underline; 
-            text-underline-offset: 4px; 
-        }
-        
-        .arrow { 
-            font-size: 9px; 
-            color: #aaa; 
-            transition: transform 0.3s ease; 
-            display: inline-block;
-            text-decoration: none !important;
-        }
-        .arrow.open { transform: rotate(180deg); }
-        .dropdown-toggle .arrow {
-            display: inline-block;
-            text-decoration: none !important;
-        }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: "Inter Tight", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        .submenu {
-            padding: 0 0 0 15px !important;
-            margin: 10px 0 5px 0 !important;
-            display: none; 
-            flex-direction: column;
-            gap: 12px;
-        }
-        .submenu.open { display: flex; }
-        .submenu a { font-size: 0.75rem !important; color: #999; }
-        .submenu a:hover { color: #111; font-weight: 600; }
+    /* Contenedor WebGL para la simulación Petrol Glob */
+    #glob-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      z-index: 1;
+    }
 
-        /* =========================================
-           ESTILOS DE CONTENIDO Y GALERÍA
-           ========================================= */
-        .sidebar-content { padding: 0 20px; padding-top: 8vh; }
-        
-        .gallery-viewport { flex: 1; position: relative; height: 100vh; background: #000; overflow: hidden; }
-        #gallery-track { width: 100%; height: 100%; position: relative; }
-        
-        .slide-item { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100vh; 
-            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease, border-radius 0.8s ease; 
-            overflow: hidden; background: #000; transform-origin: center bottom; 
-        }
-        .slide-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .slide-item.inactive { opacity: 0; transform: scale(0.15) translateY(20vh); border-radius: 50%; pointer-events: none; z-index: 0; }
-        .slide-item.active { opacity: 1; transform: scale(1) translateY(0); border-radius: 0; pointer-events: auto; z-index: 1; }
+    /* Capa de transición suave de salida a blanco */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #transition-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-        .gallery-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 40px; }
-        .nav-btn { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 45px; font-weight: 300; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s, transform 0.3s; opacity: 0.6; padding: 0; text-shadow: 0px 2px 10px rgba(0,0,0,0.5); }
-        .nav-btn:hover { opacity: 1; transform: scale(1.2); }
+    /* Contenedor central del logotipo interactivo */
+    .logo-hero {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      outline: none;
+      padding: 30px;
+    }
 
-                /* =========================================
-           TEXTOS ANIMADOS (FLY-TEXT Y FLIP)
-           ========================================= */
-        .fly-text { 
-            font-family: "Inter", sans-serif; 
-            color: #333; 
-            text-align: justify; 
-            text-justify: inter-word;
-            text-align-last: left;
-            word-break: normal;
-            overflow-wrap: normal;
-            hyphens: none;
-        }
-        h1.fly-text { 
-            font-size: 1.65rem; 
-            font-family: "Inter Tight", sans-serif; 
-            font-weight: 800; 
-            text-align: left;
-            line-height: 1.15;
-            word-break: normal;
-            overflow-wrap: normal;
-            hyphens: none;
-        }
-        p.fly-text { 
-            font-size: 0.9rem; 
-            line-height: 1.8; 
-            margin-bottom: 280px; 
-            text-align: justify; 
-            text-justify: inter-word;
-            text-align-last: left;
-            word-break: normal;
-            overflow-wrap: normal;
-            hyphens: none;
-        } 
-        
-        .flip-container { perspective: 800px; }
-        .flip-word {
-            display: inline-block;
-            white-space: nowrap;
-            transform-style: preserve-3d;
-        }
-        .flip-char { 
-            display: inline-block; 
-            will-change: transform, opacity; 
-            transform-style: preserve-3d;
-        }
-        
-        .scroll-cue { 
-            font-family: "Inter Tight", sans-serif; 
-            font-size: 0.85rem; 
-            font-weight: 600; 
-            color: #999; 
-            margin-bottom: 4rem; 
-            margin-top: 2rem; 
-            animation: breathe 2.5s ease-in-out infinite; 
-            text-align: left;
-            white-space: normal;
-            word-break: normal;
-            overflow-wrap: normal;
-            hyphens: none;
-        }
-        @keyframes breathe { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(5px); } }
+    .logo-stage {
+      position: relative;
+      width: clamp(210px, 24vw, 320px);
+      aspect-ratio: 1131 / 1064;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .scroll-spacer { height: 25vh; width: 100%; }
-    </style>
+    /* Partes del logo */
+    .logo-piece {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      will-change: transform, filter, opacity;
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.5s ease,
+                  opacity 0.5s ease;
+      filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.9));
+    }
+
+    /* 1. COMIENZAN UNA AL LADO DE LA OTRA */
+    .logo-piece.part-1 {
+      transform: translateX(-48%);
+      animation: floatPart1 4.5s ease-in-out infinite;
+    }
+
+    .logo-piece.part-2 {
+      transform: translateX(48%);
+      animation: floatPart2 4.5s ease-in-out infinite 0.5s;
+    }
+
+    /* Logo unificado final (inicialmente invisible) */
+    .logo-piece.part-united {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.45s ease,
+                  transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.75s ease;
+      filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
+    }
+
+    /* Flotación orgánica sutil */
+    @keyframes floatPart1 {
+      0%, 100% { transform: translateX(-48%) translateY(0); }
+      50% { transform: translateX(-48%) translateY(-10px); }
+    }
+    @keyframes floatPart2 {
+      0%, 100% { transform: translateX(48%) translateY(0); }
+      50% { transform: translateX(48%) translateY(10px); }
+    }
+
+    /* Estado Hover: atracción magnética y destello */
+    .logo-hero:not(.merged):hover .logo-piece.part-1 {
+      transform: translateX(-26%);
+      filter: drop-shadow(0 0 24px rgba(255, 175, 50, 0.55));
+    }
+    .logo-hero:not(.merged):hover .logo-piece.part-2 {
+      transform: translateX(26%);
+      filter: drop-shadow(0 0 24px rgba(80, 180, 255, 0.55));
+    }
+
+    /* Estado CLICK / UNIÓN: Se mueven una encima de otra como en LOGO-UNIDO */
+    .logo-hero.merged .logo-piece.part-1 {
+      animation: none !important;
+      transform: translateX(0) scale(1) !important;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.9));
+    }
+    .logo-hero.merged .logo-piece.part-2 {
+      animation: none !important;
+      transform: translateX(0) scale(1) !important;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.9));
+    }
+    .logo-hero.merged .logo-piece.part-united {
+      opacity: 1 !important;
+      transform: scale(1.08) !important;
+      filter: drop-shadow(0 0 50px rgba(255, 255, 255, 1)) !important;
+    }
+
+    /* Indicador sutil de entrada */
+    .enter-cue {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 600;
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s ease;
+      pointer-events: none;
+    }
+    .logo-hero:not(.merged):hover .enter-cue {
+      color: rgba(255, 255, 255, 0.95);
+      transform: translateY(3px);
+    }
+    .logo-hero.merged .enter-cue {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="portfolio-container">
-        <!-- BARRA LATERAL -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sticky-header">
-                <div class="brand">
-                    <h2 class="flip-container" data-flip>Nichole Walteros</h2>
-                </div>
-                
-                <nav class="nav-menu">
-                    <ul class="flip-container" data-flip>
-                        <li>
-                            <a href="#" class="dropdown-toggle active">ARTE <span class="arrow">▼</span></a>
-                            <ul class="submenu">
-                                <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
-                                <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
-                                <li><a href="ligero-sonido.html">UN LIGERO SONIDO</a></li>
-                                <li><a href="carotenoides.html">EL SUEÑO DE LOS CAROTENOIDES</a></li>
-                            </ul>
-                        </li>
-                        
-                        <li>
-                            <a href="#" class="dropdown-toggle">FOTOGRAFÍA <span class="arrow">▼</span></a>
-                            <ul class="submenu">
-                                <li><a href="foto.html">CIUDAD A BLANCO Y NEGRO</a></li>
-                                <li><a href="foto color.html">EXPERIMENTAL Y COLOR</a></li>
-                            </ul>
-                        </li>
+  <!-- Lienzo interactivo 3D Petrol Glob -->
+  <div id="glob-container"></div>
 
-                        <li>
-                            <a href="#" class="dropdown-toggle">ILUSTRACIÓN <span class="arrow">▼</span></a>
-                            <ul class="submenu">
-                                <li><a href="ilustracion-digital.html">ILUSTRACIÓN DIGITAL</a></li>
-                                <li><a href="Ilustracion.html">ILUSTRACIÓN TRADICIONAL</a></li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="#" class="dropdown-toggle">3D <span class="arrow">▼</span></a>
-                            <ul class="submenu">
-                                <li><a href="canto-quetzal.html">EL CANTO DE QUETZAL</a></li>
-                                <li><a href="princesa-humayun.html">LA PRINCESA DE HUMAYUN</a></li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="#" class="dropdown-toggle">DISEÑO <span class="arrow">▼</span></a>
-                            <ul class="submenu">
-                                <li><a href="diseno-proyectos.html">PROYECTOS DE DISEÑO</a></li>
-                            </ul>
-                        </li>
-
-                        <br>
-                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
-                        <br><br>
-                        <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
-                        <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="sidebar-content">
-                <div class="category-title flip-container" data-flip>
-                    <h1 class="fly-text" data-wind-angle="90" data-wind-strength="120" data-scatter="40" data-max-rot="90" style="margin-bottom: 0; line-height: 1;">ART</h1>
-                    <h1 class="fly-text" data-wind-angle="90" data-wind-strength="120" data-scatter="40" data-max-rot="90" style="margin-top: 0; line-height: 1;">PORTAFOLIO</h1>
-                    
-                    <p class="scroll-cue">↓ Haz scroll hacia abajo para interactuar</p>
-
-                    <p class="fly-text" data-wind-angle="45" data-wind-strength="150" data-scatter="80" data-max-rot="180">
-                        Plastic and sculptural research focusing on the intersection of light, matter, and contemporary organic spaces. Through a deep exploration of form and void, these artworks challenge our perception of physical boundaries.
-                    </p>
-                    
-                    <p class="fly-text" data-wind-angle="-45" data-wind-strength="200" data-scatter="100" data-max-rot="360">
-                        This ongoing series investigates subtle light variations, the ephemeral nature of plant life cycles, and the intricate textures that inhabit the penumbra. It invites the viewer to reflect on the silent dialogue between shadow and illumination.
-                    </p>
-                    
-                    <p class="fly-text" data-wind-angle="90" data-wind-strength="180" data-scatter="120" data-max-rot="200">
-                        Each piece is meticulously developed through a combination of mixed media techniques, site-specific installations, and the detailed photographic recording of natural transformation processes over time, capturing the delicate decay and rebirth of organic materials.
-                    </p>
-                </div>
-                <div class="scroll-spacer"></div>
-            </div>
-        </aside>
-
-        <!-- VISOR DE LA GALERÍA -->
-        <main class="gallery-viewport">
-            <div id="gallery-track"></div>
-            <div class="gallery-controls">
-                <button id="btn-prev" class="nav-btn">&#10094;</button>
-                <button id="btn-next" class="nav-btn">&#10095;</button>
-            </div>
-        </main>
+  <!-- Botones centrales del Logo interactivo -->
+  <div class="logo-hero" id="logo-hero" role="button" tabindex="0" aria-label="Entrar al portafolio">
+    <div class="logo-stage">
+      <img src="images/LOGOPART1.png" class="logo-piece part-1" alt="Logo Parte 1" />
+      <img src="images/LOGOPART2.png" class="logo-piece part-2" alt="Logo Parte 2" />
+      <img src="images/LOGO-UNIDO.png" class="logo-piece part-united" alt="Logo Unido" />
     </div>
+    <span class="enter-cue">ENTRAR</span>
+  </div>
 
-    <!-- SCRIPT DEL MENÚ ACORDEÓN -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggles = document.querySelectorAll('.dropdown-toggle');
-            toggles.forEach(toggle => {
-                toggle.addEventListener('click', function(e) {
-                    e.preventDefault(); 
-                    const submenu = this.nextElementSibling;
-                    const arrow = this.querySelector('.arrow');
-                    
-                    document.querySelectorAll('.submenu').forEach(sub => {
-                        if(sub !== submenu && sub.classList.contains('open')) {
-                            sub.classList.remove('open');
-                            sub.previousElementSibling.querySelector('.arrow').classList.remove('open');
-                        }
-                    });
+  <!-- Capa de transición de pantalla -->
+  <div id="transition-overlay"></div>
 
-                    submenu.classList.toggle('open');
-                    arrow.classList.toggle('open');
-                });
-            });
-        });
-    </script>
+  <!-- Script 3D Petrol Glob (Three.js WebGL) + Lógica de Fusión del Logo -->
+  <script type="module">
+    import * as THREE from "https://esm.sh/three@0.160.0";
 
-    <!-- SCRIPT DE LA GALERÍA -->
-    <script>
-        const images = ["images/foto-principal.jpg", "images/foto-principal2.jpg", "images/foto-principal3.jpg", "images/foto-principal6.jpg", "images/foto-principal4.jpg", "images/foto5matera.jpg"];
-        let currentIndex = 0; let slideElements = []; const track = document.getElementById('gallery-track');
-        function initGallery() {
-            images.forEach((src, index) => {
-                const div = document.createElement('div'); div.className = 'slide-item';
-                const img = document.createElement('img'); img.src = src; div.appendChild(img);
-                track.appendChild(div); slideElements.push(div);
-            }); updateGallery();
+    // ========================================================
+    // 1. CONFIGURACIÓN Y PARÁMETROS DEL PETROL GLOB (Originkit)
+    // ========================================================
+    const DEFAULT_SHAPE = { detail: 5, morph: 5, folds: 5, rhythm: 5 };
+    const DEFAULT_LIGHT = { key: "#FFA21A", fill: "#1A6EFF", rim: "#FF2A0A" };
+    const DEFAULT_FINISH = { film: 5, gloss: 5, edge: 5, depth: 5 };
+    const DEFAULT_GLOW = { strength: 5, radius: 5, threshold: 5 };
+    const DEFAULT_RESPONSE = { tilt: 4, stir: 5, follow: 5 };
+    const DEFAULT_COLORS = [
+      "#FF8A1F", "#FFC21A", "#3CEB7A", "#1EA0FF", "#2238FF",
+      "#B02BFF", "#FF2438", "#FF3418", "#FF5512", "#FF7418"
+    ];
+
+    const DEFAULTS = {
+      background: "#000000",
+      size: 7,
+      speed: 5,
+      spin: 10,
+      quality: "high"
+    };
+
+    const FOV = 30;
+    const SEGMENTS = { low: 64, medium: 80, high: 96 };
+    const DPR_CAP = { low: 1, medium: 1.5, high: 2 };
+    const CALM_FLOOR = 0.18;
+    const SPIN_Y = 0.24;
+    const SPIN_X = 0.1;
+    const TONE_EXPOSURE = 1.1;
+    const MAX_COLORS = 12;
+    const CHROMA = 0.003;
+    const STIR_DECAY = 1.4;
+    const STIR_EASE = 4.5;
+    const WARP_EASE = 0.9;
+    const ADAPT_AFTER = 3;
+    const ADAPT_EVERY = 2;
+    const FROZEN_FLOW = 7.3;
+    const FROZEN_ENERGY = 0.62;
+    const N_MIPS = 5;
+    const BLOOM_FACTORS = [1.0, 0.8, 0.6, 0.4, 0.2];
+    const BLOOM_THRESHOLD = 1.0;
+    const BLOOM_STRENGTH = 1.15;
+    const BLOOM_RADIUS = 0.35;
+    const BLOOM_KNEE = 0.5;
+
+    function dial(v, lo, mid, hi) {
+      const t = Math.max(0, Math.min(10, typeof v === "number" && isFinite(v) ? v : 5));
+      return t <= 5 ? lo + (t / 5) * (mid - lo) : mid + ((t - 5) / 5) * (hi - mid);
+    }
+
+    function alphaOf(input) {
+      const m = String(input ?? "").match(/^\s*rgba\(\s*[^,]+,\s*[^,]+,\s*[^,]+,\s*([\d.]+)\s*\)\s*$/i);
+      if (!m) return 1;
+      const a = parseFloat(m[1]);
+      return isFinite(a) ? Math.max(0, Math.min(1, a)) : 1;
+    }
+
+    function colorOf(input, fallback, out) {
+      const css = String(input ?? "").trim().replace(/^rgba\(\s*([^,]+),\s*([^,]+),\s*([^,]+),[^)]*\)$/i, "rgb($1, $2, $3)");
+      try {
+        out.setStyle(css || fallback);
+      } catch {
+        out.setStyle(fallback);
+      }
+      return out;
+    }
+
+    function cameraDistance(size, aspect) {
+      const fill = dial(size, 0.22, 0.58, 0.95);
+      const halfFov = Math.tan((FOV * Math.PI) / 360);
+      return 1 / Math.max(0.02, fill * halfFov * Math.min(1, aspect));
+    }
+
+    function cubeSphere(segments) {
+      const geo = new THREE.BoxGeometry(2, 2, 2, segments, segments, segments);
+      const pos = geo.attributes.position;
+      const v = new THREE.Vector3();
+      const q = Math.PI / 4;
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        v.set(Math.tan(v.x * q), Math.tan(v.y * q), Math.tan(v.z * q));
+        v.normalize();
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      geo.deleteAttribute("normal");
+      geo.deleteAttribute("uv");
+      geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1.6);
+      return geo;
+    }
+
+    // ========================================================
+    // 2. SHADERS GLSL (Simplex Noise, Vertex, Fragment, Bloom)
+    // ========================================================
+    const SIMPLEX = `
+    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+    vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+    vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
+    vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+    float snoise(vec3 v) {
+      const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
+      const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+      vec3 i = floor(v + dot(v, C.yyy));
+      vec3 x0 = v - i + dot(i, C.xxx);
+
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min(g.xyz, l.zxy);
+      vec3 i2 = max(g.xyz, l.zxy);
+
+      vec3 x1 = x0 - i1 + C.xxx;
+      vec3 x2 = x0 - i2 + C.yyy;
+      vec3 x3 = x0 - D.yyy;
+
+      i = mod289(i);
+      vec4 p = permute(permute(permute(
+        i.z + vec4(0.0, i1.z, i2.z, 1.0))
+        + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+        + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+      float n_ = 0.142857142857;
+      vec3 ns = n_ * D.wyz - D.xzx;
+
+      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_);
+
+      vec4 x = x_ * ns.x + ns.yyyy;
+      vec4 y = y_ * ns.x + ns.yyyy;
+      vec4 h = 1.0 - abs(x) - abs(y);
+
+      vec4 b0 = vec4(x.xy, y.xy);
+      vec4 b1 = vec4(x.zw, y.zw);
+
+      vec4 s0 = floor(b0) * 2.0 + 1.0;
+      vec4 s1 = floor(b1) * 2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+
+      vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+      vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+
+      vec3 p0 = vec3(a0.xy, h.x);
+      vec3 p1 = vec3(a0.zw, h.y);
+      vec3 p2 = vec3(a1.xy, h.z);
+      vec3 p3 = vec3(a1.zw, h.w);
+
+      vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+      p0 *= norm.x;
+      p1 *= norm.y;
+      p2 *= norm.z;
+      p3 *= norm.w;
+
+      vec4 m = max(0.5 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+      m = m * m;
+      return 105.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
+    }
+    `;
+
+    const GLOB_VERT = `
+    #define CREST_K 0.09
+
+    uniform float uFlow;
+    uniform float uFreq;
+    uniform float uLump;
+    uniform float uFold;
+    uniform float uSharp;
+    uniform float uWarp;
+
+    varying vec3 vNormalV;
+    varying vec3 vViewPos;
+    varying vec3 vSurf;
+    varying float vFold;
+    varying vec3 vTex;
+
+    ${SIMPLEX}
+
+    float snoiseGrad(vec3 v, out vec3 grad) {
+      const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
+      const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+      vec3 i = floor(v + dot(v, C.yyy));
+      vec3 x0 = v - i + dot(i, C.xxx);
+
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min(g.xyz, l.zxy);
+      vec3 i2 = max(g.xyz, l.zxy);
+
+      vec3 x1 = x0 - i1 + C.xxx;
+      vec3 x2 = x0 - i2 + C.yyy;
+      vec3 x3 = x0 - D.yyy;
+
+      i = mod289(i);
+      vec4 p = permute(permute(permute(
+        i.z + vec4(0.0, i1.z, i2.z, 1.0))
+        + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+        + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+      float n_ = 0.142857142857;
+      vec3 ns = n_ * D.wyz - D.xzx;
+
+      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_);
+
+      vec4 x = x_ * ns.x + ns.yyyy;
+      vec4 y = y_ * ns.x + ns.yyyy;
+      vec4 h = 1.0 - abs(x) - abs(y);
+
+      vec4 b0 = vec4(x.xy, y.xy);
+      vec4 b1 = vec4(x.zw, y.zw);
+
+      vec4 s0 = floor(b0) * 2.0 + 1.0;
+      vec4 s1 = floor(b1) * 2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+
+      vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+      vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+
+      vec3 p0 = vec3(a0.xy, h.x);
+      vec3 p1 = vec3(a0.zw, h.y);
+      vec3 p2 = vec3(a1.xy, h.z);
+      vec3 p3 = vec3(a1.zw, h.w);
+
+      vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+      p0 *= norm.x;
+      p1 *= norm.y;
+      p2 *= norm.z;
+      p3 *= norm.w;
+
+      vec4 m = max(0.5 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+      vec4 m2 = m * m;
+      vec4 m4 = m2 * m2;
+      vec4 pdotx = vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3));
+      vec4 t3 = m2 * m * pdotx;
+      grad = -8.0 * (t3.x * x0 + t3.y * x1 + t3.z * x2 + t3.w * x3)
+        + m4.x * p0 + m4.y * p1 + m4.z * p2 + m4.w * p3;
+      grad *= 105.0;
+      return 105.0 * dot(m4, pdotx);
+    }
+
+    void main() {
+      vec3 p = normalize(position);
+      vec3 q = p * uFreq;
+
+      vec3 G0; vec3 G1; vec3 G2;
+      vec3 w = vec3(
+        snoiseGrad(q * 0.8 + vec3(uFlow * 0.31, 0.0, 0.0), G0),
+        snoiseGrad(q * 0.8 + vec3(17.3, uFlow * 0.27, 0.0), G1),
+        snoiseGrad(q * 0.8 + vec3(0.0, 41.9, -uFlow * 0.29), G2)
+      );
+
+      vec3 L;
+      float lump = snoiseGrad(q + w * uWarp + vec3(0.0, uFlow * 0.22, 0.0), L);
+
+      vec3 R;
+      float rn = snoiseGrad(q * 1.35 + w * uWarp + vec3(uFlow * 0.18, 0.0, 9.1), R);
+      float sq = sqrt(rn * rn + CREST_K * CREST_K);
+      float ridge = max(1.0 - (sq - CREST_K), 1e-5);
+      float fold = pow(ridge, uSharp);
+
+      float d = uLump * lump + uFold * (fold - 0.3);
+
+      vec3 gLump = L + uWarp * 0.8 * (L.x * G0 + L.y * G1 + L.z * G2);
+      vec3 gRn = 1.35 * R + uWarp * 0.8 * (R.x * G0 + R.y * G1 + R.z * G2);
+      float dFold = uSharp * pow(ridge, uSharp - 1.0) * (-rn / sq);
+      vec3 g = uFreq * (uLump * gLump + uFold * dFold * gRn);
+      vec3 gt = g - dot(g, p) * p;
+      vec3 n = normalize(p - gt / (1.0 + d));
+
+      vec3 sp = p * 0.75;
+      vec2 wv = vec2(
+        snoise(sp + vec3(uFlow * 0.08, 0.0, 0.0)),
+        snoise(sp + vec3(5.2, uFlow * 0.07, 1.3))
+      );
+      vTex = vec3(
+        snoise(sp * 1.1 + vec3(wv * 0.9, wv.x * 0.6) + vec3(0.0, 0.0, uFlow * 0.04)),
+        snoise(p * vec3(2.0, 6.5, 2.0) + vec3(wv * 1.5, wv.x * 1.5) + vec3(0.0, uFlow * 0.05, 0.0)),
+        snoise(p * 1.1 + vec3(wv * 0.5, 0.0) + vec3(13.1, -uFlow * 0.05, 4.7))
+      );
+
+      vec3 P0 = p * (1.0 + d);
+      vec4 mv = modelViewMatrix * vec4(P0, 1.0);
+      vNormalV = normalize(normalMatrix * n);
+      vViewPos = mv.xyz;
+      vSurf = p;
+      vFold = fold;
+      gl_Position = projectionMatrix * mv;
+    }
+    `;
+
+    const GLOB_FRAG = `
+    #define MAX_COLORS ${MAX_COLORS}
+
+    uniform vec3 uKey;
+    uniform vec3 uFill;
+    uniform vec3 uRim;
+    uniform vec3 uPalette[MAX_COLORS];
+    uniform float uCount;
+    uniform float uFilm;
+    uniform float uGloss;
+    uniform float uEdge;
+    uniform float uDepth;
+    uniform float uFlow;
+    uniform float uEnergy;
+
+    varying vec3 vNormalV;
+    varying vec3 vViewPos;
+    varying vec3 vSurf;
+    varying float vFold;
+    varying vec3 vTex;
+
+    float lobe(vec3 n, vec3 dir, float power) {
+      return pow(max(dot(n, normalize(dir)), 0.0), power);
+    }
+
+    vec3 studio(vec3 n) {
+      vec3 pale = mix(uFill, vec3(0.1, 0.95, 1.0), 0.45);
+      vec3 top = mix(uKey, uRim, 0.3);
+      vec3 c = vec3(0.0);
+      c += uKey * lobe(n, vec3(0.92, -0.08, 0.38), 2.2) * 1.4;
+      c += uKey * lobe(n, vec3(1.0, -0.05, 0.12), 9.0) * 1.0;
+      c += uFill * lobe(n, vec3(-0.22, -0.96, 0.18), 2.6) * 2.6;
+      c += pale * lobe(n, vec3(-0.96, 0.18, 0.22), 3.2) * 1.4;
+      c += top * lobe(n, vec3(0.08, 0.98, 0.18), 3.6) * 1.3;
+      return c;
+    }
+
+    vec3 paletteAt(float t) {
+      float p = fract(t) * uCount;
+      float i = floor(p);
+      float f = p - i;
+      f = f * f * (3.0 - 2.0 * f);
+      float j = mod(i + 1.0, uCount);
+      vec3 a = uPalette[0];
+      vec3 b = uPalette[0];
+      for (int k = 0; k < MAX_COLORS; k++) {
+        float fk = float(k);
+        if (fk == i) a = uPalette[k];
+        if (fk == j) b = uPalette[k];
+      }
+      return mix(a, b, f);
+    }
+
+    float softbox(vec3 r, vec3 c, vec3 up, vec2 size, float soft) {
+      vec3 ax = normalize(cross(up, c));
+      vec3 ay = cross(c, ax);
+      vec2 q = vec2(dot(r, ax), dot(r, ay));
+      float d = length(max(abs(q) - size, 0.0));
+      return (1.0 - smoothstep(0.0, soft, d)) * smoothstep(0.0, 0.25, dot(r, c));
+    }
+
+    void main() {
+      vec3 n = normalize(vNormalV);
+      vec3 v = normalize(-vViewPos);
+      float ndv = clamp(dot(n, v), 0.0, 1.0);
+      float graze = 1.0 - ndv;
+
+      float edgeLo = mix(-0.12, 0.28, uEdge);
+      float fres = smoothstep(edgeLo, edgeLo + 0.58, graze) * (0.6 + 0.4 * graze);
+
+      float broad = vTex.x;
+      float streak = vTex.y;
+      float isl = vTex.z;
+      float island = smoothstep(0.38, 0.85, isl);
+
+      vec2 rimDir = normalize(n.xy + vec2(1e-5, 0.0));
+      float ang = fract(atan(rimDir.y, rimDir.x) / 6.28318);
+      float phase = ang + broad * 0.06 + streak * 0.04 + island * 0.22 + graze * 0.02 + vFold * uEnergy * 0.06;
+      vec3 film = paletteAt(phase);
+
+      vec3 lit = studio(n);
+      float litI = dot(lit, vec3(0.3333));
+
+      float grain = 0.82 + 0.18 * streak;
+      vec3 skin = mix(lit, film * (1.15 + 0.35 * litI) * grain, uFilm);
+      vec3 col = skin * (0.01 + 0.99 * fres);
+
+      col += mix(lit, film * litI, uFilm * 0.6) * pow(graze, 7.0) * 1.1;
+
+      float rimSide = 0.45 + 0.55 * smoothstep(-0.7, 0.7, n.x + 0.4 * n.y);
+      col += uRim * pow(graze, 9.0) * rimSide * 3.2;
+
+      col += uFill * lobe(n, vec3(0.25, -0.95, 0.1), 3.0) * pow(graze, 10.0) * 2.6;
+
+      vec3 back = paletteAt(phase + 0.5);
+      float murk = 0.5 + 0.5 * broad;
+      vec3 core = mix(uRim * 0.5, vec3(0.34, 0.3, 0.05), murk);
+      core = mix(core, back * 0.5, 0.25) * (0.55 + 0.45 * (0.5 + 0.5 * streak));
+      col += core * (1.0 - fres) * uDepth * 0.1;
+
+      vec3 r = reflect(-v, n);
+      float F = 0.04 + 0.96 * pow(graze, 5.0);
+      vec3 up = vec3(0.0, 1.0, 0.0);
+      float d1 = max(dot(r, normalize(vec3(-0.78, 0.5, 0.38))), 0.0);
+      float d2 = max(dot(r, normalize(vec3(0.85, 0.05, 0.5))), 0.0);
+      float d3 = max(dot(r, normalize(vec3(0.35, 0.85, 0.4))), 0.0);
+      float sheen = pow(d1, 5.0) * 1.5 + pow(d2, 7.0) * 1.0 + pow(d3, 9.0) * 0.7;
+
+      float flank = smoothstep(0.25, 0.85, graze);
+
+      float strip = softbox(r, normalize(vec3(0.96, 0.08, -0.12)), up, vec2(0.03, 0.4), 0.16);
+      float spec = pow(max(dot(r, normalize(vec3(-0.66, 0.6, 0.45))), 0.0), 60.0);
+      float glint = pow(max(dot(r, normalize(vec3(-0.62, 0.62, -0.1))), 0.0), 900.0);
+      float room = 0.012 + 0.02 * smoothstep(-0.3, 0.6, r.y);
+
+      vec3 white = vec3(1.0, 0.95, 0.96);
+
+      vec3 wash = mix(film, white, 0.45);
+      vec3 refl = wash * sheen * flank * F * 2.2
+        + mix(uKey, vec3(1.0), 0.4) * strip * 0.7 * mix(0.3, 1.0, F)
+        + white * spec * 0.22 * flank
+        + white * glint * 1.2
+        + room * 0.5 * film * flank;
+      col += refl * uGloss;
+
+      col *= 1.0 + uEnergy * 0.25;
+      gl_FragColor = vec4(col, 1.0);
+    }
+    `;
+
+    const QUAD_VERT = `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position.xy, 0.0, 1.0);
+    }
+    `;
+
+    const PREFILTER_FRAG = `
+    uniform sampler2D tDiffuse;
+    uniform vec2 uTexel;
+    uniform float uThreshold;
+    uniform float uKnee;
+    varying vec2 vUv;
+
+    vec3 tap(float x, float y) {
+      return min(texture2D(tDiffuse, vUv + vec2(x, y) * uTexel).rgb, vec3(32.0));
+    }
+    float karis(vec3 c) {
+      return 1.0 / (1.0 + dot(c, vec3(0.2126, 0.7152, 0.0722)));
+    }
+
+    void main() {
+      vec3 a = tap(-2.0, -2.0), b = tap(0.0, -2.0), c = tap(2.0, -2.0);
+      vec3 d = tap(-2.0,  0.0), e = tap(0.0,  0.0), f = tap(2.0,  0.0);
+      vec3 g = tap(-2.0,  2.0), h = tap(0.0,  2.0), i = tap(2.0,  2.0);
+      vec3 j = tap(-1.0, -1.0), k = tap(1.0, -1.0);
+      vec3 l = tap(-1.0,  1.0), m = tap(1.0,  1.0);
+
+      vec3 g0 = (a + b + d + e) * 0.25;
+      vec3 g1 = (b + c + e + f) * 0.25;
+      vec3 g2 = (d + e + g + h) * 0.25;
+      vec3 g3 = (e + f + h + i) * 0.25;
+      vec3 g4 = (j + k + l + m) * 0.25;
+      float w0 = 0.125 * karis(g0);
+      float w1 = 0.125 * karis(g1);
+      float w2 = 0.125 * karis(g2);
+      float w3 = 0.125 * karis(g3);
+      float w4 = 0.5 * karis(g4);
+      vec3 col = (g0 * w0 + g1 * w1 + g2 * w2 + g3 * w3 + g4 * w4)
+        / (w0 + w1 + w2 + w3 + w4);
+
+      float br = max(col.r, max(col.g, col.b));
+      float soft = clamp(br - uThreshold + uKnee, 0.0, 2.0 * uKnee);
+      soft = soft * soft / (4.0 * uKnee + 1e-4);
+      float contrib = max(soft, br - uThreshold) / max(br, 1e-4);
+      gl_FragColor = vec4(col * contrib, 1.0);
+    }
+    `;
+
+    const DOWN_FRAG = `
+    uniform sampler2D tDiffuse;
+    uniform vec2 uTexel;
+    varying vec2 vUv;
+
+    vec3 tap(float x, float y) {
+      return texture2D(tDiffuse, vUv + vec2(x, y) * uTexel).rgb;
+    }
+
+    void main() {
+      vec3 a = tap(-2.0, -2.0), b = tap(0.0, -2.0), c = tap(2.0, -2.0);
+      vec3 d = tap(-2.0,  0.0), e = tap(0.0,  0.0), f = tap(2.0,  0.0);
+      vec3 g = tap(-2.0,  2.0), h = tap(0.0,  2.0), i = tap(2.0,  2.0);
+      vec3 j = tap(-1.0, -1.0), k = tap(1.0, -1.0);
+      vec3 l = tap(-1.0,  1.0), m = tap(1.0,  1.0);
+      vec3 sum = e * 0.125;
+      sum += (a + c + g + i) * 0.03125;
+      sum += (b + d + f + h) * 0.0625;
+      sum += (j + k + l + m) * 0.125;
+      gl_FragColor = vec4(sum, 1.0);
+    }
+    `;
+
+    const UP_FRAG = `
+    uniform sampler2D tLow;
+    uniform sampler2D tCur;
+    uniform vec2 uLowTexel;
+    uniform float uLowWeight;
+    uniform float uCurWeight;
+    varying vec2 vUv;
+
+    vec3 tapLow(float x, float y) {
+      return texture2D(tLow, vUv + vec2(x, y) * uLowTexel).rgb;
+    }
+
+    void main() {
+      vec3 up = tapLow(-1.0, -1.0) + tapLow(0.0, -1.0) * 2.0 + tapLow(1.0, -1.0);
+      up += tapLow(-1.0, 0.0) * 2.0 + tapLow(0.0, 0.0) * 4.0 + tapLow(1.0, 0.0) * 2.0;
+      up += tapLow(-1.0, 1.0) + tapLow(0.0, 1.0) * 2.0 + tapLow(1.0, 1.0);
+      up *= 0.0625;
+      gl_FragColor = vec4(up * uLowWeight + texture2D(tCur, vUv).rgb * uCurWeight, 1.0);
+    }
+    `;
+
+    const OUTPUT_FRAG = `
+    uniform sampler2D tBase;
+    uniform float uChroma;
+    uniform sampler2D tBloom;
+    uniform vec2 uBloomTexel;
+    uniform float uBloomStrength;
+    uniform vec3 uBg;
+    uniform float uBgAlpha;
+    uniform float uExposure;
+    varying vec2 vUv;
+
+    void main() {
+      vec3 bl = texture2D(tBloom, vUv + vec2(-1.0, -1.0) * uBloomTexel).rgb
+        + texture2D(tBloom, vUv + vec2(0.0, -1.0) * uBloomTexel).rgb * 2.0
+        + texture2D(tBloom, vUv + vec2(1.0, -1.0) * uBloomTexel).rgb
+        + texture2D(tBloom, vUv + vec2(-1.0, 0.0) * uBloomTexel).rgb * 2.0
+        + texture2D(tBloom, vUv).rgb * 4.0
+        + texture2D(tBloom, vUv + vec2(1.0, 0.0) * uBloomTexel).rgb * 2.0
+        + texture2D(tBloom, vUv + vec2(-1.0, 1.0) * uBloomTexel).rgb
+        + texture2D(tBloom, vUv + vec2(0.0, 1.0) * uBloomTexel).rgb * 2.0
+        + texture2D(tBloom, vUv + vec2(1.0, 1.0) * uBloomTexel).rgb;
+
+      vec2 dc = vUv - 0.5;
+      vec3 base = vec3(
+        texture2D(tBase, 0.5 + dc * (1.0 - uChroma)).r,
+        texture2D(tBase, vUv).g,
+        texture2D(tBase, 0.5 + dc * (1.0 + uChroma)).b
+      );
+      vec3 c = base + bl * 0.0625 * uBloomStrength;
+      c = c * c / (c + 0.035);
+      vec3 lin = 1.0 - exp(-c * uExposure);
+
+      vec3 disp = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, lin));
+      float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+      vec3 lightCol = max(disp + dither / 255.0, 0.0);
+
+      float a = clamp(max(lightCol.r, max(lightCol.g, lightCol.b)), 0.0, 1.0);
+      float under = uBgAlpha * (1.0 - a);
+      gl_FragColor = vec4(lightCol + uBg * under, a + under);
+    }
+    `;
+
+    const FXAA_FRAG = `
+    uniform sampler2D tDiffuse;
+    uniform vec2 uTexel;
+    varying vec2 vUv;
+
+    #define FXAA_REDUCE_MIN (1.0 / 128.0)
+    #define FXAA_REDUCE_MUL (1.0 / 8.0)
+    #define FXAA_SPAN_MAX 8.0
+
+    float luma(vec4 c) { return dot(c.rgb, vec3(0.299, 0.587, 0.114)); }
+
+    void main() {
+      vec4 nw = texture2D(tDiffuse, vUv + vec2(-1.0, -1.0) * uTexel);
+      vec4 ne = texture2D(tDiffuse, vUv + vec2(1.0, -1.0) * uTexel);
+      vec4 sw = texture2D(tDiffuse, vUv + vec2(-1.0, 1.0) * uTexel);
+      vec4 se = texture2D(tDiffuse, vUv + vec2(1.0, 1.0) * uTexel);
+      vec4 m = texture2D(tDiffuse, vUv);
+      float lNW = luma(nw);
+      float lNE = luma(ne);
+      float lSW = luma(sw);
+      float lSE = luma(se);
+      float lM = luma(m);
+      float lMin = min(lM, min(min(lNW, lNE), min(lSW, lSE)));
+      float lMax = max(lM, max(max(lNW, lNE), max(lSW, lSE)));
+
+      vec2 dir = vec2(-((lNW + lNE) - (lSW + lSE)), (lNW + lSW) - (lNE + lSE));
+      float reduce = max((lNW + lNE + lSW + lSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+      float rcpMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + reduce);
+      dir = clamp(dir * rcpMin, vec2(-FXAA_SPAN_MAX), vec2(FXAA_SPAN_MAX)) * uTexel;
+
+      vec4 a = 0.5 * (texture2D(tDiffuse, vUv + dir * (1.0 / 3.0 - 0.5)) + texture2D(tDiffuse, vUv + dir * (2.0 / 3.0 - 0.5)));
+      vec4 b = a * 0.5 + 0.25 * (texture2D(tDiffuse, vUv + dir * -0.5) + texture2D(tDiffuse, vUv + dir * 0.5));
+      float lB = luma(b);
+      gl_FragColor = (lB < lMin || lB > lMax) ? a : b;
+    }
+    `;
+
+    // ========================================================
+    // 3. INICIALIZACIÓN THREE.JS Y PIPELINE DE RENDER
+    // ========================================================
+    const container = document.getElementById("glob-container");
+    let renderer;
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: true,
+        premultipliedAlpha: true,
+        powerPreference: "high-performance",
+      });
+    } catch (err) {
+      console.error("[petrol-glob] WebGL context failed:", err);
+    }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP[DEFAULTS.quality]));
+    renderer.setClearColor(0x000000, 0);
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.autoClear = false;
+
+    const canvas = renderer.domElement;
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.display = "block";
+    canvas.style.opacity = "0";
+    canvas.style.transition = "opacity 900ms cubic-bezier(0.2, 0.7, 0.2, 1)";
+    container.appendChild(canvas);
+
+    let shown = false;
+    const reveal = () => {
+      if (shown) return;
+      shown = true;
+      requestAnimationFrame(() => { canvas.style.opacity = "1"; });
+    };
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    const globUniforms = {
+      uFlow: { value: 0 },
+      uFreq: { value: 0.62 },
+      uLump: { value: 0.05 },
+      uFold: { value: 0 },
+      uSharp: { value: 4 },
+      uWarp: { value: 0.5 },
+      uKey: { value: new THREE.Color(DEFAULT_LIGHT.key) },
+      uFill: { value: new THREE.Color(DEFAULT_LIGHT.fill) },
+      uRim: { value: new THREE.Color(DEFAULT_LIGHT.rim) },
+      uPalette: {
+        value: Array.from({ length: MAX_COLORS }, () => new THREE.Color(0, 0, 0)),
+      },
+      uCount: { value: DEFAULT_COLORS.length },
+      uFilm: { value: 0.95 },
+      uGloss: { value: 1 },
+      uEdge: { value: 0.5 },
+      uDepth: { value: 0.5 },
+      uEnergy: { value: 0 },
+    };
+
+    const globMat = new THREE.ShaderMaterial({
+      uniforms: globUniforms,
+      vertexShader: GLOB_VERT,
+      fragmentShader: GLOB_FRAG,
+      toneMapped: false,
+    });
+
+    let builtSegments = SEGMENTS[DEFAULTS.quality];
+    const glob = new THREE.Mesh(cubeSphere(builtSegments), globMat);
+    const lean = new THREE.Group();
+    lean.add(glob);
+    scene.add(lean);
+
+    // Escena plana para post-procesado (Bloom & FXAA)
+    const quadScene = new THREE.Scene();
+    const quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const quadGeo = new THREE.PlaneGeometry(2, 2);
+    const quad = new THREE.Mesh(quadGeo);
+    quad.frustumCulled = false;
+    quadScene.add(quad);
+
+    const passMat = (fragmentShader, uniforms, defines) =>
+      new THREE.ShaderMaterial({
+        uniforms,
+        ...(defines ? { defines } : {}),
+        vertexShader: QUAD_VERT,
+        fragmentShader,
+        depthTest: false,
+        depthWrite: false,
+        blending: THREE.NoBlending,
+        toneMapped: false,
+      });
+
+    const prefilterMat = passMat(PREFILTER_FRAG, {
+      tDiffuse: { value: null },
+      uTexel: { value: new THREE.Vector2() },
+      uThreshold: { value: BLOOM_THRESHOLD },
+      uKnee: { value: BLOOM_KNEE },
+    });
+
+    const downMat = passMat(DOWN_FRAG, {
+      tDiffuse: { value: null },
+      uTexel: { value: new THREE.Vector2() },
+    });
+
+    const upMat = passMat(UP_FRAG, {
+      tLow: { value: null },
+      tCur: { value: null },
+      uLowTexel: { value: new THREE.Vector2() },
+      uLowWeight: { value: 1 },
+      uCurWeight: { value: 1 },
+    });
+
+    let bloomRadius = BLOOM_RADIUS;
+    const mipWeight = (i) => {
+      const factor = BLOOM_FACTORS[i];
+      return factor + (1.2 - factor - factor) * bloomRadius;
+    };
+
+    const outputMat = new THREE.ShaderMaterial({
+      uniforms: {
+        tBase: { value: null },
+        tBloom: { value: null },
+        uBloomTexel: { value: new THREE.Vector2(0.001, 0.001) },
+        uChroma: { value: CHROMA },
+        uBloomStrength: { value: BLOOM_STRENGTH },
+        uBg: { value: new THREE.Vector3(0, 0, 0) },
+        uBgAlpha: { value: 1 },
+        uExposure: { value: TONE_EXPOSURE },
+      },
+      vertexShader: QUAD_VERT,
+      fragmentShader: OUTPUT_FRAG,
+      depthTest: false,
+      depthWrite: false,
+      blending: THREE.NoBlending,
+    });
+
+    const fxaaMat = passMat(FXAA_FRAG, {
+      tDiffuse: { value: null },
+      uTexel: { value: new THREE.Vector2() },
+    });
+
+    const blit = (mat, target) => {
+      quad.material = mat;
+      renderer.setRenderTarget(target);
+      renderer.clear(true, false, false);
+      renderer.render(quadScene, quadCam);
+    };
+
+    const makeRT = (w, h, depth, samples = 0) =>
+      new THREE.WebGLRenderTarget(Math.max(1, w), Math.max(1, h), {
+        type: THREE.HalfFloatType,
+        format: THREE.RGBAFormat,
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        depthBuffer: depth,
+        stencilBuffer: false,
+        generateMipmaps: false,
+        samples,
+      });
+
+    const rtScene = makeRT(1, 1, true);
+    const rtOut = new THREE.WebGLRenderTarget(1, 1, {
+      type: THREE.UnsignedByteType,
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      depthBuffer: false,
+      stencilBuffer: false,
+      generateMipmaps: false,
+    });
+
+    const down = [];
+    const up = [];
+    for (let i = 0; i < N_MIPS; i++) {
+      down.push({ rt: makeRT(1, 1, false), w: 1, h: 1 });
+      if (i < N_MIPS - 1) up.push(makeRT(1, 1, false));
+    }
+
+    let sizeW = 0;
+    let sizeH = 0;
+    let aspect = 1;
+
+    const resize = () => {
+      const w = Math.max(1, window.innerWidth);
+      const h = Math.max(1, window.innerHeight);
+      if (w === sizeW && h === sizeH) return;
+      sizeW = w;
+      sizeH = h;
+      aspect = w / h;
+
+      renderer.setSize(w, h, false);
+      camera.aspect = aspect;
+      camera.updateProjectionMatrix();
+
+      const dpr = renderer.getPixelRatio();
+      const pw = Math.max(1, Math.round(w * dpr));
+      const ph = Math.max(1, Math.round(h * dpr));
+      rtScene.setSize(pw, ph);
+      rtOut.setSize(pw, ph);
+      fxaaMat.uniforms.uTexel.value.set(1 / pw, 1 / ph);
+
+      let resx = Math.max(1, Math.round(pw / 2));
+      let resy = Math.max(1, Math.round(ph / 2));
+      for (let i = 0; i < N_MIPS; i++) {
+        down[i].rt.setSize(resx, resy);
+        down[i].w = resx;
+        down[i].h = resy;
+        if (i < N_MIPS - 1) up[i].setSize(resx, resy);
+        resx = Math.max(1, Math.round(resx / 2));
+        resy = Math.max(1, Math.round(resy / 2));
+      }
+      outputMat.uniforms.uBloomTexel.value.set(1 / down[0].w, 1 / down[0].h);
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    // ========================================================
+    // 4. INTERACCIÓN DE PUNTERO / MOUSE
+    // ========================================================
+    const pointer = new THREE.Vector2(0, 0);
+    const lastPointer = new THREE.Vector2(0, 0);
+    let hasLast = false;
+    let over = false;
+    let stirred = 0;
+    let stirShown = 0;
+    let stirVel = 0;
+    let calmEnergy = 0;
+    const leanVel = { x: 0, y: 0 };
+
+    const onPointerMove = (e) => {
+      if (sizeW < 1 || sizeH < 1) return;
+      pointer.set((e.clientX / sizeW) * 2 - 1, -((e.clientY / sizeH) * 2 - 1));
+      if (hasLast) {
+        const travel = pointer.distanceTo(lastPointer);
+        const k = dial(DEFAULT_RESPONSE.stir, 0, 0.55, 1.6);
+        stirred = Math.min(1, stirred + travel * k);
+      }
+      lastPointer.copy(pointer);
+      hasLast = true;
+      over = true;
+    };
+
+    const onPointerLeave = () => {
+      over = false;
+      hasLast = false;
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave, { passive: true });
+
+    // Configurar parámetros iniciales de los Shaders
+    colorOf(DEFAULT_LIGHT.key, DEFAULT_LIGHT.key, globUniforms.uKey.value);
+    colorOf(DEFAULT_LIGHT.fill, DEFAULT_LIGHT.fill, globUniforms.uFill.value);
+    colorOf(DEFAULT_LIGHT.rim, DEFAULT_LIGHT.rim, globUniforms.uRim.value);
+
+    const pal = globUniforms.uPalette.value;
+    DEFAULT_COLORS.forEach((css, k) => colorOf(css, "#FFFFFF", pal[k]));
+    globUniforms.uCount.value = DEFAULT_COLORS.length;
+
+    const bgColor = new THREE.Color();
+    colorOf(DEFAULTS.background, DEFAULTS.background, bgColor);
+    const bgSRGB = { r: 0, g: 0, b: 0 };
+    bgColor.getRGB(bgSRGB, THREE.SRGBColorSpace);
+    outputMat.uniforms.uBg.value.set(bgSRGB.r, bgSRGB.g, bgSRGB.b);
+    outputMat.uniforms.uBgAlpha.value = alphaOf(DEFAULTS.background);
+
+    globUniforms.uFreq.value = dial(DEFAULT_SHAPE.detail, 0.3, 0.62, 1.5);
+    globUniforms.uFilm.value = dial(DEFAULT_FINISH.film, 0, 0.95, 1);
+    globUniforms.uGloss.value = dial(DEFAULT_FINISH.gloss, 0, 1, 2.2);
+    globUniforms.uEdge.value = dial(DEFAULT_FINISH.edge, 0, 0.5, 1);
+    globUniforms.uDepth.value = dial(DEFAULT_FINISH.depth, 0, 1, 3);
+
+    prefilterMat.uniforms.uThreshold.value = dial(DEFAULT_GLOW.threshold, 0.2, BLOOM_THRESHOLD, 3);
+    outputMat.uniforms.uBloomStrength.value = dial(DEFAULT_GLOW.strength, 0, BLOOM_STRENGTH, 3);
+    bloomRadius = dial(DEFAULT_GLOW.radius, 0, BLOOM_RADIUS, 1);
+
+    let flow = 0;
+    let breath = 0;
+    let spinY = 0.6;
+    let spinX = 0.35;
+    const leanTarget = new THREE.Euler();
+
+    const envelope = (phase) => {
+      let e = 0.5 - 0.5 * Math.cos(phase);
+      e = e * e * (3 - 2 * e);
+      e *= 0.82 + 0.18 * Math.sin(phase * 0.37 + 1.3);
+      return e;
+    };
+
+    const pose = (energy, calm = energy) => {
+      const peakLump = dial(DEFAULT_SHAPE.morph, 0, 0.24, 0.45);
+      const peakFold = dial(DEFAULT_SHAPE.folds, 0, 0.09, 0.22);
+      globUniforms.uLump.value = peakLump * (CALM_FLOOR + (1 - CALM_FLOOR) * energy);
+      globUniforms.uFold.value = peakFold * energy * energy;
+      globUniforms.uSharp.value = dial(DEFAULT_SHAPE.folds, 1, 4, 8);
+      globUniforms.uWarp.value = 0.2 + 0.35 * calm;
+      globUniforms.uFlow.value = flow;
+      globUniforms.uEnergy.value = energy;
+    };
+
+    const renderFrame = () => {
+      camera.position.z = cameraDistance(DEFAULTS.size, aspect);
+      renderer.setRenderTarget(rtScene);
+      renderer.clear(true, true, false);
+      renderer.render(scene, camera);
+
+      prefilterMat.uniforms.tDiffuse.value = rtScene.texture;
+      prefilterMat.uniforms.uTexel.value.set(1 / rtScene.width, 1 / rtScene.height);
+      blit(prefilterMat, down[0].rt);
+
+      for (let i = 1; i < N_MIPS; i++) {
+        const src = down[i - 1];
+        downMat.uniforms.tDiffuse.value = src.rt.texture;
+        downMat.uniforms.uTexel.value.set(1 / src.w, 1 / src.h);
+        blit(downMat, down[i].rt);
+      }
+
+      for (let i = N_MIPS - 2; i >= 0; i--) {
+        const deepest = i === N_MIPS - 2;
+        const low = down[i + 1];
+        upMat.uniforms.tLow.value = deepest ? low.rt.texture : up[i + 1].texture;
+        upMat.uniforms.uLowTexel.value.set(1 / low.w, 1 / low.h);
+        upMat.uniforms.uLowWeight.value = deepest ? mipWeight(i + 1) : 1;
+        upMat.uniforms.tCur.value = down[i].rt.texture;
+        upMat.uniforms.uCurWeight.value = mipWeight(i);
+        blit(upMat, up[i]);
+      }
+
+      outputMat.uniforms.tBase.value = rtScene.texture;
+      outputMat.uniforms.tBloom.value = up[0].texture;
+      blit(outputMat, rtOut);
+
+      fxaaMat.uniforms.tDiffuse.value = rtOut.texture;
+      blit(fxaaMat, null);
+    };
+
+    const clock = new THREE.Clock();
+    let last = 0;
+    let frameAvg = 1 / 60;
+    let lastAdapt = 0;
+
+    const loop = () => {
+      const t = clock.getElapsedTime();
+      const dt = Math.min(0.1, t - last);
+      last = t;
+
+      stirred *= Math.exp(-STIR_DECAY * dt);
+      {
+        const w = STIR_EASE;
+        stirVel += (w * w * (stirred - stirShown) - 2 * w * stirVel) * dt;
+        stirShown += stirVel * dt;
+        stirShown = Math.max(0, stirShown);
+      }
+
+      const speedMul = dial(DEFAULTS.speed, 0, 1, 2.8);
+      const period = dial(DEFAULT_SHAPE.rhythm, 22, 9, 3.5);
+      breath += ((dt * Math.PI * 2) / period) * Math.max(0.15, speedMul);
+      const energy = Math.min(1, envelope(breath) + stirShown);
+      calmEnergy += (energy - calmEnergy) * (1 - Math.exp(-WARP_EASE * dt));
+
+      flow += dt * speedMul * (0.55 + 1.45 * energy);
+
+      const spinMul = dial(DEFAULTS.spin, 0, 1, 3.2);
+      spinY += dt * SPIN_Y * spinMul;
+      spinX += dt * SPIN_X * spinMul;
+      glob.rotation.set(spinX, spinY, 0);
+
+      const tilt = dial(DEFAULT_RESPONSE.tilt, 0, 0.32, 0.9);
+      if (over) leanTarget.set(-pointer.y * tilt, pointer.x * tilt, 0);
+      else leanTarget.set(0, 0, 0);
+
+      const k = dial(DEFAULT_RESPONSE.follow, 0.6, 3.5, 12) * 1.6;
+      leanVel.x += (k * k * (leanTarget.x - lean.rotation.x) - 2 * k * leanVel.x) * dt;
+      leanVel.y += (k * k * (leanTarget.y - lean.rotation.y) - 2 * k * leanVel.y) * dt;
+      lean.rotation.x += leanVel.x * dt;
+      lean.rotation.y += leanVel.y * dt;
+
+      pose(energy, calmEnergy);
+      renderFrame();
+      reveal();
+
+      frameAvg += (dt - frameAvg) * 0.05;
+      if (t > ADAPT_AFTER && t - lastAdapt > ADAPT_EVERY) {
+        lastAdapt = t;
+        const ratio = renderer.getPixelRatio();
+        if (frameAvg > 1 / 48 && ratio > 1) {
+          renderer.setPixelRatio(Math.max(1, ratio - 0.25));
+          sizeW = 0;
+          sizeH = 0;
+          resize();
         }
-        function updateGallery() {
-            slideElements.forEach((slide, index) => {
-                if (index === currentIndex) { slide.className = 'slide-item active'; } 
-                else { slide.className = 'slide-item inactive'; }
-            });
-        }
-        document.getElementById('btn-next').onclick = () => { currentIndex = (currentIndex + 1) % images.length; updateGallery(); };
-        document.getElementById('btn-prev').onclick = () => { currentIndex = (currentIndex - 1 + images.length) % images.length; updateGallery(); };
-        document.addEventListener('DOMContentLoaded', initGallery);
-    </script>
+      }
+    };
 
-    <!-- SCRIPT GSAP: Entrada "Mechanical Flip" ACELERADA + Dispersión en Scroll -->
-    <script type="module">
-        import { gsap } from "https://esm.sh/gsap@3.12.5";
-        import { ScrollTrigger } from "https://esm.sh/gsap@3.12.5/ScrollTrigger";
-        gsap.registerPlugin(ScrollTrigger);
+    renderer.setAnimationLoop(loop);
 
-                function splitTextForFlip(el) {
-            function getTextNodes(node) {
-                let textNodes = [];
-                if (node.nodeType === Node.TEXT_NODE) {
-                    textNodes.push(node);
-                } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    if (!node.classList.contains('flip-word') && !node.classList.contains('flip-char')) {
-                        for (let child of node.childNodes) {
-                            textNodes = textNodes.concat(getTextNodes(child));
-                        }
-                    }
-                }
-                return textNodes;
-            }
+    // ========================================================
+    // 5. INTERACCIÓN DEL LOGOTIPO (FUSIÓN Y NAVEGACIÓN)
+    // ========================================================
+    const logoHero = document.getElementById("logo-hero");
+    const overlay = document.getElementById("transition-overlay");
+    let isTransitioning = false;
 
-            const textNodes = getTextNodes(el);
-            const chars = [];
+    function handleEnter() {
+      if (isTransitioning) return;
+      isTransitioning = true;
 
-            textNodes.forEach(node => {
-                if (!node.parentNode) return;
-                const text = node.textContent;
-                if (!text.trim()) {
-                    if (node.previousSibling && node.nextSibling) {
-                        const spaceNode = document.createTextNode(' ');
-                        node.parentNode.replaceChild(spaceNode, node);
-                    } else {
-                        node.parentNode.removeChild(node);
-                    }
-                    return;
-                }
+      // 1. Unir las partes del logotipo (LOGOPARTE1 + LOGOPARTE2 -> LOGO-UNIDO)
+      logoHero.classList.add("merged");
 
-                const hasLeadingSpace = /^\s/.test(text);
-                const hasTrailingSpace = /\s$/.test(text);
-                const words = text.trim().split(/\s+/);
-                const frag = document.createDocumentFragment();
+      // 2. Transición suave de salida tras completarse la animación de fusión
+      setTimeout(() => {
+        overlay.classList.add("active");
+        setTimeout(() => {
+          window.location.assign("intro2.html");
+        }, 450);
+      }, 750);
+    }
 
-                if (hasLeadingSpace && node.previousSibling) {
-                    frag.appendChild(document.createTextNode(' '));
-                }
-
-                words.forEach((word, wordIdx) => {
-                    if (wordIdx > 0) {
-                        frag.appendChild(document.createTextNode(' '));
-                    }
-                    const wordSpan = document.createElement('span');
-                    wordSpan.className = 'flip-word';
-
-                    for (let i = 0; i < word.length; i++) {
-                        const charSpan = document.createElement('span');
-                        charSpan.className = 'flip-char';
-                        charSpan.textContent = word[i];
-                        wordSpan.appendChild(charSpan);
-                        chars.push(charSpan);
-                    }
-                    frag.appendChild(wordSpan);
-                });
-
-                if (hasTrailingSpace && node.nextSibling) {
-                    frag.appendChild(document.createTextNode(' '));
-                }
-
-                node.parentNode.replaceChild(frag, node);
-            });
-
-            return chars;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // ANIMACIÓN DE ENTRADA (Mechanical Flip) ACELERADA
-            const allElementsToFlip = document.querySelectorAll('[data-flip]');
-            let allAnimatedChars = [];
-
-            allElementsToFlip.forEach(container => {
-                const textHolders = container.querySelectorAll('h1, h2, a, p, span.year, span.scroll-cue');
-                if(textHolders.length > 0) {
-                    textHolders.forEach(holder => {
-                        allAnimatedChars = allAnimatedChars.concat(splitTextForFlip(holder));
-                    });
-                } else {
-                    allAnimatedChars = allAnimatedChars.concat(splitTextForFlip(container));
-                }
-            });
-
-            gsap.from(allAnimatedChars, {
-                rotationX: -90,
-                opacity: 0,
-                transformOrigin: "50% 0%",
-                duration: 0.3, // ACELERADO: Antes era 0.6
-                stagger: 0.008, // ACELERADO: Las letras aparecen casi instantáneamente una tras otra
-                ease: "power2.out",
-                onComplete: () => {
-                    // DISPERSIÓN DE LETRAS VINCULADA AL SCROLL
-                    document.querySelectorAll('.fly-text').forEach((el) => {
-                        const charsToFly = el.querySelectorAll('.flip-char');
-                        const windAngle = parseFloat(el.dataset.windAngle) || 0;
-                        const windStrength = parseFloat(el.dataset.windStrength) || 150;
-                        const scatter = parseFloat(el.dataset.scatter) || 100;
-                        const maxRot = parseFloat(el.dataset.maxRot) || 180;
-                        
-                        const tl = gsap.timeline({ paused: true });
-
-                        charsToFly.forEach((char) => {
-                            const angleRad = (windAngle + (Math.random()*40 - 20)) * Math.PI / 180;
-                            const dist = windStrength * (0.5 + Math.random() * 0.5);
-                            const dx = Math.cos(angleRad) * dist + (Math.random() - 0.5) * scatter;
-                            const dy = -Math.sin(angleRad) * dist + (Math.random() - 0.5) * scatter;
-                            const rot = (Math.random() - 0.5) * maxRot;
-                            
-                            const scatteredState = { x: dx, y: dy, rotationZ: rot, opacity: 0, scale: 0.3 };
-                            const naturalState = { x: 0, y: 0, rotationZ: 0, opacity: 1, scale: 1 };
-
-                            tl.fromTo(char, naturalState, { ...scatteredState, duration: 1, ease: "power2.in" }, Math.random() * 0.5);
-                        });
-
-                        ScrollTrigger.create({
-                            trigger: el, 
-                            scroller: "#sidebar",
-                            start: "top 80%", 
-                            end: "bottom 30%",
-                            scrub: 1.5, 
-                            animation: tl
-                        });
-                    });
-                }
-            });
-            
-            // ANIMACIÓN DE ENTRADA PARA LA IMAGEN DE LA GALERÍA
-            gsap.from(".slide-item.active img", {
-                scale: 1.2,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power2.out",
-                delay: 0.3 // Reduje un poco el delay para acompañar la nueva velocidad del texto
-            });
-            
-        });
-    </script>
+    logoHero.addEventListener("click", handleEnter);
+    logoHero.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleEnter();
+      }
+    });
+  </script>
 </body>
 </html>
