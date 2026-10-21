@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrada Roca - Nichole Artist</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: background-color 0.15s ease-out; 
+    }
+
+    body.white-transition {
+      background-color: #ffffff !important;
+    }
+
+    .video-container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ENVOLTORIO PARA ANIMACIÓN FLUIDA */
+    .video-wrapper {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      will-change: transform;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      perspective: 1000px; 
+    }
+
+    video {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100vh;
+      width: 100vw;
+      object-fit: cover;
+      object-position: center center; 
+    }
+
+    #vid-entrada { 
+      z-index: 1; 
+      opacity: 1; 
+    }
+    
+    #vid-click { 
+      z-index: 2; 
+      opacity: 0; 
+      transition: opacity 0.8s ease-in-out; 
+    }
+
+    /* ANIMACIÓN CSS DE LEVITACIÓN */
+    @keyframes levitate {
+      0% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -12px, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+
+    .is-levitating {
+      animation: levitate 1.8s ease-in-out infinite; 
+    }
+
+    /* ZONA DE CLIC */
+    #click-zone {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 350px;  
+      height: 350px;
+      z-index: 10;   
+      border-radius: 50%;
+      pointer-events: none; 
+      touch-action: manipulation; 
+    }
+
+    #click-zone.active {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-container" id="main-container">
+    <div class="video-wrapper" id="video-wrapper">
+      <video id="vid-entrada" src="images/entrada1.mp4" preload="auto" autoplay muted playsinline></video>
+      <video id="vid-click" src="images/accion1.mp4" preload="auto" muted playsinline></video>
+    </div>
+    
+    <div id="click-zone"></div>
+  </div>
+
+  <script>
+    const vidEntrada = document.getElementById('vid-entrada');
+    const vidClick = document.getElementById('vid-click');
+    const mainContainer = document.getElementById('main-container');
+    const videoWrapper = document.getElementById('video-wrapper');
+    const clickZone = document.getElementById('click-zone');
+
+    const recorteInicio = 1.5; 
+    
+    vidEntrada.playbackRate = 2.0; 
+    vidClick.playbackRate = 1.0;    
+
+    vidEntrada.addEventListener('loadedmetadata', () => {
+        vidEntrada.currentTime = recorteInicio;
+    });
+
+    let isIdle = false;
+    let actionTriggered = false;
+    let redirecting = false;
+
+    function startLevitation() {
+      if (isIdle) return;
+      isIdle = true;
+
+      vidEntrada.pause(); 
+      videoWrapper.classList.add('is-levitating');
+      clickZone.classList.add('active');
+    }
+
+    vidEntrada.addEventListener('timeupdate', () => {
+      if (vidEntrada.duration > 0 && vidEntrada.currentTime >= (vidEntrada.duration - 0.15)) {
+        startLevitation();
+      }
+    });
+    vidEntrada.addEventListener('ended', startLevitation);
+
+    clickZone.addEventListener('pointerdown', (e) => {
+      e.preventDefault(); 
+      if (actionTriggered) return;
+      actionTriggered = true;
+      
+      clickZone.classList.remove('active');
+      videoWrapper.style.animationPlayState = 'paused';
+
+      vidClick.currentTime = 0; 
+      vidClick.play();
+      vidClick.style.opacity = "1";
+    });
+
+    vidClick.addEventListener('timeupdate', () => {
+      if (!redirecting && vidClick.duration > 0 && vidClick.currentTime >= (vidClick.duration - 0.1)) {
+        redirecting = true;
+        vidClick.pause(); 
+        
+        document.body.classList.add('white-transition');
+        mainContainer.style.transition = "opacity 0.15s ease-out";
+        mainContainer.style.opacity = "0";
+        
+        setTimeout(() => {
+          window.location.assign('intro2.html');
+        }, 150);
+      }
+    });
+
+    vidClick.addEventListener('ended', () => {
+      if (!redirecting) {
+        redirecting = true;
+        document.body.classList.add('white-transition');
+        mainContainer.style.opacity = "0";
+        setTimeout(() => { window.location.assign('intro2.html'); }, 150);
+      }
+    });
+  </script>
+</body>
+</html>
