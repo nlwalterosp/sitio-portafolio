@@ -124,15 +124,26 @@
         }
         
         .dropdown-toggle:hover { color: #000; }
-        .dropdown-toggle.active { 
-            color: #000; 
+        .dropdown-toggle.active,
+        .nav-menu a.active { 
+            color: #000 !important; 
             font-weight: bold; 
             text-decoration: underline; 
             text-underline-offset: 4px;
         }
         
-        .arrow { font-size: 9px; color: #aaa; transition: transform 0.3s ease; }
+        .arrow { 
+            font-size: 9px; 
+            color: #aaa; 
+            transition: transform 0.3s ease; 
+            display: inline-block;
+            text-decoration: none !important;
+        }
         .arrow.open { transform: rotate(180deg); }
+        .dropdown-toggle .arrow {
+            display: inline-block;
+            text-decoration: none !important;
+        }
 
         .submenu {
             padding: 0 0 0 15px !important;
@@ -202,6 +213,11 @@
             margin-top: 0;
             margin-bottom: 30px;
             text-align: justify; 
+            text-justify: inter-word;
+            text-align-last: left;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
         }
 
         /* =========================================
@@ -271,11 +287,23 @@
             line-height: 1.6; 
             color: #111; 
             margin-bottom: 25px; 
+            text-align: justify;
+            text-justify: inter-word;
+            text-align-last: left;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
         }
-        .list-section .year { font-family: "Inter", sans-serif; font-weight: 800; display: block; margin-bottom: 5px; }
+        .list-section .year { font-family: "Inter", sans-serif; font-weight: 800; display: block; margin-bottom: 5px; text-align: left; }
+        .list-section strong { text-align: left; display: inline-block; }
 
         /* Clases para animación 3D */
-        .flip-container { perspective: 800px; display: inline-block; }
+        .flip-container { perspective: 800px; }
+        .flip-word {
+            display: inline-block;
+            white-space: nowrap;
+            transform-style: preserve-3d;
+        }
         .flip-char { 
             display: inline-block; 
             will-change: transform, opacity; 
@@ -297,7 +325,7 @@
                 <nav class="nav-menu">
                     <ul class="flip-container" data-flip>
                         <li>
-                            <a href="#" class="dropdown-toggle active">ARTE <span class="arrow">▼</span></a>
+                            <a href="#" class="dropdown-toggle">ARTE <span class="arrow">▼</span></a>
                             <ul class="submenu">
                                 <li><a href="strain-forms.html">STRAIN FORMS OF UNIVERSE</a></li>
                                 <li><a href="huygens.html">PRINCIPIO DE HUYGENS</a></li>
@@ -338,7 +366,7 @@
                         </li>
 
                         <br>
-                        <li><a href="bio.html" style="font-weight: 500;">BIO</a></li>
+                        <li><a href="bio.html" class="active">BIO</a></li>
                         <br><br>
                         <li><a href="intro.html" style="color: #999; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; text-transform: none;">&#8592; INICIO</a></li>
                         <li><a href="intro2.html" style="color: #333; font-weight: bold; font-size: 0.85em; display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; text-transform: none;">&#8592; MENÚ</a></li>
@@ -561,31 +589,77 @@
     <script type="module">
         import { gsap } from "https://esm.sh/gsap@3.12.5";
 
-        // Función SEGURA de animación
+        // Función SEGURA de animación (sin cortar palabras ni saltos erráticos)
         function splitTextForFlip(el) {
-            const textNodes = Array.from(el.childNodes).filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '');
+            function getTextNodes(node) {
+                let textNodes = [];
+                if (node.nodeType === Node.TEXT_NODE) {
+                    textNodes.push(node);
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (!node.classList.contains('flip-word') && !node.classList.contains('flip-char')) {
+                        for (let child of node.childNodes) {
+                            textNodes = textNodes.concat(getTextNodes(child));
+                        }
+                    }
+                }
+                return textNodes;
+            }
+
+            const textNodes = getTextNodes(el);
             const chars = [];
-            
+
             textNodes.forEach(node => {
-                const wrapper = document.createElement('span');
-                wrapper.className = 'flip-container';
-                
-                node.textContent.split('').forEach(char => {
-                    const span = document.createElement('span');
-                    span.className = 'flip-char';
-                    span.innerHTML = char === ' ' ? '&nbsp;' : char;
-                    wrapper.appendChild(span);
-                    chars.push(span);
+                if (!node.parentNode) return;
+                const text = node.textContent;
+                if (!text.trim()) {
+                    if (node.previousSibling && node.nextSibling) {
+                        const spaceNode = document.createTextNode(' ');
+                        node.parentNode.replaceChild(spaceNode, node);
+                    } else {
+                        node.parentNode.removeChild(node);
+                    }
+                    return;
+                }
+
+                const hasLeadingSpace = /^\s/.test(text);
+                const hasTrailingSpace = /\s$/.test(text);
+                const words = text.trim().split(/\s+/);
+                const frag = document.createDocumentFragment();
+
+                if (hasLeadingSpace && node.previousSibling) {
+                    frag.appendChild(document.createTextNode(' '));
+                }
+
+                words.forEach((word, wordIdx) => {
+                    if (wordIdx > 0) {
+                        frag.appendChild(document.createTextNode(' '));
+                    }
+                    const wordSpan = document.createElement('span');
+                    wordSpan.className = 'flip-word';
+
+                    for (let i = 0; i < word.length; i++) {
+                        const charSpan = document.createElement('span');
+                        charSpan.className = 'flip-char';
+                        charSpan.textContent = word[i];
+                        wordSpan.appendChild(charSpan);
+                        chars.push(charSpan);
+                    }
+                    frag.appendChild(wordSpan);
                 });
-                
-                el.replaceChild(wrapper, node);
+
+                if (hasTrailingSpace && node.nextSibling) {
+                    frag.appendChild(document.createTextNode(' '));
+                }
+
+                node.parentNode.replaceChild(frag, node);
             });
+
             return chars;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             
-            // ANIMACIÓN RÁPIDA DE ENTRADA (0.3s)
+            // ANIMACIÓN RÁPIDA DE ENTRADA (Mechanical Flip)
             const elementsToAnimate = document.querySelectorAll('.brand h2, .nav-menu a, .name-title, .text-box p, .list-section h3, .list-section li');
             let allAnimatedChars = [];
 
@@ -599,7 +673,7 @@
                     opacity: 0,
                     transformOrigin: "50% 0%",
                     duration: 0.3,
-                    stagger: 0.005, 
+                    stagger: { amount: 0.35 }, 
                     ease: "power2.out"
                 });
             }

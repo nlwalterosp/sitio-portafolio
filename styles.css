@@ -187,3 +187,24 @@ span.space {
 .fade-out {
   opacity: 0;
 }
+
+
+/* Soporte global para palabras completas, flechas y justificación */
+.flip-word {
+  display: inline-block;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+}
+.flip-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+.arrow {
+  display: inline-block;
+  text-decoration: none !important;
+}
+.dropdown-toggle .arrow {
+  display: inline-block;
+  text-decoration: none !important;
+}
