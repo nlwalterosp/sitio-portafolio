@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Canto del Quetzal | Experiencia Parallax 3D</title>
+    <title>El Canto del Quetzal | Landing Page Parallax 3D</title>
     
-    <!-- Tipografías del portafolio -->
+    <!-- Tipografías oficiales -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ==========================================================
+           1. RESET Y CONFIGURACIÓN BASE
+           ========================================================== */
         :root {
-            --cyan-glow: #00f2fe;
-            --cyan-dim: rgba(0, 242, 254, 0.45);
-            --cyan-bg: rgba(10, 26, 38, 0.72);
+            --cyan-neon: #00f2fe;
+            --cyan-glow: rgba(0, 242, 254, 0.45);
+            --cyan-glass: rgba(12, 26, 38, 0.82);
             --sand-header: #ede6d3;
             --sand-text: #2c2923;
-            --orange-card: #f26829;
+            --canyon-dark: #0d141c;
             --font-display: "Inter Tight", sans-serif;
             --font-body: "Inter", sans-serif;
         }
@@ -28,22 +31,39 @@
             padding: 0;
         }
 
-        html, body {
-            width: 100%;
-            min-height: 100%;
-            background-color: #0c1219;
-            color: #fff;
-            font-family: var(--font-body);
-            overflow-x: hidden;
+        html {
             scroll-behavior: smooth;
+            background-color: var(--canyon-dark);
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #090e14; }
-        ::-webkit-scrollbar-thumb { background: #00f2fe44; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f2fe88; }
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--canyon-dark);
+            color: #ffffff;
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-        /* HEADER ORGÁNICO SUPERIOR */
+        /* Scrollbar estilizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090e14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00f2fe55;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2feaa;
+        }
+
+        /* ==========================================================
+           2. HEADER ORGÁNICO SUPERIOR (ESTILO REFERENCIA)
+           ========================================================== */
         .site-header {
             position: fixed;
             top: 0;
@@ -63,7 +83,7 @@
             background: var(--sand-header);
             border-bottom-left-radius: 45% 25px;
             border-bottom-right-radius: 45% 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
             z-index: 1;
         }
 
@@ -71,7 +91,7 @@
             position: relative;
             z-index: 2;
             pointer-events: auto;
-            max-width: 1400px;
+            max-width: 1440px;
             margin: 0 auto;
             padding: 14px 40px;
             display: flex;
@@ -82,7 +102,7 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
             color: var(--sand-text);
         }
@@ -91,6 +111,11 @@
             height: 42px;
             width: auto;
             object-fit: contain;
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
         }
 
         .brand-title h1 {
@@ -116,7 +141,7 @@
         .main-nav {
             display: flex;
             align-items: center;
-            gap: 26px;
+            gap: 24px;
         }
 
         .main-nav a {
@@ -125,30 +150,32 @@
             font-size: 0.85rem;
             font-weight: 700;
             color: #444037;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             transition: all 0.25s ease;
         }
 
         .main-nav a:hover {
             color: #0b2216;
-            background: rgba(0, 0, 0, 0.06);
+            background: rgba(0, 0, 0, 0.08);
             transform: translateY(-1px);
         }
 
         .main-nav a.btn-back {
             background: #1a4231;
-            color: #fff;
+            color: #ffffff;
             padding: 8px 18px;
         }
 
         .main-nav a.btn-back:hover {
-            background: #000;
-            color: #00f2fe;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            background: #000000;
+            color: var(--cyan-neon);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
         }
 
-        /* HUD LATERAL DE PROFUNDIDAD */
+        /* ==========================================================
+           3. HUD LATERAL DE PROFUNDIDAD (PROGRESS TRACKER)
+           ========================================================== */
         .depth-meter {
             position: fixed;
             right: 28px;
@@ -166,7 +193,7 @@
             position: relative;
             width: 2px;
             height: 240px;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 2px;
             overflow: hidden;
             margin-right: 12px;
@@ -178,8 +205,8 @@
             left: 0;
             width: 100%;
             height: 0%;
-            background: linear-gradient(180deg, var(--cyan-glow), #00a8ff);
-            box-shadow: 0 0 12px var(--cyan-glow);
+            background: linear-gradient(180deg, var(--cyan-neon), #00a8ff);
+            box-shadow: 0 0 12px var(--cyan-neon);
             transition: height 0.1s ease-out;
         }
 
@@ -206,159 +233,210 @@
             transition: all 0.3s ease;
         }
 
-        .depth-node:hover, .depth-node.active {
-            color: var(--cyan-glow);
-            text-shadow: 0 0 8px var(--cyan-glow);
+        .depth-node:hover,
+        .depth-node.active {
+            color: var(--cyan-neon);
+            text-shadow: 0 0 8px var(--cyan-neon);
         }
 
-        .depth-node:hover .dot, .depth-node.active .dot {
-            background: var(--cyan-glow);
-            box-shadow: 0 0 10px var(--cyan-glow);
+        .depth-node:hover .dot,
+        .depth-node.active .dot {
+            background: var(--cyan-neon);
+            box-shadow: 0 0 10px var(--cyan-neon);
             transform: scale(1.6);
         }
 
-        /* ESCENARIO DEL PARALLAX 3D */
-        .parallax-viewport {
+        /* ==========================================================
+           4. ESCENARIO VERTICAL DE LA LANDING PAGE
+           ========================================================== */
+        .landing-container {
             position: relative;
             width: 100%;
-            height: 5400px;
-            overflow: hidden;
-            perspective: 1200px;
-            perspective-origin: center center;
+            min-height: 5200px;
+            background: linear-gradient(180deg, #99b6c4 0%, #172430 800px, #0f1821 2200px, #0c1219 4000px, #090e14 100%);
+            overflow: visible;
         }
 
-        .parallax-stage {
-            position: sticky;
-            top: 0;
-            left: 0;
+        /* Lienzo central con el ancho de la ilustración de referencia */
+        .canyon-canvas {
+            position: relative;
             width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            transform-style: preserve-3d;
+            max-width: 1360px;
+            height: 5200px;
+            margin: 0 auto;
+            overflow: visible;
         }
 
-        /* REGLA PRINCIPAL: position: absolute y z-index */
-        .parallax-layer {
+        /* Capas base usando position: absolute y z-index */
+        .layer {
             position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 1600px;
-            height: 100%;
             pointer-events: none;
             will-change: transform;
-            transform-origin: center center;
+            transition: transform 0.08s ease-out;
         }
 
-        .parallax-layer img {
+        .layer img {
             width: 100%;
             height: auto;
             display: block;
             user-select: none;
         }
 
-        /* CAPAS INDIVIDUALES */
-        .layer-sky { z-index: 1; top: -50px; max-width: 100%; }
-        .layer-sky img { width: 100%; height: 120vh; object-fit: cover; }
-        .layer-mountains { z-index: 2; top: 15vh; opacity: 0.9; }
-        .layer-temples { z-index: 3; top: 22vh; }
-        .layer-waterfall {
-            z-index: 4;
-            top: 30vh;
+        .center-x {
             left: 50%;
-            width: 55%;
-            max-width: 820px;
-            mix-blend-mode: screen;
-            filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.35));
-        }
-        .layer-midground-rocks { z-index: 5; top: 10vh; }
-        .layer-hero-princess {
-            z-index: 6;
-            top: 12vh;
-            max-width: 1100px;
-            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
-        }
-        .layer-interactive-hud {
-            z-index: 7;
-            width: 100%;
-            max-width: 1440px;
-            pointer-events: auto;
-        }
-        .layer-foreground-rocks {
-            z-index: 10;
-            top: 5vh;
-            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.85));
+            transform: translateX(-50%);
         }
 
-        /* TARJETAS HUD FLOTANTES */
+        /* ==========================================================
+           5. APILAMIENTO EXACTO DE CAPAS DEL PAISAJE (Z-INDEX)
+           ========================================================== */
+
+        /* 1. Montañas del fondo (Hero superior) */
+        #layer-mountains {
+            top: 60px;
+            width: 100%;
+            max-width: 1360px;
+            z-index: 2;
+            opacity: 0.95;
+        }
+
+        /* 2. Templos Mayas y Tanque mecha en la cumbre */
+        #layer-temples {
+            top: 250px;
+            width: 100%;
+            max-width: 1300px;
+            z-index: 3;
+            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
+        }
+
+        /* 3. Princesa Ixk'uk sentada sobre el mecha */
+        #layer-princess-hero {
+            top: 140px;
+            width: 820px;
+            max-width: 90%;
+            z-index: 5;
+            filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.75));
+        }
+
+        /* 4. Paredes rocosas de entrada al cañón (watchtowers) */
+        #layer-canyon-rim {
+            top: 380px;
+            width: 100%;
+            max-width: 1340px;
+            z-index: 4;
+            opacity: 0.98;
+        }
+
+        /* 5. FONDO COMPLETO DEL CAÑÓN Y LA CASCADA (Se extiende a lo largo de toda la página) */
+        #layer-canyon-stream {
+            top: 760px;
+            width: 100%;
+            max-width: 1240px;
+            z-index: 1; /* Fondo continuo que evita cualquier espacio vacío */
+            filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.8));
+        }
+
+        /* 6. Cascada en cañón entre rocas (Capa superior de agua) */
+        #layer-waterfall-drop {
+            top: 1020px;
+            width: 580px;
+            z-index: 3;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.45));
+        }
+
+        /* 7. Cavernas y lagunas intermedias del segundo plano */
+        #layer-midground-caverns {
+            top: 2320px;
+            width: 100%;
+            max-width: 1220px;
+            z-index: 4;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
+        }
+
+        /* 8. Primer plano frontal con estatua gigante y río inferior */
+        #layer-foreground-rocks {
+            top: 3180px;
+            width: 100%;
+            max-width: 1280px;
+            z-index: 8;
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.95));
+        }
+
+        /* ==========================================================
+           6. TARJETAS HUD FLOTANTES (ORGANIZACIÓN CRONOLÓGICA DIAPO 1, 2, 3, 4)
+           ========================================================== */
         .hud-card {
             position: absolute;
-            background: var(--cyan-bg);
-            border: 1.5px solid var(--cyan-dim);
+            background: var(--cyan-glass);
+            border: 1.5px solid var(--cyan-glow);
             border-radius: 22px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.65), 0 0 30px rgba(0, 242, 254, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 35px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 242, 254, 0.08);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             overflow: hidden;
             pointer-events: auto;
             cursor: pointer;
+            z-index: 7;
             transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
         }
 
         .hud-card:hover {
             transform: translateY(-8px) scale(1.02);
-            border-color: var(--cyan-glow);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 45px rgba(0, 242, 254, 0.45);
+            border-color: var(--cyan-neon);
+            box-shadow: 0 30px 65px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 242, 254, 0.5);
         }
 
-        .hud-card img { width: 100%; height: auto; display: block; border-radius: 18px; }
-
-        .hud-accent-lines { position: absolute; display: flex; gap: 4px; pointer-events: none; }
-        .hud-accent-lines span { width: 24px; height: 3px; background: var(--cyan-glow); transform: skewX(-35deg); box-shadow: 0 0 8px var(--cyan-glow); }
-        .hud-chevrons { color: var(--cyan-glow); font-size: 0.85rem; letter-spacing: 3px; text-shadow: 0 0 8px var(--cyan-glow); }
-
-        #card-concept-art { top: 28%; right: 4%; width: 440px; padding: 12px; }
-        #card-mini-pose { top: 30%; left: 3%; width: 180px; padding: 8px; border-radius: 16px; }
-        #card-palette-gear { top: 42%; left: 2%; width: 460px; padding: 12px; }
-        #card-lore-seal { top: 40%; right: 3%; width: 420px; padding: 12px; }
-
-        .holo-wireframe-cluster {
-            position: absolute;
-            top: 60%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 24px;
-            align-items: flex-end;
-            pointer-events: auto;
+        .hud-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 18px;
         }
 
-        .holo-panel {
-            position: relative;
-            width: 170px;
-            background: rgba(0, 242, 254, 0.06);
-            border: 1.5px solid rgba(0, 242, 254, 0.65);
-            border-radius: 14px;
+        /* 1. SECCIÓN SUPERIOR: DIAPOSITIVA 1 (Turnaround, swatches y UK) */
+        #card-diapo-1 {
+            top: 1140px;
+            right: 2%;
+            width: 480px;
+            padding: 12px;
+        }
+
+        /* Miniatura de pose dinámica (Lado izquierdo) */
+        #card-pose-thumbnail {
+            top: 1100px;
+            left: 3%;
+            width: 190px;
             padding: 8px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 16px;
         }
 
-        .holo-panel:hover { transform: translateY(-10px) scale(1.05); border-color: #fff; box-shadow: 0 0 35px var(--cyan-glow); }
-        .holo-panel .holo-tag { font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; color: var(--cyan-glow); letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
-        .holo-panel img { width: 100%; height: auto; mix-blend-mode: screen; filter: brightness(1.2) drop-shadow(0 0 10px rgba(0, 242, 254, 0.5)); }
+        /* 2. SECCIÓN MEDIA: DIAPOSITIVA 2 (Expresiones faciales y bocetos) */
+        #card-diapo-2 {
+            top: 1920px;
+            left: 2%;
+            width: 490px;
+            padding: 12px;
+        }
 
+        /* 3. SECCIÓN MEDIA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) */
+        #card-diapo-3 {
+            top: 2020px;
+            right: 2%;
+            width: 460px;
+            padding: 12px;
+        }
+
+        /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
         #speeder-water-rush {
             position: absolute;
-            top: 54%;
-            left: 48%;
+            top: 2900px;
+            left: 50%;
             transform: translateX(-50%);
-            width: 480px;
+            width: 500px;
+            z-index: 6;
             pointer-events: none;
-            filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.6));
+            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.65));
             animation: speederHover 4s ease-in-out infinite alternate;
         }
 
@@ -367,38 +445,105 @@
             100% { transform: translateX(-50%) translateY(-12px) rotate(1deg); }
         }
 
-        #card-dossier { top: 74%; right: 4%; width: 450px; padding: 12px; }
+        .holo-wireframe-cluster {
+            position: absolute;
+            top: 3120px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 22px;
+            align-items: flex-end;
+            z-index: 7;
+            pointer-events: auto;
+        }
+
+        .holo-panel {
+            position: relative;
+            width: 165px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1.5px solid rgba(0, 242, 254, 0.7);
+            border-radius: 14px;
+            padding: 8px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 242, 254, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .holo-panel:hover {
+            transform: translateY(-10px) scale(1.06);
+            border-color: #ffffff;
+            box-shadow: 0 0 40px var(--cyan-neon);
+        }
+
+        .holo-panel .holo-tag {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--cyan-neon);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 6px;
+            text-shadow: 0 0 8px var(--cyan-neon);
+        }
+
+        .holo-panel img {
+            width: 100%;
+            height: auto;
+            mix-blend-mode: screen;
+            filter: brightness(1.2) drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
+        }
+
+        /* 5. SECCIÓN INFERIOR: DIAPOSITIVA 4 (Ficha técnica Princesa Ixk'uk) */
+        #card-diapo-4 {
+            top: 3920px;
+            right: 2%;
+            width: 500px;
+            padding: 12px;
+            z-index: 9;
+        }
+
+        /* Tarjeta naranja: Render de estudio del speeder */
         #card-speeder-orange {
-            top: 84%;
-            left: 3%;
-            width: 430px;
+            top: 4260px;
+            left: 2%;
+            width: 440px;
             background: linear-gradient(135deg, #f26829 0%, #c9440c 100%);
             border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 26px;
             padding: 14px;
-            box-shadow: 0 20px 50px rgba(242, 104, 41, 0.45);
+            box-shadow: 0 20px 50px rgba(242, 104, 41, 0.5);
+            z-index: 9;
         }
 
+        /* Render 3D de la princesa en las ruinas */
         #render-nevera-ruins {
             position: absolute;
-            top: 84%;
+            top: 4300px;
             right: 12%;
-            width: 260px;
+            width: 280px;
+            z-index: 9;
             pointer-events: auto;
             cursor: pointer;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.85));
             transition: transform 0.4s ease;
         }
-        #render-nevera-ruins:hover { transform: scale(1.06) translateY(-5px); }
 
-        /* LIGHTBOX MODAL */
+        #render-nevera-ruins:hover {
+            transform: scale(1.06) translateY(-5px);
+        }
+
+        /* ==========================================================
+           7. MODAL LIGHTBOX
+           ========================================================== */
         .lightbox-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(5, 12, 18, 0.92);
+            background: rgba(5, 12, 18, 0.94);
             backdrop-filter: blur(16px);
             z-index: 5000;
             display: flex;
@@ -409,99 +554,137 @@
             transition: opacity 0.3s ease;
         }
 
-        .lightbox-modal.active { opacity: 1; pointer-events: auto; }
+        .lightbox-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .lightbox-container {
             position: relative;
             max-width: 90vw;
             max-height: 88vh;
-            border: 2px solid var(--cyan-glow);
+            border: 2px solid var(--cyan-neon);
             border-radius: 20px;
-            padding: 10px;
-            background: rgba(10, 20, 30, 0.85);
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.4);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+            padding: 12px;
+            background: rgba(10, 20, 30, 0.9);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.45);
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .lightbox-modal.active .lightbox-container { transform: scale(1); }
-        .lightbox-img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 14px; display: block; }
-        .lightbox-caption { margin-top: 10px; text-align: center; font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan-glow); }
+
+        .lightbox-modal.active .lightbox-container {
+            transform: scale(1);
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .lightbox-caption {
+            margin-top: 10px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--cyan-neon);
+            letter-spacing: 1px;
+        }
+
         .lightbox-close {
             position: absolute;
             top: -18px;
             right: -18px;
             width: 40px;
             height: 40px;
-            background: var(--cyan-glow);
+            background: var(--cyan-neon);
             color: #000;
             border: none;
             border-radius: 50%;
             font-size: 1.2rem;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 0 15px var(--cyan-glow);
+            box-shadow: 0 0 15px var(--cyan-neon);
+            transition: transform 0.2s ease, background 0.2s ease;
         }
 
-        .scroll-indicator {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.6);
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
+        .lightbox-close:hover {
+            transform: scale(1.15) rotate(90deg);
+            background: #ffffff;
         }
-        .scroll-mouse {
-            width: 22px;
-            height: 36px;
-            border: 2px solid var(--cyan-glow);
-            border-radius: 12px;
+
+        /* Footer de navegación final */
+        .site-footer {
             position: relative;
-        }
-        .scroll-wheel {
-            position: absolute;
-            top: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 8px;
-            background: var(--cyan-glow);
-            border-radius: 2px;
-            animation: mouseScroll 1.6s infinite ease-in-out;
-        }
-        @keyframes mouseScroll {
-            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-            80% { transform: translateX(-50%) translateY(14px); opacity: 0; }
-            100% { transform: translateX(-50%) translateY(0); opacity: 0; }
+            z-index: 100;
+            width: 100%;
+            padding: 80px 20px 100px;
+            text-align: center;
+            background: linear-gradient(180deg, transparent 0%, #060a0e 100%);
         }
 
+        .site-footer h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--cyan-neon);
+            border: 1.5px solid var(--cyan-neon);
+            padding: 10px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Ajustes responsive para laptops y pantallas medianas */
         @media (max-width: 1200px) {
-            .hud-card { width: 360px !important; }
-            #card-concept-art { top: 25%; right: 2%; }
-            #card-palette-gear { top: 40%; left: 1%; }
-            #card-lore-seal { top: 42%; right: 1%; }
-            .holo-panel { width: 130px; }
+            .hud-card { width: 400px !important; }
+            #card-diapo-1 { right: 1%; }
+            #card-diapo-2 { left: 1%; }
+            #card-diapo-3 { right: 1%; }
+            #card-diapo-4 { right: 1%; }
+            #card-speeder-orange { left: 1%; width: 380px; }
+            .holo-panel { width: 135px; }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
             .main-nav { display: none; }
             .depth-meter { display: none; }
-            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; }
-            .holo-wireframe-cluster { position: relative !important; margin: 40px auto !important; justify-content: center; }
+            .canyon-canvas { height: auto; display: flex; flex-direction: column; align-items: center; }
+            .layer { position: relative !important; top: auto !important; left: auto !important; transform: none !important; width: 100% !important; }
+            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; }
+            .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
+    <!-- 1. HEADER ORGÁNICO SUPERIOR -->
     <header class="site-header">
         <div class="header-curve-bg"></div>
         <div class="header-content">
@@ -514,10 +697,10 @@
             </a>
 
             <nav class="main-nav">
-                <a href="#cumbre" onclick="scrollToDepth(0)">Cumbre Maya</a>
-                <a href="#cascada" onclick="scrollToDepth(0.3)">Cascada</a>
-                <a href="#laguna" onclick="scrollToDepth(0.58)">Laguna 3D</a>
-                <a href="#santuario" onclick="scrollToDepth(0.85)">Santuario</a>
+                <a href="#cumbre" onclick="scrollToY(0)">Cumbre Maya</a>
+                <a href="#cascada" onclick="scrollToY(1150)">Cascada</a>
+                <a href="#laguna" onclick="scrollToY(2900)">Laguna 3D</a>
+                <a href="#santuario" onclick="scrollToY(3920)">Santuario</a>
                 <a href="Ilustracion.html">Ilustración</a>
                 <a href="bio.html">Bio</a>
                 <a href="index.html" class="btn-back">&#8592; Menú Principal</a>
@@ -525,129 +708,150 @@
         </div>
     </header>
 
+    <!-- 2. HUD LATERAL DE PROFUNDIDAD -->
     <aside class="depth-meter">
         <div class="depth-track">
             <div class="depth-fill" id="depthFill"></div>
         </div>
-        <button class="depth-node active" data-depth="0" onclick="scrollToDepth(0)">
+        <button class="depth-node active" onclick="scrollToY(0)">
             <span>01 // CUMBRE</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" data-depth="0.32" onclick="scrollToDepth(0.32)">
+        <button class="depth-node" onclick="scrollToY(1150)">
             <span>02 // CASCADA</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" data-depth="0.60" onclick="scrollToDepth(0.60)">
+        <button class="depth-node" onclick="scrollToY(2900)">
             <span>03 // LAGUNA HUD</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" data-depth="0.88" onclick="scrollToDepth(0.88)">
+        <button class="depth-node" onclick="scrollToY(3920)">
             <span>04 // SANTUARIO</span>
             <div class="dot"></div>
         </button>
     </aside>
 
-    <div class="scroll-indicator" id="scrollCue">
-        <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
-        <span>Haz Scroll para Explorar</span>
-    </div>
+    <!-- 3. CONTENEDOR PRINCIPAL DE LA LANDING PAGE -->
+    <main class="landing-container" id="landingContainer">
+        <div class="canyon-canvas">
 
-    <!-- ESCENARIO DEL PARALLAX 3D (CAPAS APILADAS) -->
-    <div class="parallax-viewport" id="parallaxViewport">
-        <div class="parallax-stage" id="parallaxStage">
+            <!-- ====================================================
+                 A. CAPAS DEL PAISAJE (STACK POSITION: ABSOLUTE & Z-INDEX)
+                 ==================================================== -->
 
-            <!-- Capa 1: Cielo y fondo -->
-            <div class="parallax-layer layer-sky" data-speed="0.12" data-depth-z="-200">
-                <img src="images/fondo3.png" alt="Cielo del Cañón">
-            </div>
-
-            <!-- Capa 2: Montañas del fondo -->
-            <div class="parallax-layer layer-mountains" data-speed="0.22" data-depth-z="-120">
+            <!-- Capa 1: Montañas del fondo en la cumbre -->
+            <div class="layer center-x" id="layer-mountains" data-parallax-speed="0.12">
                 <img src="images/montañas-del-fondo.png" alt="Montañas lejanas">
             </div>
 
-            <!-- Capa 3: Templos y pirámides mayas -->
-            <div class="parallax-layer layer-temples" data-speed="0.34" data-depth-z="-60">
+            <!-- Capa 2: Templos y mecha en la cumbre -->
+            <div class="layer center-x" id="layer-temples" data-parallax-speed="0.06">
                 <img src="images/edificios 3.png" alt="Templos Mayas">
             </div>
 
-            <!-- Capa 4: Cascada central -->
-            <div class="parallax-layer layer-waterfall" data-speed="0.52" data-depth-z="-20">
+            <!-- Capa 3: Princesa Ixk'uk sentada sobre el mecha -->
+            <div class="layer center-x" id="layer-princess-hero" data-parallax-speed="0.03">
+                <img src="images/princesa dibujo quetzal sin fondo.png" alt="Princesa Ixk'uk y Quetzal">
+            </div>
+
+            <!-- Capa 4: Entrada y watchtowers del cañón -->
+            <div class="layer center-x" id="layer-canyon-rim" data-parallax-speed="0.05">
+                <img src="images/fondo2.png" alt="Paredes superiores del cañón">
+            </div>
+
+            <!-- Capa 5: Fondo continuo del cañón y la cascada (Recorre todo el descenso) -->
+            <div class="layer center-x" id="layer-canyon-stream" data-parallax-speed="0.0">
+                <img src="images/fondo3.png" alt="Cañón y Cascada">
+            </div>
+
+            <!-- Capa 6: Caída superior de la cascada -->
+            <div class="layer center-x" id="layer-waterfall-drop" data-parallax-speed="-0.04">
                 <img src="images/Cascada en cañón entre rocas.png" alt="Cascada entre rocas">
             </div>
 
-            <!-- Capa 5: Segundo plano de rocas -->
-            <div class="parallax-layer layer-midground-rocks" data-speed="0.44" data-depth-z="0">
-                <img src="images/segundo_plano_cascada_transparente.png" alt="Paredes del cañón">
+            <!-- Capa 7: Cavernas y lagunas del segundo plano -->
+            <div class="layer center-x" id="layer-midground-caverns" data-parallax-speed="-0.03">
+                <img src="images/segundo_plano_cascada_transparente.png" alt="Cavernas intermedias">
             </div>
 
-            <!-- Capa 6: Princesa Ixk'uk y Espíritu de Quetzal -->
-            <div class="parallax-layer layer-hero-princess" data-speed="0.40" data-depth-z="40">
-                <img src="images/princesa dibujo quetzal sin fondo.png" alt="Princesa Ixk'uk">
-            </div>
-
-            <!-- Capa 7: Módulos interactivos HUD -->
-            <div class="parallax-layer layer-interactive-hud" data-speed="0.58" data-depth-z="80">
-
-                <div class="hud-card" id="card-concept-art" onclick="openLightbox('images/princesa-diapo1.png', 'Concept Art: Expresiones y Hoja de Modelo')">
-                    <div class="hud-chevrons">&gt;&gt;&gt;&gt;</div>
-                    <img src="images/princesa-diapo1.png" alt="Concept Art Expresiones">
-                </div>
-
-                <div class="hud-card" id="card-mini-pose" onclick="openLightbox('images/princesa dibujo3.png', 'Estudio de Poses Dinámicas')">
-                    <img src="images/princesa dibujo3.png" alt="Pose Princesa">
-                    <div class="hud-accent-lines" style="bottom: 8px; left: 10px;"><span></span><span></span><span></span></div>
-                </div>
-
-                <div class="hud-card" id="card-palette-gear" onclick="openLightbox('images/princesa-diapo2.png', 'Diseño de Vestuario, Colores y Accesorios')">
-                    <img src="images/princesa-diapo2.png" alt="Paleta de Color y Vestuario">
-                </div>
-
-                <div class="hud-card" id="card-lore-seal" onclick="openLightbox('images/princesa-diapo3.png', 'Sello del Quetzal y Lore de la Princesa Ixk\'uk')">
-                    <img src="images/princesa-diapo3.png" alt="Lore y Sello">
-                </div>
-
-                <div id="speeder-water-rush">
-                    <img src="images/render de moto5.png" alt="Speeder en el agua">
-                </div>
-
-                <div class="holo-wireframe-cluster">
-                    <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
-                        <div class="holo-tag">Front</div>
-                        <img src="images/render amiga1w.png" alt="Wireframe Frontal">
-                    </div>
-                    <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
-                        <div class="holo-tag">Back</div>
-                        <img src="images/render amiga2w.png" alt="Wireframe Posterior">
-                    </div>
-                    <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
-                        <div class="holo-tag">Side</div>
-                        <img src="images/render amiga3w.png" alt="Wireframe Lateral">
-                    </div>
-                </div>
-
-                <div class="hud-card" id="card-dossier" onclick="openLightbox('images/render princesa 2.png', 'Ficha Técnica // Renders de Personaje 3D')">
-                    <img src="images/render princesa 2.png" alt="Ficha Técnica Princesa">
-                </div>
-
-                <div class="hud-card" id="card-speeder-orange" onclick="openLightbox('images/render de moto6.png', 'Render de Estudio // Speeder Biomecánico')">
-                    <img src="images/render de moto6.png" alt="Studio Speeder Render">
-                </div>
-
-                <div id="render-nevera-ruins" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
-                    <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
-                </div>
-            </div>
-
-            <!-- Capa 8: Primer plano (Rocas frontales) -->
-            <div class="parallax-layer layer-foreground-rocks" data-speed="0.88" data-depth-z="140">
+            <!-- Capa 8: Primer plano frontal con estatua y río -->
+            <div class="layer center-x" id="layer-foreground-rocks" data-parallax-speed="-0.06">
                 <img src="images/primer_plano_cascada_transparente.png" alt="Rocas del primer plano">
             </div>
 
-        </div>
-    </div>
+            <!-- ====================================================
+                 B. CONTENIDO CRONOLÓGICO: DIAPOSITIVA 1, 2, 3 Y 4
+                 ==================================================== -->
 
-    <!-- LIGHTBOX MODAL -->
+            <!-- SECCIÓN 1: DIAPOSITIVA 1 (Turnaround, swatches y "UK") -->
+            <div class="hud-card" id="card-diapo-1" data-parallax-speed="0.04" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
+                <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
+            </div>
+
+            <div class="hud-card" id="card-pose-thumbnail" data-parallax-speed="0.05" onclick="openLightbox('images/princesa dibujo3.png', 'Estudio de Pose Dinámica en Roca')">
+                <img src="images/princesa dibujo3.png" alt="Pose Dinámica">
+            </div>
+
+            <!-- SECCIÓN 2: DIAPOSITIVA 2 (Expresiones faciales y diseño de vestuario) -->
+            <div class="hud-card" id="card-diapo-2" data-parallax-speed="0.04" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
+                <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
+            </div>
+
+            <!-- SECCIÓN 2: DIAPOSITIVA 3 (Medallón del Quetzal y Narrativa Lore) -->
+            <div class="hud-card" id="card-diapo-3" data-parallax-speed="0.04" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
+                <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
+            </div>
+
+            <!-- SECCIÓN 3: LAGUNA 3D Y BLUEPRINTS HOLOGRÁFICOS -->
+            <div id="speeder-water-rush">
+                <img src="images/render de moto5.png" alt="Speeder en el agua">
+            </div>
+
+            <div class="holo-wireframe-cluster" data-parallax-speed="0.02">
+                <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
+                    <div class="holo-tag">Front</div>
+                    <img src="images/render amiga1w.png" alt="Wireframe Frontal">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
+                    <div class="holo-tag">Back</div>
+                    <img src="images/render amiga2w.png" alt="Wireframe Posterior">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
+                    <div class="holo-tag">Side</div>
+                    <img src="images/render amiga3w.png" alt="Wireframe Lateral">
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: DIAPOSITIVA 4 (Ficha técnica "PRINCESA IXK´UK") -->
+            <div class="hud-card" id="card-diapo-4" data-parallax-speed="0.03" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
+                <img src="images/princesa-diapo4.png" alt="Princesa Diapositiva 4">
+            </div>
+
+            <!-- Render de estudio en tarjeta naranja -->
+            <div class="hud-card" id="card-speeder-orange" data-parallax-speed="0.03" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
+                <img src="images/render de moto6.png" alt="Speeder Studio Render">
+            </div>
+
+            <!-- Render de la princesa explorando las ruinas -->
+            <div id="render-nevera-ruins" data-parallax-speed="0.03" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
+                <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
+            </div>
+
+        </div>
+
+        <!-- FOOTER DE NAVEGACIÓN -->
+        <footer class="site-footer">
+            <h2>El Canto del Quetzal</h2>
+            <div class="footer-links">
+                <a href="#cumbre" onclick="scrollToY(0)">↑ Volver Arriba</a>
+                <a href="Ilustracion.html">Ilustración</a>
+                <a href="bio.html">Biografía</a>
+                <a href="index.html">Menú Principal</a>
+            </div>
+        </footer>
+    </main>
+
+    <!-- 4. MODAL LIGHTBOX INTERACTIVO -->
     <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox(event)">
         <div class="lightbox-container" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
@@ -656,96 +860,90 @@
         </div>
     </div>
 
-    <!-- SCRIPT PARALLAX 3D INTERACTIVO -->
+    <!-- ==========================================================
+       5. MOTOR JAVASCRIPT DEL PARALLAX 3D (NATURAL SCROLL + TILT)
+       ========================================================== -->
     <script>
-        const layers = document.querySelectorAll('.parallax-layer');
-        const viewport = document.getElementById('parallaxViewport');
+        const parallaxLayers = document.querySelectorAll('[data-parallax-speed]');
         const depthFill = document.getElementById('depthFill');
         const depthNodes = document.querySelectorAll('.depth-node');
-        const scrollCue = document.getElementById('scrollCue');
-        const stage = document.getElementById('parallaxStage');
+        const landingContainer = document.getElementById('landingContainer');
 
-        let currentScrollY = 0;
-        let targetScrollY = 0;
         let mouseX = 0;
         let mouseY = 0;
         let targetMouseX = 0;
         let targetMouseY = 0;
 
-        function getMaxScroll() {
-            return viewport.scrollHeight - window.innerHeight;
-        }
-
-        // Escuchador de scroll de ventana
-        window.addEventListener('scroll', () => {
-            targetScrollY = window.pageYOffset || document.documentElement.scrollTop;
-            if (targetScrollY > 100 && scrollCue) {
-                scrollCue.style.opacity = '0';
-            } else if (targetScrollY <= 100 && scrollCue) {
-                scrollCue.style.opacity = '1';
-            }
-        }, { passive: true });
-
-        // Escuchador de movimiento de cursor para perspectiva 3D
+        // Escuchar el movimiento del mouse para el efecto 3D horizontal interactivo
         window.addEventListener('mousemove', (e) => {
             const halfW = window.innerWidth / 2;
             const halfH = window.innerHeight / 2;
-            targetMouseX = (e.clientX - halfW) / halfW;
+            targetMouseX = (e.clientX - halfW) / halfW; // Rango -1 a 1
             targetMouseY = (e.clientY - halfH) / halfH;
         });
 
-        // Bucle de animación suave a 60/120 FPS
-        function animateParallax() {
-            currentScrollY += (targetScrollY - currentScrollY) * 0.085;
-            mouseX += (targetMouseX - mouseX) * 0.05;
-            mouseY += (targetMouseY - mouseY) * 0.05;
+        // BUCLE DE ANIMACIÓN FLUIDO (60/120 FPS con requestAnimationFrame)
+        function updateParallax() {
+            mouseX += (targetMouseX - mouseX) * 0.08;
+            mouseY += (targetMouseY - mouseY) * 0.08;
 
-            const maxScroll = getMaxScroll();
-            const scrollProgress = Math.min(Math.max(currentScrollY / (maxScroll || 1), 0), 1);
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const windowH = window.innerHeight;
+            const totalScroll = landingContainer.scrollHeight - windowH;
+            const progress = Math.min(Math.max(scrollY / (totalScroll || 1), 0), 1);
 
+            // Actualizar la barra lateral de profundidad
             if (depthFill) {
-                depthFill.style.height = `${scrollProgress * 100}%`;
+                depthFill.style.height = `${progress * 100}%`;
             }
 
-            depthNodes.forEach(node => {
-                const nodeDepth = parseFloat(node.getAttribute('data-depth'));
-                if (Math.abs(scrollProgress - nodeDepth) < 0.16) {
+            // Actualizar los puntos del HUD lateral según el scroll
+            const checkpoints = [0, 1150, 2900, 3920];
+            depthNodes.forEach((node, i) => {
+                const targetY = checkpoints[i];
+                if (Math.abs(scrollY - targetY) < 650) {
                     node.classList.add('active');
                 } else {
                     node.classList.remove('active');
                 }
             });
 
-            // Inclinación 3D del escenario según el ratón
-            const stageRotateX = -mouseY * 2.5;
-            const stageRotateY = mouseX * 3.5;
-            stage.style.transform = `rotateX(${stageRotateX}deg) rotateY(${stageRotateY}deg)`;
+            // PARALLAX FLUIDO Y CONTROLADO
+            parallaxLayers.forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-parallax-speed')) || 0;
+                if (speed === 0) return;
 
-            // Desplazamiento translateY individual por capa
-            layers.forEach(layer => {
-                const speed = parseFloat(layer.getAttribute('data-speed')) || 0.5;
-                const depthZ = parseFloat(layer.getAttribute('data-depth-z')) || 0;
+                const rect = el.getBoundingClientRect();
+                // Solo calcular para elementos cercanos a la pantalla para máximo rendimiento
+                if (rect.top < windowH + 300 && rect.bottom > -300) {
+                    // Desplazamiento relativo al centro de la pantalla (garantiza que jamás se mueva fuera de su sitio)
+                    const viewportCenterOffset = (windowH / 2) - rect.top;
+                    const translateY = viewportCenterOffset * speed;
+                    
+                    // Efecto de inclinación 3D del ratón
+                    const isCentered = el.classList.contains('center-x');
+                    const xBase = isCentered ? '-50%' : '0px';
+                    const mouseShiftX = (mouseX * speed * 45).toFixed(1);
 
-                const translateY = -currentScrollY * speed;
-                const mouseOffsetX = mouseX * (depthZ * 0.35);
-                const mouseOffsetY = mouseY * (depthZ * 0.2);
-
-                layer.style.transform = `translate3d(calc(-50% + ${mouseOffsetX.toFixed(2)}px), ${(translateY + mouseOffsetY).toFixed(2)}px, ${depthZ}px)`;
+                    el.style.transform = `translate3d(calc(${xBase} + ${mouseShiftX}px), ${translateY.toFixed(1)}px, 0)`;
+                }
             });
 
-            requestAnimationFrame(animateParallax);
+            requestAnimationFrame(updateParallax);
         }
 
-        requestAnimationFrame(animateParallax);
+        // Iniciar loop de renderizado
+        requestAnimationFrame(updateParallax);
 
-        function scrollToDepth(progress) {
-            const maxScroll = getMaxScroll();
+        // NAVEGACIÓN SUAVE POR PUNTOS DE PROFUNDIDAD
+        function scrollToY(y) {
             window.scrollTo({
-                top: maxScroll * progress,
+                top: y,
                 behavior: 'smooth'
             });
         }
 
+        // FUNCIONALIDAD LIGHTBOX (AMPLIAR ILUSTRACIONES)
         const modal = document.getElementById('lightboxModal');
         const modalImg = document.getElementById('lightboxImg');
         const modalCaption = document.getElementById('lightboxCaption');
@@ -758,7 +956,7 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function closeLightbox(e) {
+        function closeLightbox() {
             if (!modal) return;
             modal.classList.remove('active');
             document.body.style.overflow = '';
