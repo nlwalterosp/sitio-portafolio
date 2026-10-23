@@ -306,21 +306,20 @@
 
         /* CAPA 5 en diagrama: Cascada superior que baja desde el mecha hacia abajo */
         #layer-waterfall-drop {
-            top: 640px; /* Sube para conectar directamente bajo el mecha */
-            z-index: 4;
-            mix-blend-mode: screen;
-            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.45));
+            top: -380px; /* Sube para conectar directamente con las rocas y mecha sin hueco */
+            z-index: 5; /* Encima de la capa de rocas */
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
         }
 
-        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha (MÁS PEQUEÑA) */
+        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
-            top: 155px;
+            top: 290px; /* Mucho más abajo, sentada directamente sobre el techo del mecha/objeto */
             left: 50%;
             transform: translateX(-50%);
-            width: 440px; /* Redimensionada para encajar perfectamente sobre el tanque */
+            width: 440px;
             max-width: 32vw;
-            z-index: 5;
+            z-index: 6;
             pointer-events: none;
             will-change: transform;
             filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.8));
@@ -333,8 +332,8 @@
 
         /* FONDO COMPLETO DEL CAÑÓN (fondo3.png: columna vertebral continua) */
         #layer-canyon-stream {
-            top: 680px;
-            z-index: 2;
+            top: -160px; /* Alineado para fluir continuamente tras la cascada */
+            z-index: 4;
             opacity: 0.95;
             filter: drop-shadow(0 0 60px rgba(0, 0, 0, 0.85));
         }
@@ -342,7 +341,7 @@
         /* CAPA 6 en diagrama: Cavernas intermedias y lagunas (segundo plano) */
         #layer-midground-caverns {
             top: 2280px;
-            z-index: 6;
+            z-index: 7;
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.75));
         }
 
@@ -386,26 +385,26 @@
 
         /* 1. SECCIÓN SUPERIOR: DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK") */
         #card-diapo-1 {
-            top: 1160px;
+            top: 1100px;
             right: 4%;
             width: 480px;
             max-width: 36vw;
             padding: 12px;
         }
 
-        /* Miniatura de pose en roca (Izquierda) */
+        /* Miniatura de pose / render 3D (Izquierda) */
         #card-pose-thumbnail {
-            top: 1120px;
+            top: 1060px;
             left: 4%;
-            width: 190px;
-            max-width: 16vw;
+            width: 175px;
+            max-width: 14vw;
             padding: 8px;
             border-radius: 16px;
         }
 
         /* 2. SECCIÓN MEDIA: DIAPOSITIVA 2 (Expresiones faciales Serious, Confused, Fearful) */
         #card-diapo-2 {
-            top: 1960px;
+            top: 1860px;
             left: 4%;
             width: 480px;
             max-width: 36vw;
@@ -414,7 +413,7 @@
 
         /* 3. SECCIÓN MEDIA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) */
         #card-diapo-3 {
-            top: 2080px;
+            top: 1980px;
             right: 4%;
             width: 460px;
             max-width: 36vw;
@@ -425,10 +424,10 @@
         #speeder-water-rush {
             position: absolute;
             top: 2900px;
-            left: 50%;
+            left: 36%; /* Desplazado a la izquierda para no ser cortado por el borde derecho */
             transform: translateX(-50%);
-            width: 500px;
-            max-width: 42vw;
+            width: 410px; /* Redimensionado más pequeño para apreciarse completo */
+            max-width: 32vw;
             z-index: 9;
             pointer-events: none;
             filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.65));
@@ -519,10 +518,10 @@
         /* Render 3D de la princesa explorando las ruinas */
         #render-nevera-ruins {
             position: absolute;
-            top: 4300px;
-            right: 12%;
-            width: 270px;
-            max-width: 20vw;
+            top: 4280px;
+            right: 22%; /* Desplazada hacia la izquierda alejándola del borde derecho y HUD */
+            width: 210px; /* Redimensionada más pequeña para que se aprecie completa sin cortes */
+            max-width: 15vw;
             z-index: 10;
             pointer-events: auto;
             cursor: pointer;
@@ -776,8 +775,8 @@
             <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
         </div>
 
-        <div class="hud-card" id="card-pose-thumbnail" data-float-speed="0.25" onclick="openLightbox('images/princesa dibujo3.png', 'Estudio de Pose Dinámica en Roca')">
-            <img src="images/princesa dibujo3.png" alt="Pose Dinámica">
+        <div class="hud-card" id="card-pose-thumbnail" data-float-speed="0.25" onclick="openLightbox('images/render princesa 3.png', 'Princesa Ixk\'uk // Render 3D de Pose')">
+            <img src="images/render princesa 3.png" alt="Render Princesa 3D">
         </div>
 
         <!-- SECCIÓN 2: DIAPOSITIVA 2 (Expresiones faciales y bocetos de chaqueta) -->
@@ -850,12 +849,15 @@
        5. MOTOR JAVASCRIPT DEL PARALLAX 3D (SCROLL VELOCIDADES DIFERENCIADAS)
        ========================================================== -->
     <script>
-        // Capas del Hero Superior
+        // Capas del Hero Superior y Paisaje Completo
         const layerMountains = document.getElementById('layer-mountains');
         const layerRim = document.getElementById('layer-canyon-rim');
         const layerTemples = document.getElementById('layer-temples');
         const layerPrincess = document.getElementById('layer-princess-hero');
         const layerWaterfall = document.getElementById('layer-waterfall-drop');
+        const layerCanyonStream = document.getElementById('layer-canyon-stream');
+        const layerMidgroundCaverns = document.getElementById('layer-midground-caverns');
+        const layerForegroundRocks = document.getElementById('layer-foreground-rocks');
 
         // Capas del cañón y elementos flotantes a lo largo del scroll
         const floatCards = document.querySelectorAll('[data-float-speed]');
@@ -903,17 +905,17 @@
             });
 
             // =======================================================
-            // 1. VELOCIDADES DIFERENCIADAS DEL HERO SUPERIOR CON translateY
+            // 1. VELOCIDADES DIFERENCIADAS Y APARICIÓN DE ABAJO HACIA ARRIBA
             // =======================================================
-            // Montañas lejanas: se mueven muy lento (velocidad 0.50) -> gran distancia
+            // Montañas lejanas: velocidad 0.42 (fondo distante)
             if (layerMountains) {
-                const moveY = scrollY * 0.50;
+                const moveY = scrollY * 0.42;
                 layerMountains.style.transform = `translate3d(calc(-50% + ${mouseX * 25}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
-            // Cañón superior / watchtowers: velocidad 0.32
+            // Cañón superior / watchtowers: velocidad 0.28
             if (layerRim) {
-                const moveY = scrollY * 0.32;
+                const moveY = scrollY * 0.28;
                 layerRim.style.transform = `translate3d(calc(-50% + ${mouseX * 18}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
@@ -923,27 +925,47 @@
                 layerTemples.style.transform = `translate3d(calc(-50% + ${mouseX * 14}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
-            // Cascada superior: velocidad 0.10
-            if (layerWaterfall) {
-                const moveY = scrollY * 0.10;
-                layerWaterfall.style.transform = `translate3d(calc(-50% + ${mouseX * 10}px), ${moveY.toFixed(1)}px, 0)`;
+            // Princesa Ixk'uk: anclada firmemente sobre el techo del mecha (misma velocidad vertical 0.18)
+            if (layerPrincess) {
+                const moveY = scrollY * 0.18;
+                layerPrincess.style.transform = `translate3d(calc(-50% + ${mouseX * 14}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
-            // Princesa Ixk'uk: velocidad 0.04 (se desplaza casi en primer plano)
-            if (layerPrincess) {
-                const moveY = scrollY * 0.04;
-                layerPrincess.style.transform = `translate3d(calc(-50% + ${mouseX * 8}px), ${moveY.toFixed(1)}px, 0)`;
+            // Cascada superior: velocidad 0.12, subiendo hacia su posición
+            if (layerWaterfall) {
+                const moveY = scrollY * 0.12;
+                layerWaterfall.style.transform = `translate3d(calc(-50% + ${mouseX * 12}px), ${moveY.toFixed(1)}px, 0)`;
+            }
+
+            // Cañón y flujo continuo (fondo3): velocidad 0.15
+            if (layerCanyonStream) {
+                const moveY = scrollY * 0.15;
+                layerCanyonStream.style.transform = `translate3d(calc(-50% + ${mouseX * 10}px), ${moveY.toFixed(1)}px, 0)`;
+            }
+
+            // Cavernas intermedias (segundo plano laguna): emerge dinámicamente de abajo hacia arriba
+            if (layerMidgroundCaverns) {
+                const relY = Math.max(-800, scrollY - 2100);
+                const moveY = relY * 0.16;
+                layerMidgroundCaverns.style.transform = `translate3d(calc(-50% + ${mouseX * 16}px), ${moveY.toFixed(1)}px, 0)`;
+            }
+
+            // Primer plano rocoso frontal con estatua: gran sensación de cercanía y profundidad
+            if (layerForegroundRocks) {
+                const relY = Math.max(-800, scrollY - 2900);
+                const moveY = -relY * 0.14;
+                layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${mouseX * 22}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
             // =======================================================
             // 2. PARALLAX FLOTANTE DE LAS TARJETAS HUD (DIAPOSITIVAS 1 A 4)
             // =======================================================
             floatCards.forEach(el => {
-                const speed = parseFloat(el.getAttribute('data-float-speed')) || 0.2;
+                const speed = parseFloat(el.getAttribute('data-float-speed')) || 0.22;
                 const rect = el.getBoundingClientRect();
 
                 // Se calcula solo cuando la tarjeta está en o cerca del campo de visión
-                if (rect.top < windowH + 350 && rect.bottom > -350) {
+                if (rect.top < windowH + 450 && rect.bottom > -450) {
                     const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
                     const translateY = offsetFromCenter * speed;
 
