@@ -304,21 +304,19 @@
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
         }
 
-        /* CAPA 5 en diagrama: Cascada superior que baja desde el mecha hacia abajo */
+        /* CAPA 5 en diagrama: Cascada superior */
         #layer-waterfall-drop {
-            top: -380px; /* Sube para conectar directamente con las rocas y mecha sin hueco */
-            z-index: 5; /* Encima de la capa de rocas */
-            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
+            display: none; /* Reemplazada por Cascada-luminosa-en-cañón-rocoso.png */
         }
 
         /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
-            top: 290px; /* Mucho más abajo, sentada directamente sobre el techo del mecha/objeto */
+            top: 520px; /* Más abajo y más pequeña, sentada en la repisa del mecha señalada en el diagrama */
             left: 50%;
             transform: translateX(-50%);
-            width: 440px;
-            max-width: 32vw;
+            width: 330px; /* Redimensionada más pequeña */
+            max-width: 25vw;
             z-index: 6;
             pointer-events: none;
             will-change: transform;
@@ -330,12 +328,12 @@
             display: block;
         }
 
-        /* FONDO COMPLETO DEL CAÑÓN (fondo3.png: columna vertebral continua) */
+        /* FONDO COMPLETO DEL CAÑÓN: Cascada luminosa en cañón rocoso */
         #layer-canyon-stream {
-            top: -160px; /* Alineado para fluir continuamente tras la cascada */
+            top: 860px; /* Conecta suavemente bajo los templos y el mecha */
             z-index: 4;
-            opacity: 0.95;
-            filter: drop-shadow(0 0 60px rgba(0, 0, 0, 0.85));
+            opacity: 0.98;
+            filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
         }
 
         /* CAPA 6 en diagrama: Cavernas intermedias y lagunas (segundo plano) */
@@ -423,14 +421,14 @@
         /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
         #speeder-water-rush {
             position: absolute;
-            top: 2900px;
-            left: 36%; /* Desplazado a la izquierda para no ser cortado por el borde derecho */
+            top: 2420px; /* Más hacia arriba, en el espejo de agua bajo la cascada según la flecha */
+            left: 38%; /* Posicionado a la izquierda */
             transform: translateX(-50%);
-            width: 410px; /* Redimensionado más pequeño para apreciarse completo */
-            max-width: 32vw;
+            width: 330px; /* Redimensionado más pequeño */
+            max-width: 26vw;
             z-index: 9;
             pointer-events: none;
-            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.65));
+            filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.65));
             animation: speederHover 4s ease-in-out infinite alternate;
         }
 
@@ -505,8 +503,8 @@
         #card-speeder-orange {
             top: 4260px;
             left: 4%;
-            width: 440px;
-            max-width: 34vw;
+            width: 380px; /* Redimensionada más pequeña */
+            max-width: 29vw;
             background: linear-gradient(135deg, #f26829 0%, #c9440c 100%);
             border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 26px;
@@ -518,10 +516,10 @@
         /* Render 3D de la princesa explorando las ruinas */
         #render-nevera-ruins {
             position: absolute;
-            top: 4280px;
-            right: 22%; /* Desplazada hacia la izquierda alejándola del borde derecho y HUD */
-            width: 210px; /* Redimensionada más pequeña para que se aprecie completa sin cortes */
-            max-width: 15vw;
+            top: 4140px; /* Elevada a la repisa central de las ruinas según la flecha */
+            right: 40%; /* Mucho más centrada en la escena según la flecha */
+            width: 175px; /* Redimensionada más pequeña */
+            max-width: 13vw;
             z-index: 10;
             pointer-events: auto;
             cursor: pointer;
@@ -616,14 +614,15 @@
             background: #ffffff;
         }
 
-        /* Footer de navegación */
+        /* Footer de navegación (al final del recorrido) */
         .site-footer {
             position: relative;
             z-index: 100;
             width: 100%;
-            padding: 80px 20px 100px;
+            padding: 90px 20px 120px;
             text-align: center;
-            background: linear-gradient(180deg, transparent 0%, #060a0e 100%);
+            background: linear-gradient(180deg, #0c1219 0%, #05080c 100%);
+            border-top: 1.5px solid rgba(0, 242, 254, 0.25);
         }
 
         .site-footer h2 {
@@ -687,7 +686,7 @@
             <nav class="main-nav">
                 <a href="#cumbre" onclick="scrollToY(0)">Cumbre Maya</a>
                 <a href="#cascada" onclick="scrollToY(1160)">Cascada</a>
-                <a href="#laguna" onclick="scrollToY(2900)">Laguna 3D</a>
+                <a href="#laguna" onclick="scrollToY(2550)">Laguna 3D</a>
                 <a href="#santuario" onclick="scrollToY(3950)">Santuario</a>
                 <a href="Ilustracion.html">Ilustración</a>
                 <a href="bio.html">Bio</a>
@@ -709,7 +708,7 @@
             <span>02 // CASCADA</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" onclick="scrollToY(2900)">
+        <button class="depth-node" onclick="scrollToY(2550)">
             <span>03 // LAGUNA HUD</span>
             <div class="dot"></div>
         </button>
@@ -741,19 +740,14 @@
             <img src="images/edificios 3.png" alt="Templos Mayas y Tanque">
         </div>
 
-        <!-- CAPA 5 (en diagrama): Cascada superior que baja desde el mecha -->
-        <div class="full-bleed-layer" id="layer-waterfall-drop">
-            <img src="images/Cascada en cañón entre rocas.png" alt="Cascada entre rocas">
+        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada luminosa en cañón rocoso -->
+        <div class="full-bleed-layer" id="layer-canyon-stream">
+            <img src="images/Cascada-luminosa-en-cañón-rocoso.png" alt="Cascada Luminosa en Cañón Rocoso">
         </div>
 
-        <!-- CAPA 3 (en diagrama): Princesa Ixk'uk sentada sobre el mecha (MÁS PEQUEÑA) -->
+        <!-- CAPA 3 (en diagrama): Princesa Ixk'uk sentada sobre el mecha -->
         <div id="layer-princess-hero">
             <img src="images/princesa dibujo quetzal sin fondo.png" alt="Princesa Ixk'uk y Quetzal">
-        </div>
-
-        <!-- FONDO CONTINUO DEL CAÑÓN (fondo3.png: recorre todo el descenso) -->
-        <div class="full-bleed-layer" id="layer-canyon-stream">
-            <img src="images/fondo3.png" alt="Cañón y Cascada">
         </div>
 
         <!-- CAPA 6 (en diagrama): Cavernas intermedias y lagunas (segundo plano) -->
@@ -824,17 +818,18 @@
             <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
         </div>
 
-        <!-- FOOTER DE NAVEGACIÓN -->
-        <footer class="site-footer">
-            <h2>El Canto del Quetzal</h2>
-            <div class="footer-links">
-                <a href="#cumbre" onclick="scrollToY(0)">↑ Volver Arriba</a>
-                <a href="Ilustracion.html">Ilustración</a>
-                <a href="bio.html">Biografía</a>
-                <a href="index.html">Menú Principal</a>
-            </div>
-        </footer>
     </main>
+
+    <!-- FOOTER DE NAVEGACIÓN (AL FINAL DE LA PÁGINA) -->
+    <footer class="site-footer">
+        <h2>El Canto del Quetzal</h2>
+        <div class="footer-links">
+            <a href="#cumbre" onclick="scrollToY(0)">↑ Volver Arriba</a>
+            <a href="Ilustracion.html">Ilustración</a>
+            <a href="bio.html">Biografía</a>
+            <a href="index.html">Menú Principal</a>
+        </div>
+    </footer>
 
     <!-- 4. MODAL LIGHTBOX INTERACTIVO -->
     <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox(event)">
@@ -894,7 +889,7 @@
             }
 
             // Actualizar nodos activos del HUD lateral
-            const checkpoints = [0, 1160, 2900, 3950];
+            const checkpoints = [0, 1160, 2550, 3950];
             depthNodes.forEach((node, i) => {
                 const targetY = checkpoints[i];
                 if (Math.abs(scrollY - targetY) < 650) {
