@@ -284,43 +284,43 @@
            5. APILAMIENTO EXACTO DE CAPAS (ORDEN DIAGRAMA DEL USUARIO)
            ========================================================== */
 
-        /* CAPA 1: Montañas del fondo (Furthest back) */
+        /* CAPA 1: Montañas del fondo (Furthest back - Fondo horizonte lejano) */
         #layer-mountains {
             top: 0px;
             z-index: 1;
             opacity: 0.98;
         }
 
-        /* CAPA 2: Paredes del cañón con torres y puertas de piedra (fondo2.png) */
+        /* CAPA 2: Cañón superior y watchtowers (fondo20.png - "montañas cafés") */
         #layer-canyon-rim {
-            top: 130px;
+            top: 100px;
             z-index: 2;
         }
 
-        /* CAPA 4 en diagrama: Edificios y mecha tanque encima de fondo2 */
+        /* CAPA 4 en diagrama: Ruinas mayas y mecha tanque estrellado (Ruinas Mayas y Máquina Estrellada) */
         #layer-temples {
-            top: 260px;
+            top: 220px;
             z-index: 3;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
         }
 
         /* CAPA 5 en diagrama: Cascada superior */
         #layer-waterfall-drop {
-            display: none; /* Reemplazada por Cascada-luminosa-en-cañón-rocoso.png */
+            display: none;
         }
 
         /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
-            top: 520px; /* Más abajo y más pequeña, sentada en la repisa del mecha señalada en el diagrama */
+            top: clamp(520px, 39vw, 750px);
             left: 50%;
             transform: translateX(-50%);
-            width: 330px; /* Redimensionada más pequeña */
-            max-width: 25vw;
+            width: clamp(270px, 21vw, 350px);
+            max-width: 26vw;
             z-index: 6;
             pointer-events: none;
             will-change: transform;
-            filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.8));
+            filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.85));
         }
         #layer-princess-hero img {
             width: 100%;
@@ -328,9 +328,9 @@
             display: block;
         }
 
-        /* FONDO COMPLETO DEL CAÑÓN: Cascada luminosa en cañón rocoso */
+        /* FONDO CONTINUO DEL CAÑÓN: Cascada en cañón rocoso (fondocascada2.png) */
         #layer-canyon-stream {
-            top: 860px; /* Conecta suavemente bajo los templos y el mecha */
+            top: 920px;
             z-index: 4;
             opacity: 0.98;
             filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
@@ -727,27 +727,27 @@
 
         <!-- CAPA 1: Montañas del fondo (Fondo absoluto) -->
         <div class="full-bleed-layer" id="layer-mountains">
-            <img src="images/montañas-del-fondo.png" alt="Montañas lejanas">
+            <img src="images/montañas-del-fondo1.png" alt="Montañas lejanas">
         </div>
 
-        <!-- CAPA 2: Cañón superior y watchtowers (fondo2.png) -->
+        <!-- CAPA 2: Cañón superior y watchtowers (fondo20.png - montañas cafés) -->
         <div class="full-bleed-layer" id="layer-canyon-rim">
-            <img src="images/fondo2.png" alt="Paredes superiores del cañón">
+            <img src="images/fondo20.png" alt="Paredes superiores del cañón">
         </div>
 
-        <!-- CAPA 4 (en diagrama): Edificios mayas y mecha tanque encima de fondo2 -->
+        <!-- CAPA 4 (en diagrama): Ruinas mayas y mecha tanque estrellado -->
         <div class="full-bleed-layer" id="layer-temples">
-            <img src="images/edificios 3.png" alt="Templos Mayas y Tanque">
+            <img src="images/Ruinas Mayas y Máquina Estrellada (1).png" alt="Ruinas Mayas y Máquina Estrellada">
         </div>
 
-        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada luminosa en cañón rocoso -->
+        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada en cañón rocoso (fondocascada2.png) -->
         <div class="full-bleed-layer" id="layer-canyon-stream">
-            <img src="images/Cascada-luminosa-en-cañón-rocoso.png" alt="Cascada Luminosa en Cañón Rocoso">
+            <img src="images/fondocascada2.png" alt="Cascada en el cañón">
         </div>
 
         <!-- CAPA 3 (en diagrama): Princesa Ixk'uk sentada sobre el mecha -->
         <div id="layer-princess-hero">
-            <img src="images/princesa dibujo quetzal sin fondo.png" alt="Princesa Ixk'uk y Quetzal">
+            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
         </div>
 
         <!-- CAPA 6 (en diagrama): Cavernas intermedias y lagunas (segundo plano) -->
@@ -784,7 +784,7 @@
         </div>
 
         <!-- SECCIÓN 3: LAGUNA 3D Y BLUEPRINTS HOLOGRÁFICOS -->
-        <div id="speeder-water-rush">
+        <div id="speeder-water-rush" data-float-speed="0.28">
             <img src="images/render de moto5.png" alt="Speeder en el agua">
         </div>
 
@@ -900,67 +900,96 @@
             });
 
             // =======================================================
-            // 1. VELOCIDADES DIFERENCIADAS Y APARICIÓN DE ABAJO HACIA ARRIBA
+            // 1. VELOCIDADES MARCADAS Y TIEMPOS DIFERENCIADOS (PARALLAX HERO)
             // =======================================================
-            // Montañas lejanas: velocidad 0.42 (fondo distante)
+            // CAPA 1: Montañas del fondo (Fondo distante - casi fijo en el horizonte)
+            // Al hacer scroll, se desplaza hacia abajo a 0.72*scrollY, por lo que en pantalla
+            // sube a una velocidad aparente de solo 0.28x (lejanía extrema e inmensidad).
             if (layerMountains) {
-                const moveY = scrollY * 0.42;
-                layerMountains.style.transform = `translate3d(calc(-50% + ${mouseX * 25}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.72;
+                const shiftX = mouseX * 28;
+                const shiftY = mouseY * 12;
+                layerMountains.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // Cañón superior / watchtowers: velocidad 0.28
+            // CAPA 2: Cañón superior y watchtowers (fondo20.png - "montañas cafés")
+            // Velocidad intermedia: moveY = scrollY * 0.44 (en pantalla sube a 0.56x, el doble que el fondo).
+            // Crea el efecto inmediato de que las montañas cafés se deslizan y adelantan a las del fondo.
             if (layerRim) {
-                const moveY = scrollY * 0.28;
-                layerRim.style.transform = `translate3d(calc(-50% + ${mouseX * 18}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.44;
+                const shiftX = mouseX * 20;
+                const shiftY = mouseY * 8;
+                layerRim.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // Edificios mayas y tanque: velocidad 0.18
+            // CAPA 4: Ruinas Mayas y Máquina Estrellada (primer plano del cañón superior)
+            // Velocidad rápida: moveY = scrollY * 0.10 (en pantalla sube a 0.90x, adelantando a las montañas cafés).
             if (layerTemples) {
-                const moveY = scrollY * 0.18;
-                layerTemples.style.transform = `translate3d(calc(-50% + ${mouseX * 14}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.10;
+                const shiftX = mouseX * 14;
+                const shiftY = mouseY * 5;
+                layerTemples.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // Princesa Ixk'uk: anclada firmemente sobre el techo del mecha (misma velocidad vertical 0.18)
+            // CAPA 3: Princesa Ixk'uk sentada sobre el mecha (princesa dibujo quetzal sin fondo1.png)
+            // Se mueve con el mecha pero con un leve desfase flotante (0.06), otorgándole profundidad tridimensional.
             if (layerPrincess) {
-                const moveY = scrollY * 0.18;
-                layerPrincess.style.transform = `translate3d(calc(-50% + ${mouseX * 14}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.06;
+                const shiftX = mouseX * 16;
+                const shiftY = mouseY * 6;
+                layerPrincess.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // Cascada superior: velocidad 0.12, subiendo hacia su posición
+            // Cascada superior antigua (si existiera en DOM)
             if (layerWaterfall) {
-                const moveY = scrollY * 0.12;
-                layerWaterfall.style.transform = `translate3d(calc(-50% + ${mouseX * 12}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.20;
+                layerWaterfall.style.transform = `translate3d(calc(-50% + ${(mouseX * 12).toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
-            // Cañón y flujo continuo (fondo3): velocidad 0.15
+            // CAPA DE TRANSICIÓN: Cascada en cañón (fondocascada2.png)
+            // Emerge de abajo hacia arriba a velocidad continua 0.32 (0.68x en pantalla) conectando las ruinas con la laguna
             if (layerCanyonStream) {
-                const moveY = scrollY * 0.15;
-                layerCanyonStream.style.transform = `translate3d(calc(-50% + ${mouseX * 10}px), ${moveY.toFixed(1)}px, 0)`;
-            }
-
-            // Cavernas intermedias (segundo plano laguna): emerge dinámicamente de abajo hacia arriba
-            if (layerMidgroundCaverns) {
-                const relY = Math.max(-800, scrollY - 2100);
-                const moveY = relY * 0.16;
-                layerMidgroundCaverns.style.transform = `translate3d(calc(-50% + ${mouseX * 16}px), ${moveY.toFixed(1)}px, 0)`;
-            }
-
-            // Primer plano rocoso frontal con estatua: gran sensación de cercanía y profundidad
-            if (layerForegroundRocks) {
-                const relY = Math.max(-800, scrollY - 2900);
-                const moveY = -relY * 0.14;
-                layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${mouseX * 22}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.32;
+                const shiftX = mouseX * 12;
+                layerCanyonStream.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
             // =======================================================
-            // 2. PARALLAX FLOTANTE DE LAS TARJETAS HUD (DIAPOSITIVAS 1 A 4)
+            // 2. PARALLAX DINÁMICO DE CAPAS INFERIORES (VIEWPORT RELATIVE)
+            // =======================================================
+            // CAPA 6: Cavernas intermedias (segundo plano de la laguna) - velocidad moderada (0.20)
+            if (layerMidgroundCaverns) {
+                const rect = layerMidgroundCaverns.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.20;
+                    const shiftX = mouseX * 18;
+                    layerMidgroundCaverns.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            // CAPA 7: Primer plano rocoso frontal con estatua - velocidad rápida (0.42)
+            // Al ser el elemento más cercano a la cámara en la parte inferior, se desplaza al doble
+            // de velocidad que las cavernas del fondo, creando una tremenda ilusión de profundidad tridimensional.
+            if (layerForegroundRocks) {
+                const rect = layerForegroundRocks.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.42;
+                    const shiftX = mouseX * 26;
+                    layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            // =======================================================
+            // 3. PARALLAX FLOTANTE DE LAS TARJETAS HUD Y ELEMENTOS (DIAPOSITIVAS 1 A 4, SPEEDER, NEVERA)
             // =======================================================
             floatCards.forEach(el => {
                 const speed = parseFloat(el.getAttribute('data-float-speed')) || 0.22;
                 const rect = el.getBoundingClientRect();
 
-                // Se calcula solo cuando la tarjeta está en o cerca del campo de visión
-                if (rect.top < windowH + 450 && rect.bottom > -450) {
+                // Se calcula cuando el elemento entra en el rango de visión
+                if (rect.top < windowH + 500 && rect.bottom > -500) {
                     const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
                     const translateY = offsetFromCenter * speed;
 
