@@ -297,11 +297,18 @@
             z-index: 2;
         }
 
-        /* CAPA 4 en diagrama: Ruinas mayas y mecha tanque estrellado (Ruinas Mayas y Máquina Estrellada) */
+        /* CAPA RUINAS MAYAS (en el fondo): Ruinas mayas luminosas en la selva */
         #layer-temples {
-            top: 220px;
+            top: 200px;
             z-index: 3;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
+        }
+
+        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas */
+        #layer-mecha {
+            top: 200px;
+            z-index: 5;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
         }
 
         /* CAPA 5 en diagrama: Cascada superior */
@@ -309,15 +316,15 @@
             display: none;
         }
 
-        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
+        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha (más grande y desplazada a la derecha) */
         #layer-princess-hero {
             position: absolute;
-            top: clamp(520px, 39vw, 750px);
-            left: 50%;
+            top: clamp(500px, 38vw, 730px);
+            left: calc(50% + clamp(28px, 3.8vw, 68px));
             transform: translateX(-50%);
-            width: clamp(270px, 21vw, 350px);
-            max-width: 26vw;
-            z-index: 6;
+            width: clamp(330px, 26vw, 440px);
+            max-width: 32vw;
+            z-index: 7;
             pointer-events: none;
             will-change: transform;
             filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.85));
@@ -328,7 +335,7 @@
             display: block;
         }
 
-        /* FONDO CONTINUO DEL CAÑÓN: Cascada en cañón rocoso (fondocascada2.png) */
+        /* FONDO CONTINUO DEL CAÑÓN: Cascada glaciar entre rocas estilizadas */
         #layer-canyon-stream {
             top: 920px;
             z-index: 4;
@@ -348,6 +355,14 @@
             top: 3120px;
             z-index: 8;
             filter: drop-shadow(0 35px 65px rgba(0, 0, 0, 0.95));
+        }
+
+        /* CAPA FINAL: Estructura metálica en el primer plano inferior */
+        #layer-metal-part {
+            top: 4520px;
+            z-index: 11;
+            filter: drop-shadow(0 -20px 45px rgba(0, 0, 0, 0.9));
+            pointer-events: none;
         }
 
         /* ==========================================================
@@ -390,12 +405,21 @@
             padding: 12px;
         }
 
-        /* Miniatura de pose / render 3D (Izquierda) */
+        /* Miniaturas de pose y arte conceptual (Izquierda sobre la roca) */
         #card-pose-thumbnail {
             top: 1060px;
             left: 4%;
-            width: 175px;
-            max-width: 14vw;
+            width: 165px;
+            max-width: 13vw;
+            padding: 8px;
+            border-radius: 16px;
+        }
+
+        #card-pose-thumbnail-2 {
+            top: 1060px;
+            left: clamp(170px, 15vw, 220px);
+            width: 165px;
+            max-width: 13vw;
             padding: 8px;
             border-radius: 16px;
         }
@@ -421,11 +445,11 @@
         /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
         #speeder-water-rush {
             position: absolute;
-            top: 2420px; /* Más hacia arriba, en el espejo de agua bajo la cascada según la flecha */
-            left: 38%; /* Posicionado a la izquierda */
+            top: 2420px;
+            left: 43%; /* Centrado armoniosamente en el cañón */
             transform: translateX(-50%);
-            width: 330px; /* Redimensionado más pequeño */
-            max-width: 26vw;
+            width: clamp(230px, 18vw, 280px); /* Un poco más pequeño sin chocar con márgenes */
+            max-width: 21vw;
             z-index: 9;
             pointer-events: none;
             filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.65));
@@ -440,20 +464,60 @@
         .holo-wireframe-cluster {
             position: absolute;
             top: 3120px;
-            left: 50%;
+            left: 41%; /* Desplazado hacia la izquierda según lo solicitado */
             transform: translateX(-50%);
             display: flex;
-            gap: 22px;
-            align-items: flex-end;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
             z-index: 10;
             pointer-events: auto;
             will-change: transform;
         }
 
+        .holo-cluster-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+
+        .holo-tab {
+            background: rgba(10, 24, 36, 0.85);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            color: rgba(255, 255, 255, 0.75);
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .holo-tab:hover,
+        .holo-tab.active {
+            color: #000;
+            background: var(--cyan-neon);
+            border-color: var(--cyan-neon);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+        }
+
+        .holo-panels-grid {
+            display: none;
+            gap: 14px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .holo-panels-grid.active {
+            display: flex;
+        }
+
         .holo-panel {
             position: relative;
-            width: 165px;
-            max-width: 14vw;
+            width: 145px;
+            max-width: 12vw;
             background: rgba(0, 242, 254, 0.08);
             border: 1.5px solid rgba(0, 242, 254, 0.7);
             border-radius: 14px;
@@ -486,7 +550,8 @@
             width: 100%;
             height: auto;
             mix-blend-mode: screen;
-            filter: brightness(1.2) drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
+            filter: contrast(1.15) brightness(1.1) drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
+            border-radius: 8px;
         }
 
         /* 5. SECCIÓN INFERIOR: DIAPOSITIVA 4 (Ficha técnica grande "PRINCESA IXK´UK") */
@@ -666,6 +731,8 @@
             .depth-meter { display: none; }
             .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; }
             .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
+            .holo-panels-grid { flex-wrap: wrap; }
+            .holo-panel { width: 44% !important; max-width: none !important; }
         }
     </style>
 </head>
@@ -735,17 +802,22 @@
             <img src="images/fondo20.png" alt="Paredes superiores del cañón">
         </div>
 
-        <!-- CAPA 4 (en diagrama): Ruinas mayas y mecha tanque estrellado -->
+        <!-- CAPA RUINAS MAYAS (en el fondo): Ruinas mayas luminosas en la selva -->
         <div class="full-bleed-layer" id="layer-temples">
-            <img src="images/Ruinas Mayas y Máquina Estrellada (1).png" alt="Ruinas Mayas y Máquina Estrellada">
+            <img src="images/Ruinas mayas luminosas en la selva.png" alt="Ruinas mayas luminosas en la selva">
         </div>
 
-        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada en cañón rocoso (fondocascada2.png) -->
+        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada glaciar entre rocas estilizadas -->
         <div class="full-bleed-layer" id="layer-canyon-stream">
-            <img src="images/fondocascada2.png" alt="Cascada en el cañón">
+            <img src="images/Cascada glaciar entre rocas estilizadas.png" alt="Cascada glaciar entre rocas estilizadas">
         </div>
 
-        <!-- CAPA 3 (en diagrama): Princesa Ixk'uk sentada sobre el mecha -->
+        <!-- CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas -->
+        <div class="full-bleed-layer" id="layer-mecha">
+            <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
+        </div>
+
+        <!-- CAPA PRINCESA HERO: Sentada sobre el mecha (más grande y desplazada a la derecha) -->
         <div id="layer-princess-hero">
             <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
         </div>
@@ -773,6 +845,10 @@
             <img src="images/render princesa 3.png" alt="Render Princesa 3D">
         </div>
 
+        <div class="hud-card" id="card-pose-thumbnail-2" data-float-speed="0.26" onclick="openLightbox('images/kaya3.png', 'Kaya // Ilustración Original en Ruinas')">
+            <img src="images/kaya3.png" alt="Kaya Ilustración Original">
+        </div>
+
         <!-- SECCIÓN 2: DIAPOSITIVA 2 (Expresiones faciales y bocetos de chaqueta) -->
         <div class="hud-card" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
             <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
@@ -789,17 +865,45 @@
         </div>
 
         <div class="holo-wireframe-cluster" data-float-speed="0.18">
-            <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
-                <div class="holo-tag">Front</div>
-                <img src="images/render amiga1w.png" alt="Wireframe Frontal">
+            <div class="holo-cluster-nav">
+                <button type="button" class="holo-tab active" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
+                <button type="button" class="holo-tab" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
             </div>
-            <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
-                <div class="holo-tag">Back</div>
-                <img src="images/render amiga2w.png" alt="Wireframe Posterior">
+
+            <!-- Set 1: Renders solicitados (Render 0.5, Render 1, Render 1.5, Render 2) -->
+            <div class="holo-panels-grid active" id="holo-set-renders">
+                <div class="holo-panel" onclick="openLightbox('images/Render0.5.png', 'Render 0.5 // Frontal T-Pose')">
+                    <div class="holo-tag">Front 0.5</div>
+                    <img src="images/Render0.5.png" alt="Render Frontal 0.5">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/Render1.png', 'Render 1.0 // Perfil Lateral')">
+                    <div class="holo-tag">Side 1.0</div>
+                    <img src="images/Render1.png" alt="Render Perfil 1.0">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/Render1.5.png', 'Render 1.5 // Perfil Tres Cuartos')">
+                    <div class="holo-tag">Side 1.5</div>
+                    <img src="images/Render1.5.png" alt="Render Perfil 1.5">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/Render2.png', 'Render 2.0 // Posterior T-Pose')">
+                    <div class="holo-tag">Back 2.0</div>
+                    <img src="images/Render2.png" alt="Render Posterior 2.0">
+                </div>
             </div>
-            <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
-                <div class="holo-tag">Side</div>
-                <img src="images/render amiga3w.png" alt="Wireframe Lateral">
+
+            <!-- Set 2: Wireframes previos -->
+            <div class="holo-panels-grid" id="holo-set-wireframes">
+                <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
+                    <div class="holo-tag">Front</div>
+                    <img src="images/render amiga1w.png" alt="Wireframe Frontal">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
+                    <div class="holo-tag">Back</div>
+                    <img src="images/render amiga2w.png" alt="Wireframe Posterior">
+                </div>
+                <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
+                    <div class="holo-tag">Side</div>
+                    <img src="images/render amiga3w.png" alt="Wireframe Lateral">
+                </div>
             </div>
         </div>
 
@@ -816,6 +920,11 @@
         <!-- Render 3D de la princesa explorando las ruinas -->
         <div id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
             <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
+        </div>
+
+        <!-- CAPA FINAL: Parte de metal en primer plano al final de la página -->
+        <div class="full-bleed-layer" id="layer-metal-part">
+            <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
         </div>
 
     </main>
@@ -848,11 +957,13 @@
         const layerMountains = document.getElementById('layer-mountains');
         const layerRim = document.getElementById('layer-canyon-rim');
         const layerTemples = document.getElementById('layer-temples');
+        const layerMecha = document.getElementById('layer-mecha');
         const layerPrincess = document.getElementById('layer-princess-hero');
         const layerWaterfall = document.getElementById('layer-waterfall-drop');
         const layerCanyonStream = document.getElementById('layer-canyon-stream');
         const layerMidgroundCaverns = document.getElementById('layer-midground-caverns');
         const layerForegroundRocks = document.getElementById('layer-foreground-rocks');
+        const layerMetalPart = document.getElementById('layer-metal-part');
 
         // Capas del cañón y elementos flotantes a lo largo del scroll
         const floatCards = document.querySelectorAll('[data-float-speed]');
@@ -903,8 +1014,6 @@
             // 1. VELOCIDADES MARCADAS Y TIEMPOS DIFERENCIADOS (PARALLAX HERO)
             // =======================================================
             // CAPA 1: Montañas del fondo (Fondo distante - casi fijo en el horizonte)
-            // Al hacer scroll, se desplaza hacia abajo a 0.72*scrollY, por lo que en pantalla
-            // sube a una velocidad aparente de solo 0.28x (lejanía extrema e inmensidad).
             if (layerMountains) {
                 const moveY = scrollY * 0.72;
                 const shiftX = mouseX * 28;
@@ -913,8 +1022,6 @@
             }
 
             // CAPA 2: Cañón superior y watchtowers (fondo20.png - "montañas cafés")
-            // Velocidad intermedia: moveY = scrollY * 0.44 (en pantalla sube a 0.56x, el doble que el fondo).
-            // Crea el efecto inmediato de que las montañas cafés se deslizan y adelantan a las del fondo.
             if (layerRim) {
                 const moveY = scrollY * 0.44;
                 const shiftX = mouseX * 20;
@@ -922,21 +1029,28 @@
                 layerRim.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // CAPA 4: Ruinas Mayas y Máquina Estrellada (primer plano del cañón superior)
-            // Velocidad rápida: moveY = scrollY * 0.10 (en pantalla sube a 0.90x, adelantando a las montañas cafés).
+            // CAPA RUINAS MAYAS (en el fondo tras el mecha): Ruinas mayas luminosas en la selva
             if (layerTemples) {
-                const moveY = scrollY * 0.10;
-                const shiftX = mouseX * 14;
-                const shiftY = mouseY * 5;
+                const moveY = scrollY * 0.22;
+                const shiftX = mouseX * 16;
+                const shiftY = mouseY * 6;
                 layerTemples.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
+            // CAPA MECHA INDUSTRIAL (encima de las ruinas mayas)
+            if (layerMecha) {
+                const moveY = scrollY * 0.10;
+                const shiftX = mouseX * 14;
+                const shiftY = mouseY * 5;
+                layerMecha.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
             // CAPA 3: Princesa Ixk'uk sentada sobre el mecha (princesa dibujo quetzal sin fondo1.png)
-            // Se mueve con el mecha pero con un leve desfase flotante (0.06), otorgándole profundidad tridimensional.
+            // Se sincroniza perfectamente con el mecha para mantenerse anclada a su techo
             if (layerPrincess) {
-                const moveY = scrollY * 0.06;
-                const shiftX = mouseX * 16;
-                const shiftY = mouseY * 6;
+                const moveY = scrollY * 0.10;
+                const shiftX = mouseX * 14;
+                const shiftY = mouseY * 5;
                 layerPrincess.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
@@ -946,8 +1060,8 @@
                 layerWaterfall.style.transform = `translate3d(calc(-50% + ${(mouseX * 12).toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
-            // CAPA DE TRANSICIÓN: Cascada en cañón (fondocascada2.png)
-            // Emerge de abajo hacia arriba a velocidad continua 0.32 (0.68x en pantalla) conectando las ruinas con la laguna
+            // CAPA DE TRANSICIÓN: Cascada glaciar entre rocas estilizadas
+            // Emerge verticalmente conectando las ruinas con la laguna
             if (layerCanyonStream) {
                 const moveY = scrollY * 0.32;
                 const shiftX = mouseX * 12;
@@ -969,8 +1083,6 @@
             }
 
             // CAPA 7: Primer plano rocoso frontal con estatua - velocidad rápida (0.42)
-            // Al ser el elemento más cercano a la cámara en la parte inferior, se desplaza al doble
-            // de velocidad que las cavernas del fondo, creando una tremenda ilusión de profundidad tridimensional.
             if (layerForegroundRocks) {
                 const rect = layerForegroundRocks.getBoundingClientRect();
                 if (rect.top < windowH + 600 && rect.bottom > -600) {
@@ -978,6 +1090,17 @@
                     const moveY = offsetFromCenter * 0.42;
                     const shiftX = mouseX * 26;
                     layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            // CAPA FINAL: Estructura de metal en primer plano (al final de la página)
+            if (layerMetalPart) {
+                const rect = layerMetalPart.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.38;
+                    const shiftX = mouseX * 24;
+                    layerMetalPart.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
                 }
             }
 
@@ -1013,6 +1136,21 @@
                 top: y,
                 behavior: 'smooth'
             });
+        }
+
+        // ALTERNADOR DE SETS HOLOGRÁFICOS (RENDERS 3D / BLUEPRINTS)
+        function switchHoloSet(setName) {
+            const tabs = document.querySelectorAll('.holo-tab');
+            const grids = document.querySelectorAll('.holo-panels-grid');
+            tabs.forEach(t => t.classList.remove('active'));
+            grids.forEach(g => g.classList.remove('active'));
+            if (setName === 'renders') {
+                tabs[0]?.classList.add('active');
+                document.getElementById('holo-set-renders')?.classList.add('active');
+            } else {
+                tabs[1]?.classList.add('active');
+                document.getElementById('holo-set-wireframes')?.classList.add('active');
+            }
         }
 
         // FUNCIONALIDAD LIGHTBOX (AMPLIAR ILUSTRACIONES)
