@@ -252,9 +252,9 @@
         .landing-stage {
             position: relative;
             width: 100%;
-            min-height: 5200px;
+            min-height: 6400px;
             overflow-x: hidden;
-            background: linear-gradient(180deg, #9bb8c6 0%, #15222e 700px, #0e1720 2000px, #0c1219 3800px, #080d12 100%);
+            background: linear-gradient(180deg, #9bb8c6 0%, #15222e 700px, #0e1720 2200px, #0c1219 4200px, #080d12 100%);
         }
 
         /* Capas de ancho completo para eliminar espacios sobrantes */
@@ -304,11 +304,25 @@
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
         }
 
-        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas */
+        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas, centrado a la derecha, detrás de la princesa) */
         #layer-mecha {
-            top: 200px;
+            position: absolute;
+            top: clamp(220px, 16vw, 300px);
+            left: calc(50% + clamp(50px, 6vw, 130px));
+            transform: translateX(-50%);
+            width: clamp(720px, 64vw, 1020px);
+            max-width: 68vw;
             z-index: 5;
+            pointer-events: none;
+            will-change: transform;
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+        }
+
+        #layer-mecha img {
+            width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
         }
 
         /* CAPA 5 en diagrama: Cascada superior */
@@ -316,14 +330,14 @@
             display: none;
         }
 
-        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha (más grande y desplazada a la derecha) */
+        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
-            top: clamp(500px, 38vw, 730px);
-            left: calc(50% + clamp(28px, 3.8vw, 68px));
+            top: clamp(340px, 24vw, 460px);
+            left: calc(50% + clamp(5px, 1.5vw, 30px));
             transform: translateX(-50%);
             width: clamp(330px, 26vw, 440px);
-            max-width: 32vw;
+            max-width: 30vw;
             z-index: 7;
             pointer-events: none;
             will-change: transform;
@@ -345,24 +359,35 @@
 
         /* CAPA 6 en diagrama: Cavernas intermedias y lagunas (segundo plano) */
         #layer-midground-caverns {
-            top: 2280px;
+            top: 2600px;
             z-index: 7;
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.75));
         }
 
         /* CAPA 7 en diagrama: Primer plano rocoso frontal con estatua y río */
         #layer-foreground-rocks {
-            top: 3120px;
+            top: 3600px;
             z-index: 8;
             filter: drop-shadow(0 35px 65px rgba(0, 0, 0, 0.95));
         }
 
-        /* CAPA FINAL: Estructura metálica en el primer plano inferior */
+        /* CAPA FINAL: Estructura metálica más pequeña y detrás de la nevera */
         #layer-metal-part {
-            top: 4520px;
-            z-index: 11;
-            filter: drop-shadow(0 -20px 45px rgba(0, 0, 0, 0.9));
+            position: absolute;
+            top: 5650px;
+            left: calc(50% + clamp(180px, 17vw, 290px));
+            transform: translateX(-50%);
+            width: clamp(520px, 45vw, 750px);
+            z-index: 8;
+            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.85));
             pointer-events: none;
+            will-change: transform;
+        }
+
+        #layer-metal-part img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* ==========================================================
@@ -396,63 +421,67 @@
             border-radius: 18px;
         }
 
-        /* 1. SECCIÓN SUPERIOR: DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK") */
-        #card-diapo-1 {
-            top: 1100px;
-            right: 4%;
-            width: 480px;
-            max-width: 36vw;
-            padding: 12px;
+        /* 1. SECCIÓN KAYA CONCEPT ART SHEET ("Calla", grande y centrada) */
+        #card-kaya-calla {
+            top: 1300px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(620px, 60vw, 900px);
+            padding: 14px;
+            border-radius: 22px;
         }
 
-        /* Miniaturas de pose y arte conceptual (Izquierda sobre la roca) */
+        /* Miniatura de pose 3D (ampliada y centrada junto a Diapo 1) */
         #card-pose-thumbnail {
-            top: 1060px;
-            left: 4%;
-            width: 165px;
-            max-width: 13vw;
-            padding: 8px;
-            border-radius: 16px;
+            top: 2000px;
+            left: calc(50% - clamp(260px, 23vw, 340px));
+            transform: translateX(-50%);
+            width: clamp(230px, 20vw, 300px);
+            padding: 10px;
+            border-radius: 18px;
         }
 
-        #card-pose-thumbnail-2 {
-            top: 1060px;
-            left: clamp(170px, 15vw, 220px);
-            width: 165px;
-            max-width: 13vw;
-            padding: 8px;
-            border-radius: 16px;
+        /* DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK", ampliada y centrada) */
+        #card-diapo-1 {
+            top: 2000px;
+            left: calc(50% + clamp(140px, 13vw, 190px));
+            transform: translateX(-50%);
+            width: clamp(480px, 42vw, 640px);
+            padding: 12px;
+            border-radius: 20px;
         }
 
         /* 2. SECCIÓN MEDIA: DIAPOSITIVA 2 (Expresiones faciales Serious, Confused, Fearful) */
         #card-diapo-2 {
-            top: 1860px;
-            left: 4%;
-            width: 480px;
-            max-width: 36vw;
-            padding: 12px;
+            top: 2750px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(620px, 60vw, 900px);
+            padding: 14px;
+            border-radius: 22px;
         }
 
         /* 3. SECCIÓN MEDIA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) */
         #card-diapo-3 {
-            top: 1980px;
-            right: 4%;
-            width: 460px;
-            max-width: 36vw;
-            padding: 12px;
+            top: 3450px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(620px, 60vw, 900px);
+            padding: 14px;
+            border-radius: 22px;
         }
 
         /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
         #speeder-water-rush {
             position: absolute;
-            top: 2420px;
-            left: 43%; /* Centrado armoniosamente en el cañón */
+            top: 4150px;
+            left: 50%;
             transform: translateX(-50%);
-            width: clamp(230px, 18vw, 280px); /* Un poco más pequeño sin chocar con márgenes */
-            max-width: 21vw;
+            width: clamp(280px, 24vw, 380px);
+            max-width: 25vw;
             z-index: 9;
             pointer-events: none;
-            filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.65));
+            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.7));
             animation: speederHover 4s ease-in-out infinite alternate;
         }
 
@@ -463,13 +492,13 @@
 
         .holo-wireframe-cluster {
             position: absolute;
-            top: 3120px;
-            left: 41%; /* Desplazado hacia la izquierda según lo solicitado */
+            top: 4550px;
+            left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             z-index: 10;
             pointer-events: auto;
             will-change: transform;
@@ -516,12 +545,12 @@
 
         .holo-panel {
             position: relative;
-            width: 145px;
-            max-width: 12vw;
+            width: 160px;
+            max-width: 14vw;
             background: rgba(0, 242, 254, 0.08);
             border: 1.5px solid rgba(0, 242, 254, 0.7);
-            border-radius: 14px;
-            padding: 8px;
+            border-radius: 16px;
+            padding: 10px;
             backdrop-filter: blur(8px);
             box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 242, 254, 0.15);
             cursor: pointer;
@@ -556,20 +585,21 @@
 
         /* 5. SECCIÓN INFERIOR: DIAPOSITIVA 4 (Ficha técnica grande "PRINCESA IXK´UK") */
         #card-diapo-4 {
-            top: 3950px;
-            right: 4%;
-            width: 500px;
-            max-width: 38vw;
-            padding: 12px;
+            top: 5200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(620px, 60vw, 900px);
+            padding: 14px;
+            border-radius: 22px;
             z-index: 10;
         }
 
         /* Tarjeta naranja: Render de estudio del speeder */
         #card-speeder-orange {
-            top: 4260px;
-            left: 4%;
-            width: 380px; /* Redimensionada más pequeña */
-            max-width: 29vw;
+            top: 5800px;
+            left: calc(50% - clamp(240px, 22vw, 340px));
+            transform: translateX(-50%);
+            width: clamp(420px, 36vw, 540px);
             background: linear-gradient(135deg, #f26829 0%, #c9440c 100%);
             border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 26px;
@@ -578,23 +608,29 @@
             z-index: 10;
         }
 
-        /* Render 3D de la princesa explorando las ruinas */
+        /* Render 3D de la princesa en la nevera: delante de la estructura de metal */
         #render-nevera-ruins {
             position: absolute;
-            top: 4140px; /* Elevada a la repisa central de las ruinas según la flecha */
-            right: 40%; /* Mucho más centrada en la escena según la flecha */
-            width: 175px; /* Redimensionada más pequeña */
-            max-width: 13vw;
-            z-index: 10;
+            top: 5780px;
+            left: calc(50% + clamp(150px, 14vw, 230px));
+            transform: translateX(-50%);
+            width: clamp(240px, 19vw, 320px);
+            z-index: 12;
             pointer-events: auto;
             cursor: pointer;
-            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.85));
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95));
             will-change: transform;
             transition: transform 0.4s ease;
         }
 
         #render-nevera-ruins:hover {
-            transform: scale(1.06) translateY(-5px);
+            transform: translateX(-50%) scale(1.06) translateY(-5px);
+        }
+
+        #render-nevera-ruins img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* ==========================================================
@@ -729,10 +765,14 @@
         @media (max-width: 860px) {
             .main-nav { display: none; }
             .depth-meter { display: none; }
-            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; }
+            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
             .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
             .holo-panels-grid { flex-wrap: wrap; }
             .holo-panel { width: 44% !important; max-width: none !important; }
+            #layer-mecha { position: relative !important; width: 95% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-princess-hero { position: relative !important; width: 75% !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-metal-part { position: relative !important; width: 92% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
+            #render-nevera-ruins { position: relative !important; width: 65% !important; margin: -110px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
         }
     </style>
 </head>
@@ -752,9 +792,9 @@
 
             <nav class="main-nav">
                 <a href="#cumbre" onclick="scrollToY(0)">Cumbre Maya</a>
-                <a href="#cascada" onclick="scrollToY(1160)">Cascada</a>
-                <a href="#laguna" onclick="scrollToY(2550)">Laguna 3D</a>
-                <a href="#santuario" onclick="scrollToY(3950)">Santuario</a>
+                <a href="#cascada" onclick="scrollToY(1300)">Cascada</a>
+                <a href="#laguna" onclick="scrollToY(4150)">Laguna 3D</a>
+                <a href="#santuario" onclick="scrollToY(5200)">Santuario</a>
                 <a href="Ilustracion.html">Ilustración</a>
                 <a href="bio.html">Bio</a>
                 <a href="index.html" class="btn-back">&#8592; Menú Principal</a>
@@ -771,15 +811,15 @@
             <span>01 // CUMBRE</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" onclick="scrollToY(1160)">
+        <button class="depth-node" onclick="scrollToY(1300)">
             <span>02 // CASCADA</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" onclick="scrollToY(2550)">
+        <button class="depth-node" onclick="scrollToY(4150)">
             <span>03 // LAGUNA HUD</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" onclick="scrollToY(3950)">
+        <button class="depth-node" onclick="scrollToY(5200)">
             <span>04 // SANTUARIO</span>
             <div class="dot"></div>
         </button>
@@ -813,11 +853,11 @@
         </div>
 
         <!-- CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas -->
-        <div class="full-bleed-layer" id="layer-mecha">
+        <div id="layer-mecha">
             <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
         </div>
 
-        <!-- CAPA PRINCESA HERO: Sentada sobre el mecha (más grande y desplazada a la derecha) -->
+        <!-- CAPA PRINCESA HERO: Sentada sobre el mecha -->
         <div id="layer-princess-hero">
             <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
         </div>
@@ -836,26 +876,27 @@
              B. CONTENIDO CRONOLÓGICO: DIAPOSITIVA 1, 2, 3 Y 4
              ==================================================== -->
 
-        <!-- SECCIÓN 1: DIAPOSITIVA 1 (Turnaround, swatches y "UK") -->
-        <div class="hud-card" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
-            <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
+        <!-- SECCIÓN 1: KAYA CONCEPT ART SHEET ("Calla", grande y centrada) -->
+        <div class="hud-card center-x" id="card-kaya-calla" data-float-speed="0.22" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
+            <img src="images/kaya3.png" alt="Kaya Ficha Conceptual Oficial">
         </div>
 
-        <div class="hud-card" id="card-pose-thumbnail" data-float-speed="0.25" onclick="openLightbox('images/render princesa 3.png', 'Princesa Ixk\'uk // Render 3D de Pose')">
+        <!-- DIAPOSITIVA 1: Render 3D de Pose y Turnaround con Paleta -->
+        <div class="hud-card center-x" id="card-pose-thumbnail" data-float-speed="0.24" onclick="openLightbox('images/render princesa 3.png', 'Princesa Ixk\'uk // Render 3D de Pose')">
             <img src="images/render princesa 3.png" alt="Render Princesa 3D">
         </div>
 
-        <div class="hud-card" id="card-pose-thumbnail-2" data-float-speed="0.26" onclick="openLightbox('images/kaya3.png', 'Kaya // Ilustración Original en Ruinas')">
-            <img src="images/kaya3.png" alt="Kaya Ilustración Original">
+        <div class="hud-card center-x" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
+            <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
         </div>
 
         <!-- SECCIÓN 2: DIAPOSITIVA 2 (Expresiones faciales y bocetos de chaqueta) -->
-        <div class="hud-card" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
+        <div class="hud-card center-x" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
             <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
         </div>
 
         <!-- SECCIÓN 2: DIAPOSITIVA 3 (Medallón del Quetzal y Lore Ancestral) -->
-        <div class="hud-card" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
+        <div class="hud-card center-x" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
             <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
         </div>
 
@@ -908,23 +949,23 @@
         </div>
 
         <!-- SECCIÓN 4: DIAPOSITIVA 4 (Ficha técnica oficial "PRINCESA IXK´UK") -->
-        <div class="hud-card" id="card-diapo-4" data-float-speed="0.20" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
+        <div class="hud-card center-x" id="card-diapo-4" data-float-speed="0.20" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
             <img src="images/princesa-diapo4.png" alt="Princesa Diapositiva 4">
         </div>
 
         <!-- Render de estudio en tarjeta naranja -->
-        <div class="hud-card" id="card-speeder-orange" data-float-speed="0.20" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
+        <div class="hud-card center-x" id="card-speeder-orange" data-float-speed="0.20" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
             <img src="images/render de moto6.png" alt="Speeder Studio Render">
         </div>
 
-        <!-- Render 3D de la princesa explorando las ruinas -->
-        <div id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
-            <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
+        <!-- CAPA FINAL: Estructura metálica más pequeña y detrás de la nevera -->
+        <div id="layer-metal-part">
+            <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
         </div>
 
-        <!-- CAPA FINAL: Parte de metal en primer plano al final de la página -->
-        <div class="full-bleed-layer" id="layer-metal-part">
-            <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
+        <!-- Render 3D de la princesa explorando las ruinas (en la nevera, delante del mecha metálico) -->
+        <div class="center-x" id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
+            <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
         </div>
 
     </main>
@@ -1000,10 +1041,10 @@
             }
 
             // Actualizar nodos activos del HUD lateral
-            const checkpoints = [0, 1160, 2550, 3950];
+            const checkpoints = [0, 1300, 4150, 5200];
             depthNodes.forEach((node, i) => {
                 const targetY = checkpoints[i];
-                if (Math.abs(scrollY - targetY) < 650) {
+                if (Math.abs(scrollY - targetY) < 700) {
                     node.classList.add('active');
                 } else {
                     node.classList.remove('active');
@@ -1093,13 +1134,13 @@
                 }
             }
 
-            // CAPA FINAL: Estructura de metal en primer plano (al final de la página)
+            // CAPA FINAL: Estructura de metal (detrás de la princesa en la nevera)
             if (layerMetalPart) {
                 const rect = layerMetalPart.getBoundingClientRect();
                 if (rect.top < windowH + 600 && rect.bottom > -600) {
                     const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
-                    const moveY = offsetFromCenter * 0.38;
-                    const shiftX = mouseX * 24;
+                    const moveY = offsetFromCenter * 0.22;
+                    const shiftX = mouseX * 18;
                     layerMetalPart.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
                 }
             }
