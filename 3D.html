@@ -299,19 +299,19 @@
 
         /* CAPA RUINAS MAYAS (en el fondo): Ruinas mayas luminosas en la selva */
         #layer-temples {
-            top: 200px;
+            top: clamp(100px, 8vw, 150px);
             z-index: 3;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
         }
 
-        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas, centrado a la derecha, detrás de la princesa) */
+        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas, en el suelo central sobre la cascada) */
         #layer-mecha {
             position: absolute;
-            top: clamp(220px, 16vw, 300px);
-            left: calc(50% + clamp(50px, 6vw, 130px));
+            top: clamp(480px, 35vw, 620px);
+            left: calc(50% + clamp(-10px, 0vw, 15px));
             transform: translateX(-50%);
-            width: clamp(720px, 64vw, 1020px);
-            max-width: 68vw;
+            width: clamp(700px, 50vw, 940px);
+            max-width: 56vw;
             z-index: 5;
             pointer-events: none;
             will-change: transform;
@@ -325,19 +325,34 @@
             user-select: none;
         }
 
-        /* CAPA 5 en diagrama: Cascada superior */
+        /* CAPA 5 en diagrama: Cascada superior que baja verticalmente bajo el mecha */
         #layer-waterfall-drop {
-            display: none;
+            position: absolute;
+            top: clamp(660px, 48vw, 800px);
+            left: calc(50% - clamp(60px, 5vw, 100px));
+            transform: translateX(-50%);
+            width: clamp(240px, 18vw, 340px);
+            z-index: 4;
+            pointer-events: none;
+            will-change: transform;
+            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.5));
+        }
+
+        #layer-waterfall-drop img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
-            top: clamp(340px, 24vw, 460px);
-            left: calc(50% + clamp(5px, 1.5vw, 30px));
+            top: clamp(160px, 12vw, 220px);
+            left: calc(50% + clamp(15px, 1.8vw, 35px));
             transform: translateX(-50%);
-            width: clamp(330px, 26vw, 440px);
-            max-width: 30vw;
+            width: clamp(300px, 22vw, 420px);
+            height: calc(clamp(300px, 22vw, 420px) * 1.016);
+            overflow: hidden;
             z-index: 7;
             pointer-events: none;
             will-change: transform;
@@ -421,54 +436,64 @@
             border-radius: 18px;
         }
 
-        /* 1. SECCIÓN KAYA CONCEPT ART SHEET ("Calla", grande y centrada) */
+        /* 1. SECCIÓN HERO CUMBRE MAYA: TARJETA INFERIOR DERECHA (Kaya Concept Art Sheet) */
         #card-kaya-calla {
-            top: 1300px;
-            left: 50%;
+            top: clamp(640px, 46vw, 790px);
+            left: calc(50% + clamp(200px, 18vw, 320px));
             transform: translateX(-50%);
-            width: clamp(620px, 60vw, 900px);
-            padding: 14px;
-            border-radius: 22px;
-        }
-
-        /* Miniatura de pose 3D (ampliada y centrada junto a Diapo 1) */
-        #card-pose-thumbnail {
-            top: 2000px;
-            left: calc(50% - clamp(260px, 23vw, 340px));
-            transform: translateX(-50%);
-            width: clamp(230px, 20vw, 300px);
-            padding: 10px;
-            border-radius: 18px;
-        }
-
-        /* DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK", ampliada y centrada) */
-        #card-diapo-1 {
-            top: 2000px;
-            left: calc(50% + clamp(140px, 13vw, 190px));
-            transform: translateX(-50%);
-            width: clamp(480px, 42vw, 640px);
+            width: clamp(420px, 34vw, 620px);
             padding: 12px;
             border-radius: 20px;
+            border: 1.5px solid var(--cyan-neon);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            z-index: 10;
         }
 
-        /* 2. SECCIÓN MEDIA: DIAPOSITIVA 2 (Expresiones faciales Serious, Confused, Fearful) */
+        /* SECCIÓN HERO CUMBRE MAYA: TARJETA INFERIOR IZQUIERDA (Miniatura de pose con corte biselado 45°) */
+        #card-pose-thumbnail {
+            top: clamp(660px, 48vw, 820px);
+            left: calc(50% - clamp(280px, 27vw, 480px));
+            transform: translateX(-50%);
+            width: clamp(180px, 14vw, 240px);
+            padding: 10px;
+            border-radius: 0;
+            clip-path: polygon(26px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 26px);
+            border: 1.5px solid var(--cyan-neon);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4), inset 0 0 15px rgba(0, 242, 254, 0.15);
+            z-index: 10;
+        }
+
+        /* 2. SECCIÓN CASCADA: DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK") */
+        #card-diapo-1 {
+            top: 1550px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(620px, 55vw, 860px);
+            padding: 12px;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        /* 3. SECCIÓN CASCADA: DIAPOSITIVA 2 (Expresiones faciales Serious, Confused, Fearful) */
         #card-diapo-2 {
-            top: 2750px;
+            top: 2350px;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(620px, 60vw, 900px);
+            width: clamp(620px, 55vw, 860px);
             padding: 14px;
             border-radius: 22px;
+            z-index: 10;
         }
 
-        /* 3. SECCIÓN MEDIA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) */
+        /* 4. SECCIÓN CASCADA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) */
         #card-diapo-3 {
-            top: 3450px;
+            top: 3150px;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(620px, 60vw, 900px);
+            width: clamp(620px, 55vw, 860px);
             padding: 14px;
             border-radius: 22px;
+            z-index: 10;
         }
 
         /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
@@ -766,11 +791,13 @@
             .main-nav { display: none; }
             .depth-meter { display: none; }
             .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
+            #card-pose-thumbnail { clip-path: none !important; border-radius: 20px !important; width: 85% !important; }
             .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
             .holo-panels-grid { flex-wrap: wrap; }
             .holo-panel { width: 44% !important; max-width: none !important; }
             #layer-mecha { position: relative !important; width: 95% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
-            #layer-princess-hero { position: relative !important; width: 75% !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-princess-hero { position: relative !important; width: 75% !important; height: auto !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-waterfall-drop { position: relative !important; width: 60% !important; margin: -40px auto 20px !important; top: auto !important; left: auto !important; transform: none !important; }
             #layer-metal-part { position: relative !important; width: 92% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
             #render-nevera-ruins { position: relative !important; width: 65% !important; margin: -110px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
         }
@@ -792,7 +819,7 @@
 
             <nav class="main-nav">
                 <a href="#cumbre" onclick="scrollToY(0)">Cumbre Maya</a>
-                <a href="#cascada" onclick="scrollToY(1300)">Cascada</a>
+                <a href="#cascada" onclick="scrollToY(1550)">Cascada</a>
                 <a href="#laguna" onclick="scrollToY(4150)">Laguna 3D</a>
                 <a href="#santuario" onclick="scrollToY(5200)">Santuario</a>
                 <a href="Ilustracion.html">Ilustración</a>
@@ -811,7 +838,7 @@
             <span>01 // CUMBRE</span>
             <div class="dot"></div>
         </button>
-        <button class="depth-node" onclick="scrollToY(1300)">
+        <button class="depth-node" onclick="scrollToY(1550)">
             <span>02 // CASCADA</span>
             <div class="dot"></div>
         </button>
@@ -852,6 +879,11 @@
             <img src="images/Cascada glaciar entre rocas estilizadas.png" alt="Cascada glaciar entre rocas estilizadas">
         </div>
 
+        <!-- CAPA WATERFALL: Cascada superior que baja verticalmente bajo el mecha -->
+        <div id="layer-waterfall-drop">
+            <img src="images/Cascada en cañón entre rocas.png" alt="Cascada bajo el mecha">
+        </div>
+
         <!-- CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas -->
         <div id="layer-mecha">
             <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
@@ -873,29 +905,30 @@
         </div>
 
         <!-- ====================================================
-             B. CONTENIDO CRONOLÓGICO: DIAPOSITIVA 1, 2, 3 Y 4
+             B. CONTENIDO CRONOLÓGICO: HERO HUD Y DIAPOSITIVAS
              ==================================================== -->
 
-        <!-- SECCIÓN 1: KAYA CONCEPT ART SHEET ("Calla", grande y centrada) -->
-        <div class="hud-card center-x" id="card-kaya-calla" data-float-speed="0.22" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
+        <!-- SECCIÓN 1: HERO CUMBRE MAYA - TARJETA INFERIOR IZQUIERDA (Miniatura de Pose con corte 45°) -->
+        <div class="hud-card center-x" id="card-pose-thumbnail" data-float-speed="0.12" onclick="openLightbox('images/princesa dibujo quetzal sin fondo1.png', 'Princesa Ixk\'uk // Ilustración Oficial')">
+            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk">
+        </div>
+
+        <!-- SECCIÓN 1: HERO CUMBRE MAYA - TARJETA INFERIOR DERECHA (Kaya Concept Art Sheet) -->
+        <div class="hud-card center-x" id="card-kaya-calla" data-float-speed="0.12" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
             <img src="images/kaya3.png" alt="Kaya Ficha Conceptual Oficial">
         </div>
 
-        <!-- DIAPOSITIVA 1: Render 3D de Pose y Turnaround con Paleta -->
-        <div class="hud-card center-x" id="card-pose-thumbnail" data-float-speed="0.24" onclick="openLightbox('images/render princesa 3.png', 'Princesa Ixk\'uk // Render 3D de Pose')">
-            <img src="images/render princesa 3.png" alt="Render Princesa 3D">
-        </div>
-
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 1 (Turnaround, swatches y lettering 'UK') -->
         <div class="hud-card center-x" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
             <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
         </div>
 
-        <!-- SECCIÓN 2: DIAPOSITIVA 2 (Expresiones faciales y bocetos de chaqueta) -->
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 2 (Expresiones faciales y bocetos de vestuario) -->
         <div class="hud-card center-x" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
             <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
         </div>
 
-        <!-- SECCIÓN 2: DIAPOSITIVA 3 (Medallón del Quetzal y Lore Ancestral) -->
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 3 (Medallón del Quetzal y Lore Ancestral) -->
         <div class="hud-card center-x" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
             <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
         </div>
@@ -1041,7 +1074,7 @@
             }
 
             // Actualizar nodos activos del HUD lateral
-            const checkpoints = [0, 1300, 4150, 5200];
+            const checkpoints = [0, 1550, 4150, 5200];
             depthNodes.forEach((node, i) => {
                 const targetY = checkpoints[i];
                 if (Math.abs(scrollY - targetY) < 700) {
@@ -1095,10 +1128,11 @@
                 layerPrincess.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
             }
 
-            // Cascada superior antigua (si existiera en DOM)
+            // Cascada superior que baja verticalmente bajo el mecha
             if (layerWaterfall) {
-                const moveY = scrollY * 0.20;
-                layerWaterfall.style.transform = `translate3d(calc(-50% + ${(mouseX * 12).toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                const moveY = scrollY * 0.14;
+                const shiftX = mouseX * 12;
+                layerWaterfall.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
             }
 
             // CAPA DE TRANSICIÓN: Cascada glaciar entre rocas estilizadas
