@@ -32,7 +32,6 @@
         }
 
         html {
-            /* Quitamos scroll-behavior: smooth de aquí porque bloqueaba el parallax y los clics */
             background-color: var(--canyon-dark);
         }
 
@@ -349,8 +348,9 @@
             filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
         }
 
+        /* AJUSTE 1: Bajamos segundo_plano_cascada_transparente.png de 3200px a 3680px para tapar el hueco negro */
         #layer-midground-caverns {
-            top: 3200px;
+            top: 3680px;
             z-index: 7;
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.75));
         }
@@ -469,16 +469,17 @@
             z-index: 20;
         }
 
+        /* AJUSTE 2: Agrandamos la princesa con motocicleta y la subimos ligeramente */
         #speeder-water-rush {
             position: absolute;
-            top: 5250px;
+            top: 5080px;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(280px, 24vw, 380px);
-            max-width: 25vw;
-            z-index: 9;
+            width: clamp(450px, 38vw, 650px);
+            max-width: 46vw;
+            z-index: 15;
             pointer-events: none;
-            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.7));
+            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 35px rgba(0, 242, 254, 0.7));
         }
 
         #speeder-water-rush img {
@@ -490,27 +491,34 @@
 
         @keyframes speederHover {
             0% { transform: translateY(0px) rotate(-1deg); }
-            100% { transform: translateY(-12px) rotate(1deg); }
+            100% { transform: translateY(-16px) rotate(1.5deg); }
         }
 
+        /* ==========================================================
+           AJUSTE 3: DEPTH GALLERY (ORIGINKIT / CODROPS) EN VANILLA JS
+           ========================================================== */
         .holo-wireframe-cluster {
             position: absolute;
-            top: 5650px;
+            top: 5560px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 14px;
-            z-index: 20;
+            z-index: 25;
             pointer-events: auto;
             will-change: transform;
+            width: clamp(340px, 68vw, 920px);
         }
 
         .holo-cluster-nav {
             display: flex;
-            gap: 10px;
-            margin-bottom: 2px;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 5;
         }
 
         .holo-tab {
@@ -518,10 +526,10 @@
             border: 1px solid rgba(0, 242, 254, 0.4);
             color: rgba(255, 255, 255, 0.75);
             font-family: var(--font-display);
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 1px;
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -535,57 +543,139 @@
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
         }
 
-        .holo-panels-grid {
-            display: none;
-            gap: 14px;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .holo-panels-grid.active {
-            display: flex;
-        }
-
-        .holo-panel {
+        /* Contenedor principal de la Depth Gallery */
+        .depth-gallery-stage {
             position: relative;
-            width: 160px;
-            max-width: 14vw;
-            background: rgba(0, 242, 254, 0.08);
-            border: 1.5px solid rgba(0, 242, 254, 0.7);
-            border-radius: 16px;
-            padding: 10px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 242, 254, 0.15);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .holo-panel:hover {
-            transform: translateY(-10px) scale(1.06);
-            border-color: #ffffff;
-            box-shadow: 0 0 40px var(--cyan-neon);
-        }
-
-        .holo-panel .holo-tag {
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--cyan-neon);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 6px;
-            text-shadow: 0 0 8px var(--cyan-neon);
-            pointer-events: none;
-        }
-
-        .holo-panel img {
             width: 100%;
-            height: auto;
-            mix-blend-mode: screen;
-            filter: contrast(1.15) brightness(1.1) drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
-            border-radius: 8px;
+            height: 540px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1.5px solid var(--cyan-glow);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 242, 254, 0.22);
+            cursor: grab;
+            user-select: none;
+            touch-action: pan-x;
+            background: #08131d;
+        }
+
+        .depth-gallery-stage:active {
+            cursor: grabbing;
+        }
+
+        .dg-ground {
+            position: absolute;
+            inset: 0;
             pointer-events: none;
+            transition: background 0.1s linear;
+        }
+
+        .dg-grain {
+            position: absolute;
+            inset: 0;
+            background-size: 128px 128px;
+            opacity: 0.1;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        .dg-corridor {
+            position: absolute;
+            inset: 0;
+            perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+            pointer-events: none;
+        }
+
+        .dg-plate {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            overflow: hidden;
+            backface-visibility: hidden;
+            visibility: hidden;
+            opacity: 0;
+            will-change: transform, opacity;
+            border: 1.5px solid rgba(0, 242, 254, 0.65);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 242, 254, 0.25);
+            background: rgba(8, 22, 34, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .dg-plate img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            padding: 18px;
+            pointer-events: none;
+            filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.45));
+        }
+
+        .dg-plate-tag {
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--cyan-neon);
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+            pointer-events: none;
+        }
+
+        /* Controles inferiores dentro del visor Depth Gallery */
+        .dg-hud-controls {
+            position: absolute;
+            bottom: 14px;
+            left: 18px;
+            right: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .dg-hint {
+            font-family: var(--font-display);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.65);
+            background: rgba(6, 16, 24, 0.75);
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+        }
+
+        .dg-btn-group {
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .dg-btn {
+            background: rgba(10, 24, 36, 0.9);
+            border: 1px solid var(--cyan-neon);
+            color: var(--cyan-neon);
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 6px 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dg-btn:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 12px var(--cyan-neon);
         }
 
         #card-diapo-4 {
@@ -769,9 +859,8 @@
             .depth-meter { display: none; }
             .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
             #card-pose-thumbnail { clip-path: none !important; border-radius: 20px !important; width: 85% !important; }
-            .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
-            .holo-panels-grid { flex-wrap: wrap; }
-            .holo-panel { width: 44% !important; max-width: none !important; }
+            .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; width: 94% !important; }
+            .depth-gallery-stage { height: 420px; }
             #layer-mecha { position: relative !important; width: 95% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
             #layer-princess-hero { position: relative !important; width: 75% !important; height: auto !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
             #layer-metal-part { position: relative !important; width: 92% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
@@ -793,7 +882,6 @@
                 </div>
             </a>
 
-            <!-- Usamos return false para que el href="#..." NO cancele el clic del scroll -->
             <nav class="main-nav">
                 <a href="#cumbre" class="kpr-hack" data-value="Cumbre Maya" onclick="scrollToY(0); return false;">Cumbre Maya</a>
                 <a href="#cascada" class="kpr-hack" data-value="Cascada" onclick="scrollToY(2100); return false;">Cascada</a>
@@ -857,6 +945,7 @@
             <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
         </div>
 
+        <!-- AJUSTE 1: Segundo plano cascada más abajo para eliminar el hueco negro -->
         <div class="full-bleed-layer" id="layer-midground-caverns">
             <img src="images/segundo_plano_cascada_transparente.png" alt="Cavernas intermedias">
         </div>
@@ -886,7 +975,7 @@
             <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
         </div>
 
-        <!-- SECCIÓN 3: LAGUNA 3D Y BLUEPRINTS HOLOGRÁFICOS -->
+        <!-- SECCIÓN 3: LAGUNA 3D (MOTO AGRANDADA + DEPTH GALLERY 3D) -->
         <div id="speeder-water-rush" data-float-speed="0.28">
             <img src="images/render de moto5.png" alt="Speeder en el agua">
         </div>
@@ -895,39 +984,22 @@
             <div class="holo-cluster-nav">
                 <button type="button" class="holo-tab active kpr-hack" data-value="Kaya // Renders 3D" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
                 <button type="button" class="holo-tab kpr-hack" data-value="Blueprints Wireframe" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
+                <button type="button" class="holo-tab kpr-hack" data-value="Todos en Corredor 3D" onclick="switchHoloSet('all')">Todos en Corredor 3D</button>
             </div>
 
-            <div class="holo-panels-grid active" id="holo-set-renders">
-                <div class="holo-panel" onclick="openLightbox('images/Render0.5.png', 'Render 0.5 // Frontal T-Pose')">
-                    <div class="holo-tag">Front 0.5</div>
-                    <img src="images/Render0.5.png" alt="Render Frontal 0.5">
-                </div>
-                <div class="holo-panel" onclick="openLightbox('images/Render1.png', 'Render 1.0 // Perfil Lateral')">
-                    <div class="holo-tag">Side 1.0</div>
-                    <img src="images/Render1.png" alt="Render Perfil 1.0">
-                </div>
-                <div class="holo-panel" onclick="openLightbox('images/Render1.5.png', 'Render 1.5 // Perfil Tres Cuartos')">
-                    <div class="holo-tag">Side 1.5</div>
-                    <img src="images/Render1.5.png" alt="Render Perfil 1.5">
-                </div>
-                <div class="holo-panel" onclick="openLightbox('images/Render2.png', 'Render 2.0 // Posterior T-Pose')">
-                    <div class="holo-tag">Back 2.0</div>
-                    <img src="images/Render2.png" alt="Render Posterior 2.0">
-                </div>
-            </div>
-
-            <div class="holo-panels-grid" id="holo-set-wireframes">
-                <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
-                    <div class="holo-tag">Front</div>
-                    <img src="images/render amiga1w.png" alt="Wireframe Frontal">
-                </div>
-                <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
-                    <div class="holo-tag">Back</div>
-                    <img src="images/render amiga2w.png" alt="Wireframe Posterior">
-                </div>
-                <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
-                    <div class="holo-tag">Side</div>
-                    <img src="images/render amiga3w.png" alt="Wireframe Lateral">
+            <!-- Escenario de la Depth Gallery (Originkit) -->
+            <div class="depth-gallery-stage" id="depthGalleryStage">
+                <div class="dg-ground" id="dgGround"></div>
+                <div class="dg-grain" id="dgGrain"></div>
+                <div class="dg-corridor" id="dgCorridor"></div>
+                
+                <div class="dg-hud-controls">
+                    <span class="dg-hint">RUEDA DEL RATÓN O ARRASTRAR PARA VOLAR POR LA GALERÍA 3D</span>
+                    <div class="dg-btn-group">
+                        <button type="button" class="dg-btn" onclick="stepDepthGallery(-1)">&#8592; ANT</button>
+                        <button type="button" class="dg-btn" onclick="stepDepthGallery(1)">SIG &#8594;</button>
+                        <button type="button" class="dg-btn" onclick="zoomFocusedPlate()">&#10530; AMPLIAR</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -972,7 +1044,7 @@
     </div>
 
     <!-- ==========================================================
-       5. MOTOR JAVASCRIPT DEL PARALLAX 3D (ORIGINAL)
+       5. MOTOR JAVASCRIPT DEL PARALLAX 3D + DEPTH GALLERY (ORIGINKIT)
        ========================================================== -->
     <script>
         const layerMountains = document.getElementById('layer-mountains');
@@ -1124,20 +1196,295 @@
             });
         }
 
-        function switchHoloSet(setName) {
-            const tabs = document.querySelectorAll('.holo-tab');
-            const grids = document.querySelectorAll('.holo-panels-grid');
-            tabs.forEach(t => t.classList.remove('active'));
-            grids.forEach(g => g.classList.remove('active'));
-            if (setName === 'renders') {
-                tabs[0]?.classList.add('active');
-                document.getElementById('holo-set-renders')?.classList.add('active');
-            } else {
-                tabs[1]?.classList.add('active');
-                document.getElementById('holo-set-wireframes')?.classList.add('active');
+        // ==========================================================
+        // MOTOR DEPTH GALLERY (ORIGINKIT) PORTADO A VANILLA JS
+        // ==========================================================
+        const DG_SETS = {
+            renders: [
+                { src: 'images/Render0.5.png', tag: 'FRONT 0.5', caption: 'Render 0.5 // Frontal T-Pose', tint: { r: 0, g: 210, b: 255 } },
+                { src: 'images/Render1.png', tag: 'SIDE 1.0', caption: 'Render 1.0 // Perfil Lateral', tint: { r: 0, g: 165, b: 235 } },
+                { src: 'images/Render1.5.png', tag: 'SIDE 1.5', caption: 'Render 1.5 // Perfil Tres Cuartos', tint: { r: 30, g: 230, b: 210 } },
+                { src: 'images/Render2.png', tag: 'BACK 2.0', caption: 'Render 2.0 // Posterior T-Pose', tint: { r: 0, g: 140, b: 220 } }
+            ],
+            wireframes: [
+                { src: 'images/render amiga1w.png', tag: 'WIRE FRONT', caption: 'Proyección Holográfica // Vista Frontal', tint: { r: 0, g: 242, b: 254 } },
+                { src: 'images/render amiga2w.png', tag: 'WIRE BACK', caption: 'Proyección Holográfica // Vista Posterior', tint: { r: 20, g: 185, b: 255 } },
+                { src: 'images/render amiga3w.png', tag: 'WIRE SIDE', caption: 'Proyección Holográfica // Vista Lateral', tint: { r: 0, g: 220, b: 190 } }
+            ]
+        };
+        DG_SETS.all = [...DG_SETS.renders, ...DG_SETS.wireframes];
+
+        const dgStage = document.getElementById('depthGalleryStage');
+        const dgCorridor = document.getElementById('dgCorridor');
+        const dgGround = document.getElementById('dgGround');
+        const dgGrain = document.getElementById('dgGrain');
+
+        // Constantes exactas del componente DepthGallery
+        const VIEW_LEAD = 1;
+        const PERSPECTIVE_RATIO = 3.2;
+        const GAP_MIN = 0.26, GAP_RANGE = 0.9;
+        const SPREAD_RANGE = 0.6;
+        const WHEEL_SPAN = 650, WHEEL_MIN = 0.4, WHEEL_RANGE = 1.6;
+        const DRAG_GAIN = 1.8;
+        const VELOCITY_MAX = 0.03, VELOCITY_DAMPING = 0.12;
+        const POINTER_SMOOTHING = 0.08, BREATH_SMOOTHING = 0.14, DRIFT_SMOOTHING = 0.05, BREATH_GAIN = 1.1;
+        const BREATH_TILT_DEG = 2.6, BREATH_SCALE = 0.03, DEPTH_INFLUENCE = 0.05;
+
+        const dgConfig = {
+            depth: 5,
+            spread: 4.5,
+            cardWidth: 320,
+            cardHeight: 400,
+            radius: 16,
+            sensitivity: 5,
+            smoothing: 6,
+            pointer: 5,
+            breath: 5,
+            drift: 5
+        };
+
+        let dgItems = DG_SETS.renders;
+        let dgNodes = [];
+        let dgTarget = 0;
+        let dgCurrent = 0;
+        let dgPrevious = 0;
+        let dgVelocity = 0;
+        let dgBreath = 0;
+        let dgDrift = 0;
+        let dgPointer = { x: 0, y: 0 };
+        let dgPointerTarget = { x: 0, y: 0 };
+        let dgCurrentFocusIndex = 0;
+
+        function dgClamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+        function dgWrap(v, span) { return ((v % span) + span) % span; }
+        function dgMix(a, b, t) { return a + (b - a) * t; }
+
+        // Generar textura de grano (film grain) como en el useEffect original
+        (function initGrain() {
+            const c = document.createElement('canvas');
+            c.width = 128; c.height = 128;
+            const ctx = c.getContext('2d');
+            if (!ctx || !dgGrain) return;
+            const noise = ctx.createImageData(128, 128);
+            for (let i = 0; i < noise.data.length; i += 4) {
+                const v = Math.round(Math.random() * 255);
+                noise.data[i] = v; noise.data[i+1] = v; noise.data[i+2] = v; noise.data[i+3] = 255;
+            }
+            ctx.putImageData(noise, 0, 0);
+            dgGrain.style.backgroundImage = `url(${c.toDataURL()})`;
+        })();
+
+        function buildDepthGalleryPlates(list) {
+            dgItems = list.length === 1 ? [list[0], { ...list[0] }] : list;
+            dgCorridor.innerHTML = '';
+            dgNodes = [];
+
+            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
+            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
+            const scaleK = (perspective + gap) / perspective;
+            const plateWidth = Math.max(dgConfig.cardWidth, 1) * scaleK;
+            const plateHeight = Math.max(dgConfig.cardHeight, 1) * scaleK;
+
+            dgCorridor.style.perspective = `${perspective}px`;
+
+            dgItems.forEach((item, i) => {
+                const el = document.createElement('div');
+                el.className = 'dg-plate';
+                el.style.width = `${plateWidth}px`;
+                el.style.height = `${plateHeight}px`;
+                el.style.marginLeft = `${-plateWidth / 2}px`;
+                el.style.marginTop = `${-plateHeight / 2}px`;
+                el.style.borderRadius = `${dgConfig.radius * scaleK}px`;
+                el.innerHTML = `
+                    <div class="dg-plate-tag">
+                        <span>// 0${i + 1}</span>
+                        <span>${item.tag}</span>
+                    </div>
+                    <img src="${item.src}" alt="${item.caption}" draggable="false">
+                `;
+                dgCorridor.appendChild(el);
+                dgNodes.push(el);
+            });
+        }
+
+        function tickDepthGallery(now) {
+            requestAnimationFrame(tickDepthGallery);
+            const count = dgItems.length;
+            if (count < 2) return;
+
+            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
+            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
+            const scaleK = (perspective + gap) / perspective;
+            const spreadPx = (dgClamp(dgConfig.spread, 0, 10) / 10) * SPREAD_RANGE * dgConfig.cardWidth;
+            const ease = 0.16 - (dgClamp(dgConfig.smoothing, 0, 10) / 10) * 0.135;
+            const pointerAmount = (dgClamp(dgConfig.pointer, 0, 10) / 10) * 0.11 * dgConfig.cardWidth;
+            const driftAmount = (dgClamp(dgConfig.drift, 0, 10) / 10) * 0.035 * dgConfig.cardHeight;
+            const breathTilt = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_TILT_DEG;
+            const breathScale = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_SCALE;
+
+            dgCurrent += (dgTarget - dgCurrent) * ease;
+
+            const span = count % 2 === 0 ? count : count * 2;
+            if (dgCurrent < -span || dgCurrent > span) {
+                const laps = Math.floor(dgCurrent / span) * span;
+                dgCurrent -= laps;
+                dgTarget -= laps;
+                dgPrevious -= laps;
+            }
+
+            const position = dgCurrent;
+            const raw = position - dgPrevious;
+            dgPrevious = position;
+            dgVelocity += (raw - dgVelocity) * VELOCITY_DAMPING;
+            if (Math.abs(dgVelocity) < 1e-6) dgVelocity = 0;
+
+            const speed = dgClamp(Math.abs(dgVelocity) / VELOCITY_MAX, 0, 1);
+            const signed = dgClamp(dgVelocity / VELOCITY_MAX, -1, 1);
+
+            dgBreath += (speed * BREATH_GAIN - dgBreath) * BREATH_SMOOTHING;
+            dgDrift += (signed - dgDrift) * DRIFT_SMOOTHING;
+            dgPointer.x += (dgPointerTarget.x - dgPointer.x) * POINTER_SMOOTHING;
+            dgPointer.y += (dgPointerTarget.y - dgPointer.y) * POINTER_SMOOTHING;
+
+            const slot = Math.floor(position);
+            const blend = position - slot;
+            const focus = dgWrap(slot, count);
+            const following = dgWrap(slot + 1, count);
+            dgCurrentFocusIndex = blend < 0.5 ? focus : following;
+
+            for (let i = 0; i < count; i++) {
+                if (i === focus || i === following) continue;
+                const node = dgNodes[i];
+                if (node && node.style.visibility !== 'hidden') {
+                    node.style.visibility = 'hidden';
+                    node.style.opacity = '0';
+                }
+            }
+
+            const placePlate = (index, s, opacity, ahead) => {
+                const node = dgNodes[index];
+                if (!node) return;
+                const distance = ahead + VIEW_LEAD;
+                const z = -distance * gap;
+                const influence = opacity * (1 + distance * DEPTH_INFLUENCE);
+                const side = dgWrap(s, 2) === 0 ? -1 : 1;
+                const x = side * spreadPx * scaleK + dgPointer.x * pointerAmount * influence;
+                const y = dgPointer.y * pointerAmount * 0.5 * influence + dgDrift * driftAmount;
+                const lean = dgBreath * opacity;
+                const tiltX = -dgPointer.y * breathTilt * lean;
+                const tiltY = dgPointer.x * breathTilt * lean;
+                const pulse = 1 + breathScale * lean;
+
+                node.style.visibility = 'visible';
+                node.style.opacity = opacity.toFixed(3);
+                node.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scale(${pulse.toFixed(4)})`;
+            };
+
+            placePlate(focus, slot, 1 - blend, -blend);
+            placePlate(following, slot + 1, blend, 1 - blend);
+
+            // Atmósfera dinámica de fondo (Mood Blobs)
+            if (dgGround) {
+                const tA = dgItems[focus].tint || { r: 0, g: 242, b: 254 };
+                const tB = dgItems[following].tint || { r: 0, g: 160, b: 255 };
+                const r = Math.round(dgMix(tA.r, tB.r, blend));
+                const g = Math.round(dgMix(tA.g, tB.g, blend));
+                const b = Math.round(dgMix(tA.b, tB.b, blend));
+                const t = now * 0.0004;
+                const b1x = (50 + Math.sin(t) * 22).toFixed(1);
+                const b1y = (50 + Math.cos(t * 0.8) * 18).toFixed(1);
+                dgGround.style.backgroundImage = `radial-gradient(ellipse 65% 65% at ${b1x}% ${b1y}%, rgba(${r},${g},${b},0.26) 0%, rgba(8,19,29,0.95) 75%)`;
             }
         }
 
+        // Eventos de rueda, arrastre y puntero en el contenedor Depth Gallery
+        if (dgStage) {
+            const wheelToSlot = (WHEEL_MIN + (dgClamp(dgConfig.sensitivity, 0, 10) / 10) * WHEEL_RANGE) / WHEEL_SPAN;
+            const dragToSlot = wheelToSlot * DRAG_GAIN;
+
+            dgStage.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+                dgTarget += delta * wheelToSlot;
+            }, { passive: false });
+
+            let activePointer = null;
+            let lastY = 0;
+            let dragDistance = 0;
+
+            dgStage.addEventListener('pointerdown', (e) => {
+                if (e.target.closest('.dg-btn')) return;
+                activePointer = e.pointerId;
+                lastY = e.clientY;
+                dragDistance = 0;
+                dgStage.setPointerCapture(e.pointerId);
+            });
+
+            dgStage.addEventListener('pointermove', (e) => {
+                const box = dgStage.getBoundingClientRect();
+                if (box.width && box.height) {
+                    dgPointerTarget.x = ((e.clientX - box.left) / box.width) * 2 - 1;
+                    dgPointerTarget.y = -(((e.clientY - box.top) / box.height) * 2 - 1);
+                }
+                if (activePointer !== e.pointerId) return;
+                const dy = e.clientY - lastY;
+                lastY = e.clientY;
+                dragDistance += Math.abs(dy);
+                dgTarget -= dy * dragToSlot;
+            });
+
+            const releaseDrag = (e) => {
+                if (activePointer !== e.pointerId) return;
+                activePointer = null;
+                if (dgStage.hasPointerCapture(e.pointerId)) dgStage.releasePointerCapture(e.pointerId);
+                // Si fue un clic rápido sin arrastrar, abre la imagen enfocada en el Lightbox
+                if (dragDistance < 6 && !e.target.closest('.dg-btn')) {
+                    zoomFocusedPlate();
+                }
+            };
+
+            dgStage.addEventListener('pointerup', releaseDrag);
+            dgStage.addEventListener('pointercancel', releaseDrag);
+            dgStage.addEventListener('pointerleave', () => {
+                dgPointerTarget.x = 0;
+                dgPointerTarget.y = 0;
+            });
+        }
+
+        function stepDepthGallery(dir) {
+            dgTarget = Math.round(dgTarget + dir);
+        }
+
+        function zoomFocusedPlate() {
+            const item = dgItems[dgCurrentFocusIndex];
+            if (item) openLightbox(item.src, item.caption);
+        }
+
+        function switchHoloSet(setName) {
+            const tabs = document.querySelectorAll('.holo-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            if (setName === 'renders') {
+                tabs[0]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.renders);
+            } else if (setName === 'wireframes') {
+                tabs[1]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.wireframes);
+            } else {
+                tabs[2]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.all);
+            }
+            dgTarget = 0;
+            dgCurrent = 0;
+            dgPrevious = 0;
+        }
+
+        // Inicializar Depth Gallery
+        buildDepthGalleryPlates(DG_SETS.renders);
+        requestAnimationFrame(tickDepthGallery);
+
+        // ==========================================================
+        // MODAL LIGHTBOX Y EFECTO HACKY-TEXT KPR
+        // ==========================================================
         const modal = document.getElementById('lightboxModal');
         const modalImg = document.getElementById('lightboxImg');
         const modalCaption = document.getElementById('lightboxCaption');
@@ -1165,7 +1512,6 @@
             }
         });
 
-        // PASO 1: EFECTO DE LETRAS KPR (SIN INTERFERIR CON CLICS)
         const kprGlyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//<>[]";
         function runKprHack(el) {
             const original = el.getAttribute('data-value') || el.textContent;
