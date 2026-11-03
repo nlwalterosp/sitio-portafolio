@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Canto del Quetzal | Experiencia Parallax 3D + KPR HUD</title>
+    <title>El Canto del Quetzal | Experiencia Parallax 3D</title>
     
     <!-- Tipografías oficiales del portafolio -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
 
     <style>
         /* ==========================================================
-           1. VARIABLES (TUS COLORES + SISTEMA MATEMÁTICO KPR)
+           1. VARIABLES Y CONFIGURACIÓN BASE
            ========================================================== */
         :root {
             --cyan-neon: #00f2fe;
@@ -23,26 +23,16 @@
             --canyon-dark: #0d141c;
             --font-display: "Inter Tight", sans-serif;
             --font-body: "Inter", sans-serif;
-
-            /* Variables inyectadas de KPR */
-            --cl-green: #c0fb50;
-            --line-light: hsla(0, 0%, 100%, 0.18);
-            --frame-pad: 16px;
-            --frame-radius: 14px;
-            --ease-out-expo: cubic-bezier(.19, 1, .22, 1);
-            --ease-out-back: cubic-bezier(.175, .885, .32, 1.275);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         html {
-            scroll-behavior: auto; /* Controlado suave para evitar lag con requestAnimationFrame */
+            scroll-behavior: smooth;
             background-color: var(--canyon-dark);
         }
 
@@ -56,87 +46,23 @@
             position: relative;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #090e14; }
-        ::-webkit-scrollbar-thumb { background: #00f2fe55; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f2feaa; }
-
-        /* ==========================================================
-           1.5 MARCO HUD FIJO ESTILO KPR (the-frame-layer)
-           ========================================================== */
-        .kpr-hud-frame {
-            position: fixed;
-            inset: var(--frame-pad);
-            border: 1px solid var(--line-light);
-            border-radius: var(--frame-radius);
-            z-index: 850;
-            pointer-events: none;
-            box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.04);
+        /* Barra de scroll personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        /* Mira lateral izquierda estilo KPR (seg 0:08 del video) */
-        .kpr-crosshair {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: var(--cyan-neon);
-            font-family: monospace;
-            font-size: 14px;
-            opacity: 0.75;
+        ::-webkit-scrollbar-track {
+            background: #090e14;
         }
-        .kpr-crosshair::before,
-        .kpr-crosshair::after {
-            content: "";
-            width: 1px;
-            height: 28px;
-            background: var(--line-light);
+        ::-webkit-scrollbar-thumb {
+            background: #00f2fe55;
+            border-radius: 4px;
         }
-
-        /* Barra inferior de telemetría KPR */
-        .kpr-bottom-bar {
-            position: absolute;
-            bottom: 12px;
-            left: 24px;
-            right: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.55);
-            text-transform: uppercase;
-        }
-
-        .kpr-audio-btn {
-            pointer-events: auto;
-            background: rgba(10, 24, 36, 0.85);
-            border: 1px solid var(--cyan-glow);
-            color: var(--cyan-neon);
-            font-family: var(--font-display);
-            font-size: 0.68rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s var(--ease-out-expo);
-        }
-        .kpr-audio-btn:hover,
-        .kpr-audio-btn.active {
-            background: var(--cyan-neon);
-            color: #000;
-            box-shadow: 0 0 15px var(--cyan-neon);
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2feaa;
         }
 
         /* ==========================================================
-           2. HEADER ORGÁNICO SUPERIOR
+           2. HEADER ORGÁNICO SUPERIOR (ESTILO REFERENCIA)
            ========================================================== */
         .site-header {
             position: fixed;
@@ -145,7 +71,7 @@
             width: 100%;
             z-index: 1000;
             pointer-events: none;
-            transition: transform 0.3s var(--ease-out-expo);
+            transition: transform 0.3s ease;
         }
 
         .header-curve-bg {
@@ -215,7 +141,7 @@
         .main-nav {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
         }
 
         .main-nav a {
@@ -226,7 +152,7 @@
             color: #444037;
             padding: 6px 14px;
             border-radius: 20px;
-            transition: all 0.25s var(--ease-out-expo);
+            transition: all 0.25s ease;
         }
 
         .main-nav a:hover {
@@ -252,7 +178,7 @@
            ========================================================== */
         .depth-meter {
             position: fixed;
-            right: 36px;
+            right: 28px;
             top: 50%;
             transform: translateY(-50%);
             z-index: 900;
@@ -294,7 +220,7 @@
             letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.4);
             cursor: pointer;
-            transition: all 0.3s var(--ease-out-expo);
+            transition: all 0.3s ease;
             background: transparent;
             border: none;
         }
@@ -304,7 +230,7 @@
             height: 6px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s var(--ease-out-back);
+            transition: all 0.3s ease;
         }
 
         .depth-node:hover,
@@ -321,7 +247,7 @@
         }
 
         /* ==========================================================
-           4. ESCENARIO VERTICAL FULL-WIDTH
+           4. ESCENARIO VERTICAL FULL-WIDTH (SIN BORDES NI RECORTES)
            ========================================================== */
         .landing-stage {
             position: relative;
@@ -331,6 +257,7 @@
             background: linear-gradient(180deg, #9bb8c6 0%, #15222e 700px, #0e1720 2800px, #0c1219 5000px, #080d12 100%);
         }
 
+        /* Capas de ancho completo para eliminar espacios sobrantes */
         .full-bleed-layer {
             position: absolute;
             left: 50%;
@@ -354,16 +281,30 @@
         }
 
         /* ==========================================================
-           5. APILAMIENTO EXACTO DE CAPAS
+           5. APILAMIENTO EXACTO DE CAPAS (ORDEN DIAGRAMA DEL USUARIO)
            ========================================================== */
-        #layer-mountains { top: 0px; z-index: 1; opacity: 0.98; }
-        #layer-canyon-rim { top: 100px; z-index: 2; }
+
+        /* CAPA 1: Montañas del fondo (Furthest back - Fondo horizonte lejano) */
+        #layer-mountains {
+            top: 0px;
+            z-index: 1;
+            opacity: 0.98;
+        }
+
+        /* CAPA 2: Cañón superior y watchtowers (fondo20.png - "montañas cafés") */
+        #layer-canyon-rim {
+            top: 100px;
+            z-index: 2;
+        }
+
+        /* CAPA RUINAS MAYAS (en el fondo): Ruinas mayas luminosas en la selva */
         #layer-temples {
             top: clamp(100px, 8vw, 150px);
             z-index: 3;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.55));
         }
 
+        /* CAPA MECHA INDUSTRIAL (encima de las ruinas mayas, en el suelo central sobre la cascada) */
         #layer-mecha {
             position: absolute;
             top: calc(clamp(480px, 35vw, 620px) + 280px);
@@ -376,8 +317,15 @@
             will-change: transform;
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
         }
-        #layer-mecha img { width: 100%; height: auto; display: block; user-select: none; }
 
+        #layer-mecha img {
+            width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
+        }
+
+        /* CAPA 3 en diagrama: Princesa Ixk'uk sentada sobre el mecha */
         #layer-princess-hero {
             position: absolute;
             top: calc(clamp(160px, 12vw, 220px) + 2.5cm + 280px);
@@ -391,8 +339,13 @@
             will-change: transform;
             filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.85));
         }
-        #layer-princess-hero img { width: 100%; height: auto; display: block; }
+        #layer-princess-hero img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
+        /* FONDO CONTINUO DEL CAÑÓN: Cascada glaciar entre rocas estilizadas */
         #layer-canyon-stream {
             top: 920px;
             z-index: 4;
@@ -400,18 +353,21 @@
             filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
         }
 
+        /* CAPA 6 en diagrama: Cavernas intermedias y lagunas (segundo plano) */
         #layer-midground-caverns {
             top: 3200px;
             z-index: 7;
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.75));
         }
 
+        /* CAPA 7 en diagrama: Primer plano rocoso frontal con estatua y río */
         #layer-foreground-rocks {
             top: 4400px;
             z-index: 8;
             filter: drop-shadow(0 35px 65px rgba(0, 0, 0, 0.95));
         }
 
+        /* CAPA FINAL: Estructura metálica más pequeña y detrás de la nevera */
         #layer-metal-part {
             position: absolute;
             top: 6950px;
@@ -423,10 +379,15 @@
             pointer-events: none;
             will-change: transform;
         }
-        #layer-metal-part img { width: 100%; height: auto; display: block; }
+
+        #layer-metal-part img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
         /* ==========================================================
-           6. TARJETAS HUD FLOTANTES (CON SINTAXIS CORREGIDA Y ESTILO KPR)
+           6. TARJETAS HUD FLOTANTES (ORDEN CRONOLÓGICO DIAPO 1, 2, 3 Y 4)
            ========================================================== */
         .hud-card {
             position: absolute;
@@ -441,49 +402,35 @@
             cursor: pointer;
             z-index: 10;
             will-change: transform;
-            transition: box-shadow 0.4s var(--ease-out-expo), border-color 0.4s var(--ease-out-expo);
+            transition: box-shadow 0.35s ease, border-color 0.35s ease;
         }
 
         .hud-card:hover {
             border-color: var(--cyan-neon);
-            box-shadow: 0 30px 65px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 242, 254, 0.65);
+            box-shadow: 0 30px 65px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 242, 254, 0.55);
         }
 
         .hud-card img {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 14px;
-            transition: transform 0.6s var(--ease-out-expo);
+            border-radius: 18px;
         }
 
-        .hud-card:hover img {
-            transform: scale(1.02);
-        }
-
-        /* Etiqueta superior estilo KPR dentro de cada tarjeta */
-        .kpr-card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--font-display);
-            font-size: 0.68rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--cyan-neon);
-            padding: 2px 6px 8px;
-            text-transform: uppercase;
-        }
-
+        /* 1. SECCIÓN HERO CUMBRE MAYA: TARJETA INFERIOR DERECHA (Kaya Concept Art Sheet) */
         #card-kaya-calla {
             top: calc(clamp(640px, 46vw, 790px) + 6.5cm + 280px);
             left: calc(50% + clamp(200px, 18vw, 320px));
             transform: translateX(-50%);
             width: clamp(390px, 31vw, 560px);
             padding: 12px;
+            border-radius: 20px;
+            border: 1.5px solid var(--cyan-neon);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            z-index: 10;
         }
 
-        /* CORREGIDO: Signo '-' restaurado en calc(50% - clamp(...)) */
+        /* SECCIÓN HERO CUMBRE MAYA: TARJETA INFERIOR IZQUIERDA (Miniatura de pose con corte biselado 45°) */
         #card-pose-thumbnail {
             top: calc(clamp(660px, 48vw, 820px) + 6.5cm + 280px);
             left: calc(50% - clamp(280px, 27vw, 480px));
@@ -493,9 +440,11 @@
             border-radius: 0;
             clip-path: polygon(26px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 26px);
             border: 1.5px solid var(--cyan-neon);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4), inset 0 0 15px rgba(0, 242, 254, 0.15);
+            z-index: 10;
         }
 
-        /* CORREGIDO: Signo '-' restaurado en calc(100vw - 40px) */
+        /* 2. SECCIÓN CASCADA: DIAPOSITIVA 1 (Turnaround, swatches y lettering "UK") - CORRIDA A LA DERECHA */
         #card-diapo-1 {
             top: 2100px;
             left: calc(50% + clamp(260px, 24vw, 420px));
@@ -503,9 +452,11 @@
             width: clamp(480px, 44vw, 700px);
             max-width: min(700px, calc(100vw - 40px));
             padding: 12px;
+            border-radius: 20px;
+            z-index: 10;
         }
 
-        /* CORREGIDO: Signos '-' restaurados en left y max-width */
+        /* 3. SECCIÓN CASCADA: DIAPOSITIVA 2 (Expresiones faciales Serious, Confused, Fearful) - CORRIDA A LA IZQUIERDA */
         #card-diapo-2 {
             top: 3150px;
             left: calc(50% - clamp(260px, 24vw, 420px));
@@ -513,8 +464,11 @@
             width: clamp(480px, 44vw, 700px);
             max-width: min(700px, calc(100vw - 40px));
             padding: 14px;
+            border-radius: 22px;
+            z-index: 10;
         }
 
+        /* 4. SECCIÓN CASCADA: DIAPOSITIVA 3 (Medallón rojo del Quetzal y Lore) - CORRIDA A LA DERECHA */
         #card-diapo-3 {
             top: 4200px;
             left: calc(50% + clamp(260px, 24vw, 420px));
@@ -522,9 +476,11 @@
             width: clamp(480px, 44vw, 700px);
             max-width: min(700px, calc(100vw - 40px));
             padding: 14px;
+            border-radius: 22px;
+            z-index: 10;
         }
 
-        /* CORREGIDO: La animación de hover se aplica al <img> hijo para no pelear con el transform del JS */
+        /* 4. SECCIÓN LAGUNA 3D: Speeder en el agua y Paneles holográficos */
         #speeder-water-rush {
             position: absolute;
             top: 5250px;
@@ -535,18 +491,12 @@
             z-index: 9;
             pointer-events: none;
             filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.7));
-        }
-
-        #speeder-water-rush img {
-            width: 100%;
-            height: auto;
-            display: block;
             animation: speederHover 4s ease-in-out infinite alternate;
         }
 
         @keyframes speederHover {
-            0% { transform: translateY(0px) rotate(-1deg); }
-            100% { transform: translateY(-14px) rotate(1.5deg); }
+            0% { transform: translateX(-50%) translateY(0px) rotate(-1deg); }
+            100% { transform: translateX(-50%) translateY(-12px) rotate(1deg); }
         }
 
         .holo-wireframe-cluster {
@@ -563,7 +513,11 @@
             will-change: transform;
         }
 
-        .holo-cluster-nav { display: flex; gap: 10px; margin-bottom: 2px; }
+        .holo-cluster-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
 
         .holo-tab {
             background: rgba(10, 24, 36, 0.85);
@@ -576,7 +530,7 @@
             padding: 6px 16px;
             border-radius: 20px;
             cursor: pointer;
-            transition: all 0.25s var(--ease-out-expo);
+            transition: all 0.25s ease;
         }
 
         .holo-tab:hover,
@@ -593,7 +547,10 @@
             align-items: flex-end;
             justify-content: center;
         }
-        .holo-panels-grid.active { display: flex; }
+
+        .holo-panels-grid.active {
+            display: flex;
+        }
 
         .holo-panel {
             position: relative;
@@ -606,7 +563,7 @@
             backdrop-filter: blur(8px);
             box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 242, 254, 0.15);
             cursor: pointer;
-            transition: all 0.35s var(--ease-out-back);
+            transition: all 0.3s ease;
         }
 
         .holo-panel:hover {
@@ -635,15 +592,18 @@
             border-radius: 8px;
         }
 
+        /* 5. SECCIÓN INFERIOR: DIAPOSITIVA 4 (Ficha técnica grande "PRINCESA IXK´UK") */
         #card-diapo-4 {
             top: 6450px;
             left: 50%;
             transform: translateX(-50%);
             width: clamp(520px, 48vw, 760px);
             padding: 14px;
+            border-radius: 22px;
+            z-index: 10;
         }
 
-        /* CORREGIDO: Signo '-' restaurado en left */
+        /* Tarjeta naranja: Render de estudio del speeder */
         #card-speeder-orange {
             top: 7100px;
             left: calc(50% - clamp(240px, 22vw, 340px));
@@ -654,8 +614,10 @@
             border-radius: 26px;
             padding: 14px;
             box-shadow: 0 20px 50px rgba(242, 104, 41, 0.5);
+            z-index: 10;
         }
 
+        /* Render 3D de la princesa en la nevera: delante de la estructura de metal */
         #render-nevera-ruins {
             position: absolute;
             top: 7080px;
@@ -667,84 +629,151 @@
             cursor: pointer;
             filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95));
             will-change: transform;
+            transition: transform 0.4s ease;
         }
+
+        #render-nevera-ruins:hover {
+            transform: translateX(-50%) scale(1.06) translateY(-5px);
+        }
+
         #render-nevera-ruins img {
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 0.4s var(--ease-out-back);
-        }
-        #render-nevera-ruins:hover img {
-            transform: scale(1.06) translateY(-5px);
         }
 
         /* ==========================================================
-           7. MODAL LIGHTBOX Y FOOTER
+           7. MODAL LIGHTBOX
            ========================================================== */
         .lightbox-modal {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: rgba(5, 12, 18, 0.94);
             backdrop-filter: blur(16px);
             z-index: 5000;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .lightbox-modal.active { opacity: 1; pointer-events: auto; }
+
+        .lightbox-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         .lightbox-container {
             position: relative;
-            max-width: 90vw; max-height: 88vh;
+            max-width: 90vw;
+            max-height: 88vh;
             border: 2px solid var(--cyan-neon);
-            border-radius: 20px; padding: 12px;
+            border-radius: 20px;
+            padding: 12px;
             background: rgba(10, 20, 30, 0.9);
             box-shadow: 0 0 50px rgba(0, 242, 254, 0.45);
             transform: scale(0.92);
-            transition: transform 0.4s var(--ease-out-back);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .lightbox-modal.active .lightbox-container { transform: scale(1); }
-        .lightbox-img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 14px; display: block; }
-        .lightbox-caption {
-            margin-top: 10px; text-align: center;
-            font-family: var(--font-display); font-size: 0.95rem;
-            font-weight: 600; color: var(--cyan-neon); letter-spacing: 1px;
-        }
-        .lightbox-close {
-            position: absolute; top: -18px; right: -18px;
-            width: 40px; height: 40px;
-            background: var(--cyan-neon); color: #000;
-            border: none; border-radius: 50%;
-            font-size: 1.2rem; font-weight: 900; cursor: pointer;
-            box-shadow: 0 0 15px var(--cyan-neon);
-            transition: transform 0.2s var(--ease-out-back), background 0.2s ease;
-        }
-        .lightbox-close:hover { transform: scale(1.15) rotate(90deg); background: #ffffff; }
 
+        .lightbox-modal.active .lightbox-container {
+            transform: scale(1);
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .lightbox-caption {
+            margin-top: 10px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--cyan-neon);
+            letter-spacing: 1px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            width: 40px;
+            height: 40px;
+            background: var(--cyan-neon);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--cyan-neon);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.15) rotate(90deg);
+            background: #ffffff;
+        }
+
+        /* Footer de navegación (al final del recorrido) */
         .site-footer {
-            position: relative; z-index: 100; width: 100%;
-            padding: 90px 20px 120px; text-align: center;
+            position: relative;
+            z-index: 100;
+            width: 100%;
+            padding: 90px 20px 120px;
+            text-align: center;
             background: linear-gradient(180deg, #0c1219 0%, #05080c 100%);
             border-top: 1.5px solid rgba(0, 242, 254, 0.25);
         }
+
         .site-footer h2 {
-            font-family: var(--font-display); font-size: 1.8rem;
-            font-weight: 800; letter-spacing: 1px; color: #ffffff; margin-bottom: 24px;
-        }
-        .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .footer-links a {
-            text-decoration: none; font-family: var(--font-display);
-            font-size: 0.9rem; font-weight: 700; color: var(--cyan-neon);
-            border: 1.5px solid var(--cyan-neon); padding: 10px 24px;
-            border-radius: 30px; transition: all 0.3s var(--ease-out-expo);
-        }
-        .footer-links a:hover {
-            background: var(--cyan-neon); color: #000;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); transform: translateY(-2px);
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 24px;
         }
 
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--cyan-neon);
+            border: 1.5px solid var(--cyan-neon);
+            padding: 10px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Ajustes responsive */
         @media (max-width: 860px) {
-            .main-nav, .depth-meter, .kpr-hud-frame { display: none; }
+            .main-nav { display: none; }
+            .depth-meter { display: none; }
             .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
             #card-pose-thumbnail { clip-path: none !important; border-radius: 20px !important; width: 85% !important; }
             .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; justify-content: center; }
@@ -759,16 +788,6 @@
 </head>
 <body>
 
-    <!-- MARCO HUD PERIMETRAL ESTILO KPR -->
-    <div class="kpr-hud-frame">
-        <div class="kpr-crosshair">+</div>
-        <div class="kpr-bottom-bar">
-            <span id="kprCoords">ALT // 3200M — CUMBRE MAYA</span>
-            <button id="kprAudioBtn" class="kpr-audio-btn" onclick="toggleKprAudio()">[ SONIDO: OFF ]</button>
-            <span id="kprDepthPct">PROFUNDIDAD // 000%</span>
-        </div>
-    </div>
-
     <!-- 1. HEADER ORGÁNICO SUPERIOR -->
     <header class="site-header">
         <div class="header-curve-bg"></div>
@@ -776,18 +795,18 @@
             <a href="index.html" class="brand-logo">
                 <img src="images/LOGO-UNIDO.png" alt="Logo El Canto del Quetzal">
                 <div class="brand-title">
-                    <h1 class="hack-hover" data-value="EL CANTO">El Canto</h1>
-                    <span>Del Quetzal</span>
+                    <h1 class="kpr-hack" data-value="EL CANTO">El Canto</h1>
+                    <span class="kpr-hack" data-value="DEL QUETZAL">Del Quetzal</span>
                 </div>
             </a>
 
             <nav class="main-nav">
-                <a href="#cumbre" class="hack-hover" data-value="Cumbre Maya" onclick="scrollToY(0)">Cumbre Maya</a>
-                <a href="#cascada" class="hack-hover" data-value="Cascada" onclick="scrollToY(2100)">Cascada</a>
-                <a href="#laguna" class="hack-hover" data-value="Laguna 3D" onclick="scrollToY(5250)">Laguna 3D</a>
-                <a href="#santuario" class="hack-hover" data-value="Santuario" onclick="scrollToY(6450)">Santuario</a>
-                <a href="Ilustracion.html" class="hack-hover" data-value="Ilustración">Ilustración</a>
-                <a href="bio.html" class="hack-hover" data-value="Bio">Bio</a>
+                <a href="#cumbre" class="kpr-hack" data-value="Cumbre Maya" onclick="scrollToY(0)">Cumbre Maya</a>
+                <a href="#cascada" class="kpr-hack" data-value="Cascada" onclick="scrollToY(2100)">Cascada</a>
+                <a href="#laguna" class="kpr-hack" data-value="Laguna 3D" onclick="scrollToY(5250)">Laguna 3D</a>
+                <a href="#santuario" class="kpr-hack" data-value="Santuario" onclick="scrollToY(6450)">Santuario</a>
+                <a href="Ilustracion.html" class="kpr-hack" data-value="Ilustración">Ilustración</a>
+                <a href="bio.html" class="kpr-hack" data-value="Bio">Bio</a>
                 <a href="index.html" class="btn-back">&#8592; Menú Principal</a>
             </nav>
         </div>
@@ -799,19 +818,19 @@
             <div class="depth-fill" id="depthFill"></div>
         </div>
         <button class="depth-node active" onclick="scrollToY(0)">
-            <span class="hack-hover" data-value="01 // CUMBRE">01 // CUMBRE</span>
+            <span class="kpr-hack" data-value="01 // CUMBRE">01 // CUMBRE</span>
             <div class="dot"></div>
         </button>
         <button class="depth-node" onclick="scrollToY(2100)">
-            <span class="hack-hover" data-value="02 // CASCADA">02 // CASCADA</span>
+            <span class="kpr-hack" data-value="02 // CASCADA">02 // CASCADA</span>
             <div class="dot"></div>
         </button>
         <button class="depth-node" onclick="scrollToY(5250)">
-            <span class="hack-hover" data-value="03 // LAGUNA HUD">03 // LAGUNA HUD</span>
+            <span class="kpr-hack" data-value="03 // LAGUNA HUD">03 // LAGUNA HUD</span>
             <div class="dot"></div>
         </button>
         <button class="depth-node" onclick="scrollToY(6450)">
-            <span class="hack-hover" data-value="04 // SANTUARIO">04 // SANTUARIO</span>
+            <span class="kpr-hack" data-value="04 // SANTUARIO">04 // SANTUARIO</span>
             <div class="dot"></div>
         </button>
     </aside>
@@ -819,62 +838,76 @@
     <!-- 3. ESCENARIO VERTICAL FULL-WIDTH -->
     <main class="landing-stage" id="landingStage">
 
-        <!-- A. CAPAS DEL PAISAJE -->
+        <!-- ====================================================
+             A. CAPAS DEL PAISAJE (ORDEN EXACTO DEL DIAGRAMA)
+             ==================================================== -->
+
+        <!-- CAPA 1: Montañas del fondo (Fondo absoluto) -->
         <div class="full-bleed-layer" id="layer-mountains">
             <img src="images/montañas-del-fondo1.png" alt="Montañas lejanas">
         </div>
 
+        <!-- CAPA 2: Cañón superior y watchtowers (fondo20.png - montañas cafés) -->
         <div class="full-bleed-layer" id="layer-canyon-rim">
             <img src="images/fondo20.png" alt="Paredes superiores del cañón">
         </div>
 
+        <!-- CAPA RUINAS MAYAS (en el fondo): Ruinas mayas luminosas en la selva -->
         <div class="full-bleed-layer" id="layer-temples">
             <img src="images/Ruinas mayas luminosas en la selva.png" alt="Ruinas mayas luminosas en la selva">
         </div>
 
+        <!-- FONDO CONTINUO DEL CAÑÓN: Cascada glaciar entre rocas estilizadas -->
         <div class="full-bleed-layer" id="layer-canyon-stream">
             <img src="images/Cascada glaciar entre rocas estilizadas.png" alt="Cascada glaciar entre rocas estilizadas">
         </div>
 
+        <!-- CAPA MECHA INDUSTRIAL (encima de las ruinas mayas): Mecha industrial oxidado cubierto de enredaderas -->
         <div id="layer-mecha">
             <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
         </div>
 
+        <!-- CAPA PRINCESA HERO: Sentada sobre el mecha -->
         <div id="layer-princess-hero">
             <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
         </div>
 
+        <!-- CAPA 6 (en diagrama): Cavernas intermedias y lagunas (segundo plano) -->
         <div class="full-bleed-layer" id="layer-midground-caverns">
             <img src="images/segundo_plano_cascada_transparente.png" alt="Cavernas intermedias">
         </div>
 
+        <!-- CAPA 7 (en diagrama): Primer plano frontal con estatua y río -->
         <div class="full-bleed-layer" id="layer-foreground-rocks">
             <img src="images/primer_plano_cascada_transparente.png" alt="Rocas del primer plano">
         </div>
 
-        <!-- B. CONTENIDO CRONOLÓGICO: HERO HUD Y DIAPOSITIVAS -->
+        <!-- ====================================================
+             B. CONTENIDO CRONOLÓGICO: HERO HUD Y DIAPOSITIVAS
+             ==================================================== -->
+
+        <!-- SECCIÓN 1: HERO CUMBRE MAYA - TARJETA INFERIOR IZQUIERDA (Miniatura de Pose con corte 45°) -->
         <div class="hud-card center-x" id="card-pose-thumbnail" data-float-speed="0.12" onclick="openLightbox('images/princesa dibujo quetzal sin fondo1.png', 'Princesa Ixk\'uk // Ilustración Oficial')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 00</span><span>POSE</span></div>
             <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk">
         </div>
 
+        <!-- SECCIÓN 1: HERO CUMBRE MAYA - TARJETA INFERIOR DERECHA (Kaya Concept Art Sheet) -->
         <div class="hud-card center-x" id="card-kaya-calla" data-float-speed="0.12" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 01</span><span>KAYA CONCEPT</span></div>
             <img src="images/kaya3.png" alt="Kaya Ficha Conceptual Oficial">
         </div>
 
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 1 (Turnaround, swatches y lettering 'UK') -->
         <div class="hud-card center-x" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 02</span><span>MODEL SHEET & SWATCHES</span></div>
             <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
         </div>
 
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 2 (Expresiones faciales y bocetos de vestuario) -->
         <div class="hud-card center-x" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 03</span><span>EXPRESSION STUDY</span></div>
             <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
         </div>
 
+        <!-- SECCIÓN 2: CASCADA - DIAPOSITIVA 3 (Medallón del Quetzal y Lore Ancestral) -->
         <div class="hud-card center-x" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 04</span><span>LORE & SELLO QUETZAL</span></div>
             <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
         </div>
 
@@ -885,77 +918,97 @@
 
         <div class="holo-wireframe-cluster" data-float-speed="0.18">
             <div class="holo-cluster-nav">
-                <button type="button" class="holo-tab active" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
-                <button type="button" class="holo-tab" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
+                <button type="button" class="holo-tab active kpr-hack" data-value="Kaya // Renders 3D" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
+                <button type="button" class="holo-tab kpr-hack" data-value="Blueprints Wireframe" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
             </div>
 
+            <!-- Set 1: Renders solicitados (Render 0.5, Render 1, Render 1.5, Render 2) -->
             <div class="holo-panels-grid active" id="holo-set-renders">
                 <div class="holo-panel" onclick="openLightbox('images/Render0.5.png', 'Render 0.5 // Frontal T-Pose')">
-                    <div class="holo-tag">Front 0.5</div>
+                    <div class="holo-tag kpr-hack" data-value="Front 0.5">Front 0.5</div>
                     <img src="images/Render0.5.png" alt="Render Frontal 0.5">
                 </div>
                 <div class="holo-panel" onclick="openLightbox('images/Render1.png', 'Render 1.0 // Perfil Lateral')">
-                    <div class="holo-tag">Side 1.0</div>
+                    <div class="holo-tag kpr-hack" data-value="Side 1.0">Side 1.0</div>
                     <img src="images/Render1.png" alt="Render Perfil 1.0">
                 </div>
                 <div class="holo-panel" onclick="openLightbox('images/Render1.5.png', 'Render 1.5 // Perfil Tres Cuartos')">
-                    <div class="holo-tag">Side 1.5</div>
+                    <div class="holo-tag kpr-hack" data-value="Side 1.5">Side 1.5</div>
                     <img src="images/Render1.5.png" alt="Render Perfil 1.5">
                 </div>
                 <div class="holo-panel" onclick="openLightbox('images/Render2.png', 'Render 2.0 // Posterior T-Pose')">
-                    <div class="holo-tag">Back 2.0</div>
+                    <div class="holo-tag kpr-hack" data-value="Back 2.0">Back 2.0</div>
                     <img src="images/Render2.png" alt="Render Posterior 2.0">
                 </div>
             </div>
 
+            <!-- Set 2: Wireframes previos -->
             <div class="holo-panels-grid" id="holo-set-wireframes">
                 <div class="holo-panel" onclick="openLightbox('images/render amiga1w.png', 'Proyección Holográfica // Vista Frontal')">
-                    <div class="holo-tag">Front</div>
+                    <div class="holo-tag kpr-hack" data-value="Front">Front</div>
                     <img src="images/render amiga1w.png" alt="Wireframe Frontal">
                 </div>
                 <div class="holo-panel" onclick="openLightbox('images/render amiga2w.png', 'Proyección Holográfica // Vista Posterior')">
-                    <div class="holo-tag">Back</div>
+                    <div class="holo-tag kpr-hack" data-value="Back">Back</div>
                     <img src="images/render amiga2w.png" alt="Wireframe Posterior">
                 </div>
                 <div class="holo-panel" onclick="openLightbox('images/render amiga3w.png', 'Proyección Holográfica // Vista Lateral')">
-                    <div class="holo-tag">Side</div>
+                    <div class="holo-tag kpr-hack" data-value="Side">Side</div>
                     <img src="images/render amiga3w.png" alt="Wireframe Lateral">
                 </div>
             </div>
         </div>
 
-        <!-- SECCIÓN 4: DIAPOSITIVA 4 -->
+        <!-- SECCIÓN 4: DIAPOSITIVA 4 (Ficha técnica oficial "PRINCESA IXK´UK") -->
         <div class="hud-card center-x" id="card-diapo-4" data-float-speed="0.20" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
-            <div class="kpr-card-meta"><span>// ARCHIVO 05</span><span>FICHA TÉCNICA 3D</span></div>
             <img src="images/princesa-diapo4.png" alt="Princesa Diapositiva 4">
         </div>
 
+        <!-- Render de estudio en tarjeta naranja -->
         <div class="hud-card center-x" id="card-speeder-orange" data-float-speed="0.20" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
-            <div class="kpr-card-meta" style="color: #fff;"><span>// ARCHIVO 06</span><span>SPEEDER STUDIO</span></div>
             <img src="images/render de moto6.png" alt="Speeder Studio Render">
         </div>
 
+        <!-- CAPA FINAL: Estructura metálica más pequeña y detrás de la nevera -->
         <div id="layer-metal-part">
             <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
         </div>
 
+        <!-- Render 3D de la princesa explorando las ruinas (en la nevera, delante del mecha metálico) -->
         <div class="center-x" id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
             <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
         </div>
 
     </main>
 
-    <!-- FOOTER DE NAVEGACIÓN -->
+    <!-- FOOTER DE NAVEGACIÓN (AL FINAL DE LA PÁGINA) -->
     <footer class="site-footer">
-        <h2>El Canto del Quetzal</h2>
+        <h2 class="kpr-hack" data-value="El Canto del Quetzal">El Canto del Quetzal</h2>
         <div class="footer-links">
-            <a href="#cumbre" onclick="scrollToY(0)">↑ Volver Arriba</a>
-            <a href="Ilustracion.html">Ilustración</a>
-            <a href="bio.html">Biografía</a>
-            <a href="index.html">Menú Principal</a>
+            <a href="#cumbre" class="kpr-hack" data-value="↑ Volver Arriba" onclick="scrollToY(0)">↑ Volver Arriba</a>
+            <a href="Ilustracion.html" class="kpr-hack" data-value="Ilustración">Ilustración</a>
+            <a href="bio.html" class="kpr-hack" data-value="Biografía">Biografía</a>
+            <a href="index.html" class="kpr-hack" data-value="Menú Principal">Menú Principal</a>
         </div>
     </footer>
 
     <!-- 4. MODAL LIGHTBOX INTERACTIVO -->
     <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox(event)">
-        <div class="lightbox-container" onclick="event.stop
+        <div class="lightbox-container" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img class="lightbox-img" id="lightboxImg" src="" alt="Vista ampliada">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+       5. MOTOR JAVASCRIPT ORIGINAL DEL PARALLAX 3D
+       ========================================================== -->
+    <script>
+        // Capas del Hero Superior y Paisaje Completo
+        const layerMountains = document.getElementById('layer-mountains');
+        const layerRim = document.getElementById('layer-canyon-rim');
+        const layerTemples = document.getElementById('layer-temples');
+        const layerMecha = document.getElementById('layer-mecha');
+        const layerPrincess = document.getElementById('layer-princess-hero');
+        const layerCanyonStream = document.getElementById('layer-canyon
