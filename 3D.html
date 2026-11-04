@@ -45,7 +45,6 @@
             position: relative;
         }
 
-        /* Bloquea el scroll de fondo mientras la intro blanca está activa */
         body.intro-locked {
             overflow: hidden;
         }
@@ -66,136 +65,118 @@
         }
 
         /* ==========================================================
-           0. PANTALLA DE INTRO BLANCA (DOT SCATTER + ZOOM OUT)
+           0. TELÓN BLANCO INICIAL + DOT SCATTER QUE VIAJA ARRIBA A LA IZQUIERDA
            ========================================================== */
-        .scatter-intro-overlay {
+        #whiteCurtainOverlay {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             background-color: #EFECEC;
             z-index: 9999;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             user-select: none;
-            touch-action: manipulation;
             cursor: pointer;
-            clip-path: inset(0% 0% 0% 0% round 0px);
-            transition:
-                clip-path 1.25s cubic-bezier(0.77, 0, 0.175, 1) 0.25s,
-                opacity 0.95s ease 0.55s,
-                visibility 0s linear 1.55s;
+            opacity: 1;
+            /* El telón blanco se desvanece suavemente después de que el texto empieza a encogerse hacia la esquina */
+            transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.55s;
         }
 
-        /* Estado cuando se activa el Zoom Out y se abre la página */
-        .scatter-intro-overlay.zoom-out-open {
-            clip-path: inset(50% 50% 50% 50% round 40px);
+        #whiteCurtainOverlay.curtain-open {
             opacity: 0;
-            visibility: hidden;
             pointer-events: none;
         }
 
-        .scatter-svg-stage {
+        #scatterStage {
             position: relative;
-            width: 100%;
-            height: 100%;
-            transform: scale(1);
+            width: 100vw;
+            height: 100vh;
             transform-origin: center center;
-            transition: transform 1.15s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.9s ease 0.2s;
+            /* Transición suave para achicarse y ubicarse arriba a la izquierda */
+            transition:
+                transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.65s ease 0.5s;
             will-change: transform, opacity;
         }
 
-        /* El texto se hace más pequeño (Zoom Out) antes de abrirse la página */
-        .scatter-intro-overlay.zoom-out-open .scatter-svg-stage {
-            transform: scale(0.28);
-            opacity: 0;
-        }
-
-        .scatter-svg-stage svg {
-            position: absolute;
-            inset: 0;
+        #scatterSvg {
             width: 100%;
             height: 100%;
             display: block;
         }
 
-        .scatter-enter-cta {
+        .intro-click-hint {
             position: absolute;
-            bottom: 42px;
+            bottom: 48px;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
             font-family: var(--font-display);
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 3px;
             text-transform: uppercase;
-            color: #1a1a1a;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1.5px solid rgba(0, 0, 0, 0.18);
-            padding: 12px 26px;
+            color: #2c2923;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            padding: 10px 24px;
             border-radius: 30px;
-            backdrop-filter: blur(6px);
-            cursor: pointer;
-            transition: all 0.35s ease;
-            z-index: 5;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.35s ease;
         }
 
-        .scatter-enter-cta:hover {
-            background: #000000;
-            color: #EFECEC;
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .scatter-intro-overlay.zoom-out-open .scatter-enter-cta {
+        #whiteCurtainOverlay.curtain-open .intro-click-hint {
             opacity: 0;
-            transform: translateX(-50%) scale(0.8);
+            transform: translateX(-50%) translateY(10px);
         }
 
         /* ==========================================================
-           TRANSICIÓN SUAVE DE IMÁGENES AL ENTRAR Y AL HACER SCROLL
+           TRANSICIÓN LIGERA Y SUAVE DE LAS IMÁGENES AL ABRIR EL TELÓN
            ========================================================== */
-        .landing-stage img {
-            opacity: 0;
-            transform: scale(1.04);
-            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+        @keyframes softHeroReveal {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(18px) scale(1.02);
+                filter: brightness(1.6) blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0px) scale(1);
+                filter: brightness(1) blur(0px);
+            }
         }
 
-        /* Cuando se abre la intro, las capas del paisaje aparecen escalonadas suavemente */
-        body.page-revealed #layer-mountains img { opacity: 1; transform: scale(1); transition-delay: 0.10s; }
-        body.page-revealed #layer-canyon-rim img { opacity: 1; transform: scale(1); transition-delay: 0.22s; }
-        body.page-revealed #layer-temples img { opacity: 1; transform: scale(1); transition-delay: 0.34s; }
-        body.page-revealed #layer-canyon-stream img { opacity: 1; transform: scale(1); transition-delay: 0.44s; }
-        body.page-revealed #layer-mecha img { opacity: 1; transform: scale(1); transition-delay: 0.56s; }
-        body.page-revealed #layer-princess-hero img { opacity: 1; transform: scale(1); transition-delay: 0.68s; }
-        body.page-revealed #layer-midground-caverns img,
-        body.page-revealed #layer-foreground-rocks img,
-        body.page-revealed #layer-metal-part img {
-            opacity: 1;
-            transform: scale(1);
-            transition-delay: 0.3s;
+        /* Cuando se abre el telón blanco, cada imagen del inicio hace un fade ligero escalonado */
+        body.curtain-opening #layer-mountains img,
+        body.curtain-opening #layer-canyon-rim img,
+        body.curtain-opening #layer-temples img,
+        body.curtain-opening #layer-canyon-stream img,
+        body.curtain-opening #layer-mecha img,
+        body.curtain-opening #layer-princess-hero img {
+            animation: softImgFadeIn 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
-        /* Aparición suave de tarjetas HUD y elementos interactivos cuando entran en pantalla */
-        .smooth-reveal-item {
-            opacity: 0;
-            transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
-        }
+        body.curtain-opening #layer-mountains img { animation-delay: 0.25s; }
+        body.curtain-opening #layer-canyon-rim img { animation-delay: 0.38s; }
+        body.curtain-opening #layer-temples img { animation-delay: 0.50s; }
+        body.curtain-opening #layer-canyon-stream img { animation-delay: 0.60s; }
+        body.curtain-opening #layer-mecha img { animation-delay: 0.72s; }
+        body.curtain-opening #layer-princess-hero img { animation-delay: 0.85s; }
 
-        .smooth-reveal-item.is-visible {
-            opacity: 1;
-        }
-
-        .smooth-reveal-item.is-visible img {
-            opacity: 1;
-            transform: scale(1);
+        @keyframes softImgFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(1.035) translateY(12px);
+                filter: brightness(1.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: brightness(1);
+            }
         }
 
         /* ==========================================================
@@ -208,14 +189,7 @@
             width: 100%;
             z-index: 1000;
             pointer-events: none;
-            opacity: 0;
-            transform: translateY(-30px);
-            transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s, opacity 0.9s ease 0.4s;
-        }
-
-        body.page-revealed .site-header {
-            opacity: 1;
-            transform: translateY(0);
+            transition: transform 0.3s ease;
         }
 
         .header-curve-bg {
@@ -335,12 +309,6 @@
             align-items: flex-end;
             gap: 16px;
             pointer-events: auto;
-            opacity: 0;
-            transition: opacity 1s ease 0.6s;
-        }
-
-        body.page-revealed .depth-meter {
-            opacity: 1;
         }
 
         .depth-track {
@@ -499,7 +467,7 @@
             filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
         }
 
-        /* Segundo plano cascada bajado a 3680px para tapar el hueco negro */
+        /* Segundo plano cascada a 3680px para tapar el hueco negro */
         #layer-midground-caverns {
             top: 3680px;
             z-index: 7;
@@ -531,7 +499,7 @@
         }
 
         /* ==========================================================
-           6. TARJETAS HUD FLOTANTES (ORDEN CRONOLÓGICO DIAPO 1, 2, 3 Y 4)
+           6. TARJETAS HUD FLOTANTES (CON TRANSICIÓN SUAVE AL BAJAR)
            ========================================================== */
         .hud-card {
             position: absolute;
@@ -546,6 +514,7 @@
             cursor: pointer;
             z-index: 20;
             will-change: transform, opacity;
+            transition: box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.85s ease;
         }
 
         .hud-card:hover {
@@ -559,6 +528,15 @@
             display: block;
             border-radius: 18px;
             pointer-events: none;
+        }
+
+        /* Clase suave para las imágenes a medida que se hace scroll */
+        .soft-scroll-fade {
+            opacity: 0;
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .soft-scroll-fade.in-view {
+            opacity: 1;
         }
 
         #card-kaya-calla {
@@ -757,8 +735,6 @@
             object-fit: contain;
             padding: 18px;
             pointer-events: none;
-            opacity: 1 !important;
-            transform: none !important;
             filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.45));
         }
 
@@ -776,4 +752,10 @@
             color: var(--cyan-neon);
             text-transform: uppercase;
             text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
-            pointer-events
+            pointer-events: none;
+        }
+
+        .dg-hud-controls {
+            position: absolute;
+            bottom: 14px;
+            left: 18px;
