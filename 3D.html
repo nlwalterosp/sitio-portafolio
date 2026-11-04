@@ -759,3 +759,757 @@
             position: absolute;
             bottom: 14px;
             left: 18px;
+            right: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .dg-hint {
+            font-family: var(--font-display);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.65);
+            background: rgba(6, 16, 24, 0.75);
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+        }
+
+        .dg-btn-group {
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .dg-btn {
+            background: rgba(10, 24, 36, 0.9);
+            border: 1px solid var(--cyan-neon);
+            color: var(--cyan-neon);
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 6px 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dg-btn:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 12px var(--cyan-neon);
+        }
+
+        #card-diapo-4 {
+            top: 6450px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(520px, 48vw, 760px);
+            padding: 14px;
+            border-radius: 22px;
+            z-index: 20;
+        }
+
+        #card-speeder-orange {
+            top: 7100px;
+            left: calc(50% - clamp(240px, 22vw, 340px));
+            transform: translateX(-50%);
+            width: clamp(400px, 34vw, 500px);
+            background: linear-gradient(135deg, #f26829 0%, #c9440c 100%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 26px;
+            padding: 14px;
+            box-shadow: 0 20px 50px rgba(242, 104, 41, 0.5);
+            z-index: 20;
+        }
+
+        #render-nevera-ruins {
+            position: absolute;
+            top: 7080px;
+            left: calc(50% + clamp(150px, 14vw, 230px));
+            transform: translateX(-50%);
+            width: clamp(240px, 19vw, 320px);
+            z-index: 22;
+            pointer-events: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95));
+            will-change: transform, opacity;
+            transition: transform 0.4s ease, opacity 0.9s ease;
+        }
+
+        #render-nevera-ruins:hover {
+            transform: translateX(-50%) scale(1.06) translateY(-5px);
+        }
+
+        #render-nevera-ruins img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* ==========================================================
+           7. MODAL LIGHTBOX
+           ========================================================== */
+        .lightbox-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 12, 18, 0.94);
+            backdrop-filter: blur(16px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 88vh;
+            border: 2px solid var(--cyan-neon);
+            border-radius: 20px;
+            padding: 12px;
+            background: rgba(10, 20, 30, 0.9);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.45);
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .lightbox-modal.active .lightbox-container {
+            transform: scale(1);
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .lightbox-caption {
+            margin-top: 10px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--cyan-neon);
+            letter-spacing: 1px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            width: 40px;
+            height: 40px;
+            background: var(--cyan-neon);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--cyan-neon);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.15) rotate(90deg);
+            background: #ffffff;
+        }
+
+        .site-footer {
+            position: relative;
+            z-index: 100;
+            width: 100%;
+            padding: 90px 20px 120px;
+            text-align: center;
+            background: linear-gradient(180deg, #0c1219 0%, #05080c 100%);
+            border-top: 1.5px solid rgba(0, 242, 254, 0.25);
+        }
+
+        .site-footer h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--cyan-neon);
+            border: 1.5px solid var(--cyan-neon);
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 860px) {
+            .main-nav { display: none; }
+            .depth-meter { display: none; }
+            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
+            #card-pose-thumbnail { clip-path: none !important; border-radius: 20px !important; width: 85% !important; }
+            .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; width: 94% !important; }
+            .depth-gallery-stage { height: 420px; }
+            #layer-mecha { position: relative !important; width: 95% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-princess-hero { position: relative !important; width: 75% !important; height: auto !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
+            #layer-metal-part { position: relative !important; width: 92% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
+            #render-nevera-ruins { position: relative !important; width: 65% !important; margin: -110px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
+        }
+    </style>
+</head>
+<body class="intro-locked">
+
+    <!-- ==========================================================
+         0. TELÓN BLANCO INICIAL CON LAS LETRAS ANIMADAS (DOT SCATTER)
+         ========================================================== -->
+    <div id="whiteCurtainOverlay" title="Haz clic sobre las letras para entrar">
+        <div id="scatterStage">
+            <svg id="scatterSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="intro-click-hint">HAZ CLIC SOBRE LAS LETRAS PARA ENTRAR</div>
+    </div>
+
+    <!-- 1. HEADER ORGÁNICO SUPERIOR -->
+    <header class="site-header">
+        <div class="header-curve-bg"></div>
+        <div class="header-content">
+            <a href="index.html" class="brand-logo" id="brandLogoTarget">
+                <img src="images/LOGO-UNIDO.png" alt="Logo El Canto del Quetzal">
+                <div class="brand-title">
+                    <h1 class="kpr-hack" data-value="El Canto">El Canto</h1>
+                    <span class="kpr-hack" data-value="Del Quetzal">Del Quetzal</span>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <a href="#cumbre" class="kpr-hack" data-value="Cumbre Maya" onclick="scrollToY(0); return false;">Cumbre Maya</a>
+                <a href="#cascada" class="kpr-hack" data-value="Cascada" onclick="scrollToY(2100); return false;">Cascada</a>
+                <a href="#laguna" class="kpr-hack" data-value="Laguna 3D" onclick="scrollToY(5250); return false;">Laguna 3D</a>
+                <a href="#santuario" class="kpr-hack" data-value="Santuario" onclick="scrollToY(6450); return false;">Santuario</a>
+                <a href="Ilustracion.html" class="kpr-hack" data-value="Ilustración">Ilustración</a>
+                <a href="bio.html" class="kpr-hack" data-value="Bio">Bio</a>
+                <a href="index.html" class="btn-back">&#8592; Menú Principal</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. HUD LATERAL DE PROFUNDIDAD -->
+    <aside class="depth-meter">
+        <div class="depth-track">
+            <div class="depth-fill" id="depthFill"></div>
+        </div>
+        <button type="button" class="depth-node active" onclick="scrollToY(0)">
+            <span class="kpr-hack" data-value="01 // CUMBRE">01 // CUMBRE</span>
+            <div class="dot"></div>
+        </button>
+        <button type="button" class="depth-node" onclick="scrollToY(2100)">
+            <span class="kpr-hack" data-value="02 // CASCADA">02 // CASCADA</span>
+            <div class="dot"></div>
+        </button>
+        <button type="button" class="depth-node" onclick="scrollToY(5250)">
+            <span class="kpr-hack" data-value="03 // LAGUNA HUD">03 // LAGUNA HUD</span>
+            <div class="dot"></div>
+        </button>
+        <button type="button" class="depth-node" onclick="scrollToY(6450)">
+            <span class="kpr-hack" data-value="04 // SANTUARIO">04 // SANTUARIO</span>
+            <div class="dot"></div>
+        </button>
+    </aside>
+
+    <!-- 3. ESCENARIO VERTICAL FULL-WIDTH -->
+    <main class="landing-stage" id="landingStage">
+
+        <!-- A. CAPAS DEL PAISAJE -->
+        <div class="full-bleed-layer" id="layer-mountains">
+            <img src="images/montañas-del-fondo1.png" alt="Montañas lejanas">
+        </div>
+
+        <div class="full-bleed-layer" id="layer-canyon-rim">
+            <img src="images/fondo20.png" alt="Paredes superiores del cañón">
+        </div>
+
+        <div class="full-bleed-layer" id="layer-temples">
+            <img src="images/Ruinas mayas luminosas en la selva.png" alt="Ruinas mayas luminosas en la selva">
+        </div>
+
+        <div class="full-bleed-layer" id="layer-canyon-stream">
+            <img src="images/Cascada glaciar entre rocas estilizadas.png" alt="Cascada glaciar entre rocas estilizadas">
+        </div>
+
+        <div id="layer-mecha">
+            <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
+        </div>
+
+        <div id="layer-princess-hero">
+            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
+        </div>
+
+        <!-- Segundo plano cascada a 3680px -->
+        <div class="full-bleed-layer" id="layer-midground-caverns">
+            <img src="images/segundo_plano_cascada_transparente.png" alt="Cavernas intermedias">
+        </div>
+
+        <div class="full-bleed-layer" id="layer-foreground-rocks">
+            <img src="images/primer_plano_cascada_transparente.png" alt="Rocas del primer plano">
+        </div>
+
+        <!-- B. CONTENIDO CRONOLÓGICO: HERO HUD Y DIAPOSITIVAS -->
+        <div class="hud-card center-x soft-scroll-fade" id="card-pose-thumbnail" data-float-speed="0.12" onclick="openLightbox('images/princesa dibujo quetzal sin fondo1.png', 'Princesa Ixk\'uk // Ilustración Oficial')">
+            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk">
+        </div>
+
+        <div class="hud-card center-x soft-scroll-fade" id="card-kaya-calla" data-float-speed="0.12" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
+            <img src="images/kaya3.png" alt="Kaya Ficha Conceptual Oficial">
+        </div>
+
+        <div class="hud-card center-x soft-scroll-fade" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
+            <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
+        </div>
+
+        <div class="hud-card center-x soft-scroll-fade" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
+            <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
+        </div>
+
+        <div class="hud-card center-x soft-scroll-fade" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
+            <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
+        </div>
+
+        <!-- SECCIÓN 3: LAGUNA 3D (MOTO AGRANDADA + DEPTH GALLERY 3D) -->
+        <div id="speeder-water-rush" class="soft-scroll-fade" data-float-speed="0.28">
+            <img src="images/render de moto5.png" alt="Speeder en el agua">
+        </div>
+
+        <div class="holo-wireframe-cluster soft-scroll-fade" data-float-speed="0.18">
+            <div class="holo-cluster-nav">
+                <button type="button" class="holo-tab active kpr-hack" data-value="Kaya // Renders 3D" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
+                <button type="button" class="holo-tab kpr-hack" data-value="Blueprints Wireframe" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
+                <button type="button" class="holo-tab kpr-hack" data-value="Todos en Corredor 3D" onclick="switchHoloSet('all')">Todos en Corredor 3D</button>
+            </div>
+
+            <div class="depth-gallery-stage" id="depthGalleryStage">
+                <div class="dg-ground" id="dgGround"></div>
+                <div class="dg-grain" id="dgGrain"></div>
+                <div class="dg-corridor" id="dgCorridor"></div>
+                
+                <div class="dg-hud-controls">
+                    <span class="dg-hint">RUEDA DEL RATÓN O ARRASTRAR PARA VOLAR POR LA GALERÍA 3D</span>
+                    <div class="dg-btn-group">
+                        <button type="button" class="dg-btn" onclick="stepDepthGallery(-1)">&#8592; ANT</button>
+                        <button type="button" class="dg-btn" onclick="stepDepthGallery(1)">SIG &#8594;</button>
+                        <button type="button" class="dg-btn" onclick="zoomFocusedPlate()">&#10530; AMPLIAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: DIAPOSITIVA 4 -->
+        <div class="hud-card center-x soft-scroll-fade" id="card-diapo-4" data-float-speed="0.20" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
+            <img src="images/princesa-diapo4.png" alt="Princesa Diapositiva 4">
+        </div>
+
+        <div class="hud-card center-x soft-scroll-fade" id="card-speeder-orange" data-float-speed="0.20" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
+            <img src="images/render de moto6.png" alt="Speeder Studio Render">
+        </div>
+
+        <div id="layer-metal-part">
+            <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
+        </div>
+
+        <div class="center-x soft-scroll-fade" id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
+            <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
+        </div>
+
+    </main>
+
+    <!-- FOOTER DE NAVEGACIÓN -->
+    <footer class="site-footer">
+        <h2 class="kpr-hack" data-value="El Canto del Quetzal">El Canto del Quetzal</h2>
+        <div class="footer-links">
+            <a href="#cumbre" onclick="scrollToY(0); return false;">↑ Volver Arriba</a>
+            <a href="Ilustracion.html">Ilustración</a>
+            <a href="bio.html">Biografía</a>
+            <a href="index.html">Menú Principal</a>
+        </div>
+    </footer>
+
+    <!-- 4. MODAL LIGHTBOX INTERACTIVO -->
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+        <div class="lightbox-container" onclick="event.stopPropagation()">
+            <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img class="lightbox-img" id="lightboxImg" src="" alt="Vista ampliada">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+       5. JAVASCRIPT: INTRO DOT SCATTER + PARALLAX + DEPTH GALLERY
+       ========================================================== -->
+    <script>
+        /* ==========================================================
+           A. PANTALLA BLANCA + DOT SCATTER QUE VIAJA ARRIBA A LA IZQUIERDA
+           ========================================================== */
+        (function() {
+            const PAPER_CELL_SIZE = 13;
+            const PAPER_DOT_SIZE = 9;
+            const PAPER_GLYPH_HEIGHT = 132;
+            const REFERENCE_WIDTH = 720;
+            const REFERENCE_HEIGHT = 405;
+            const REFERENCE_DOT_SIZE = 8.6;
+
+            const PRESET = {
+                text: "el canto del Quetzal",
+                cursorRadius: 115,
+                color: "#000000",
+                letterGap: 1.25,
+                cellScale: 1.65,
+                fillRatio: 0.56,
+                maxWidth: 0.94
+            };
+
+            const mark = (x, y, width = PAPER_DOT_SIZE, height = PAPER_DOT_SIZE) => ({ x, y, width, height });
+            const glyph = (marks) => ({
+                width: Math.max(...marks.map(m => m.x + m.width)),
+                marks
+            });
+
+            const GLYPHS = {
+                " ": { width: PAPER_CELL_SIZE * 2, marks: [] },
+                a: glyph([mark(10,27,28,9),mark(0,41,10,9),mark(38,41,10,9),mark(29,54,18,9),mark(38,67,9,10),mark(10,68,19,9),mark(0,81,10,10),mark(38,81,9,10),mark(9,95,29,9),mark(47,95,10,9)]),
+                b: glyph([mark(0,0,9,9),mark(0,13,9,10),mark(0,27,9,10),mark(19,27,28,9),mark(0,41,19,9),mark(47,41,10,9),mark(0,54,9,10),mark(47,54,10,10),mark(0,68,9,9),mark(47,68,10,9),mark(0,81,19,10),mark(47,81,10,10),mark(0,95,9,9),mark(19,95,28,9)]),
+                c: glyph([mark(10,27,28,9),mark(0,41,9,9),mark(38,41,9,9),mark(0,54,9,9),mark(0,68,9,9),mark(0,81,9,10),mark(38,81,9,10),mark(10,95,27,9)]),
+                d: glyph([mark(48,0,9,9),mark(48,13,9,10),mark(48,27,9,10),mark(10,27,28,9),mark(38,41,19,9),mark(0,41,10,9),mark(48,54,9,10),mark(0,54,10,10),mark(48,68,9,9),mark(0,68,10,9),mark(38,81,19,10),mark(0,81,10,10),mark(48,95,9,9),mark(10,95,28,9)]),
+                e: glyph([mark(9,27,38,9),mark(0,41,9,9),mark(47,41,10,9),mark(0,54,56,9),mark(0,68,9,9),mark(0,81,9,10),mark(47,81,10,10),mark(10,95,37,9)]),
+                f: glyph([mark(10,0,28,9),mark(0,13,9,9),mark(0,27,9,9),mark(10,27,38,9),mark(0,41,9,9),mark(0,54,38,9),mark(0,67,9,9),mark(0,81,9,9),mark(0,95,9,9)]),
+                g: glyph([mark(10,27,38,9),mark(0,41,9,9),mark(48,41,9,9),mark(0,54,9,9),mark(48,54,9,9),mark(0,67,9,9),mark(48,67,9,9),mark(10,81,38,9),mark(48,95,9,9),mark(48,108,9,9),mark(20,122,28,9)]),
+                h: glyph([mark(0,0,9,9),mark(0,13,9,9),mark(0,27,9,9),mark(19,27,28,9),mark(0,41,9,9),mark(47,41,9,9),mark(0,54,9,9),mark(47,54,9,9),mark(0,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(47,81,9,9),mark(0,95,9,9),mark(47,95,9,9)]),
+                i: glyph([mark(0,0,19,9),mark(0,27,19,9),mark(10,41,9,9),mark(10,54,9,9),mark(10,67,9,10),mark(10,81,9,10),mark(10,95,9,9)]),
+                j: glyph([mark(0,0,19,9),mark(0,27,19,9),mark(10,41,9,9),mark(10,54,9,9),mark(10,67,9,10),mark(10,81,9,10),mark(10,95,9,9),mark(0,108,9,9),mark(0,122,19,9)]),
+                k: glyph([mark(0,0,9,9),mark(0,13,9,9),mark(0,27,9,9),mark(0,41,9,9),mark(0,54,9,9),mark(0,67,9,9),mark(0,81,9,9),mark(0,95,9,9),mark(38,27,9,9),mark(19,41,19,9),mark(0,54,28,9),mark(19,67,19,9),mark(38,81,9,9),mark(57,95,9,9)]),
+                l: glyph([mark(0,0,10,9),mark(1,13,9,10),mark(0,27,10,10),mark(1,41,9,9),mark(0,54,10,9),mark(0,67,10,10),mark(0,81,10,10),mark(10,95,10,9)]),
+                m: glyph([mark(19,27,9,10),mark(38,27,18,10),mark(66,27,28,9),mark(19,41,19,9),mark(57,41,19,9),mark(94,41,10,9),mark(18,54,10,9),mark(56,54,10,10),mark(94,54,10,9),mark(18,67,10,10),mark(56,67,10,10),mark(95,67,9,10),mark(18,81,10,10),mark(56,81,10,10),mark(95,81,9,10),mark(18,95,10,9),mark(56,95,10,9),mark(94,95,10,9)]),
+                n: glyph([mark(0,27,9,9),mark(19,27,28,9),mark(0,41,9,9),mark(47,41,9,9),mark(0,54,9,9),mark(47,54,9,9),mark(0,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(47,81,9,9),mark(0,95,9,9),mark(47,95,9,9)]),
+                o: glyph([mark(10,27,38,9),mark(0,41,10,9),mark(48,41,10,9),mark(0,54,10,9),mark(48,54,10,10),mark(1,67,9,10),mark(48,67,10,10),mark(0,81,10,10),mark(48,81,10,10),mark(10,95,38,9)]),
+                p: glyph([mark(0,27,9,10),mark(19,27,28,9),mark(0,41,19,9),mark(47,41,10,9),mark(0,54,9,10),mark(47,54,10,10),mark(0,68,9,9),mark(47,68,10,9),mark(0,81,19,10),mark(47,81,10,10),mark(0,95,9,9),mark(19,95,28,9),mark(0,108,9,9),mark(0,122,9,9)]),
+                q: glyph([mark(48,27,9,10),mark(10,27,28,9),mark(38,41,19,9),mark(0,41,10,9),mark(48,54,9,10),mark(0,54,10,10),mark(48,68,9,9),mark(0,68,10,9),mark(38,81,19,10),mark(0,81,10,10),mark(48,95,9,9),mark(10,95,28,9),mark(48,108,9,9),mark(48,122,9,9)]),
+                r: glyph([mark(1,27,9,10),mark(20,27,18,10),mark(1,41,18,9),mark(1,54,9,10),mark(0,67,10,10),mark(1,81,9,10),mark(0,95,10,9)]),
+                s: glyph([mark(10,27,28,10),mark(0,40,10,10),mark(38,40,10,10),mark(10,54,19,10),mark(29,67,19,10),mark(0,81,10,10),mark(38,81,10,10),mark(10,95,28,9)]),
+                t: glyph([mark(19,0,9,9),mark(19,13,9,9),mark(0,27,57,9),mark(19,41,9,9),mark(19,54,9,9),mark(19,67,9,9),mark(19,81,9,9),mark(19,95,28,9),mark(57,95,9,9)]),
+                u: glyph([mark(0,27,10,10),mark(48,27,9,9),mark(0,40,10,10),mark(48,41,9,9),mark(0,54,10,9),mark(48,54,9,9),mark(48,67,9,10),mark(0,68,10,9),mark(0,81,10,10),mark(38,81,19,10),mark(10,95,28,9),mark(48,95,9,9)]),
+                v: glyph([mark(0,27,9,9),mark(48,27,9,9),mark(0,41,9,9),mark(48,41,9,9),mark(0,54,9,9),mark(48,54,9,9),mark(0,67,9,9),mark(48,67,9,9),mark(10,81,9,9),mark(38,81,9,9),mark(19,95,19,9)]),
+                w: glyph([mark(0,27,9,9),mark(76,27,9,9),mark(0,41,9,9),mark(76,41,9,9),mark(0,54,9,9),mark(38,54,9,9),mark(76,54,9,9),mark(0,67,9,9),mark(19,67,9,9),mark(57,67,9,9),mark(76,67,9,9),mark(10,81,28,9),mark(48,81,28,9),mark(19,95,9,9),mark(57,95,9,9)]),
+                x: glyph([mark(0,27,9,9),mark(57,27,9,9),mark(10,41,9,9),mark(47,41,9,9),mark(19,54,28,9),mark(10,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(57,81,9,9),mark(0,95,9,9),mark(57,95,9,9)]),
+                y: glyph([mark(0,27,10,10),mark(48,27,10,10),mark(0,40,10,10),mark(48,40,9,10),mark(0,54,10,10),mark(48,54,10,10),mark(0,67,10,10),mark(48,67,10,10),mark(10,81,9,10),mark(38,81,10,10),mark(19,95,19,9),mark(19,108,10,10),mark(0,122,19,9)]),
+                z: glyph([mark(10,27,28,9),mark(38,41,9,9),mark(29,54,19,9),mark(10,67,19,9),mark(0,81,9,9),mark(10,95,28,9)])
+            };
+            const FALLBACK_GLYPH = glyph([mark(10,27,28),mark(38,41),mark(29,54,19),mark(19,81)]);
+
+            const mulberry32 = (seed) => {
+                let state = seed >>> 0;
+                return () => {
+                    state = (state + 0x6d2b79f5) >>> 0;
+                    let t = state;
+                    t = Math.imul(t ^ (t >>> 15), t | 1);
+                    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+                };
+            };
+
+            function generateTextTargets(word, width, height) {
+                const characters = [...word.toLowerCase()];
+                const glyphs = characters.map(ch => GLYPHS[ch] || FALLBACK_GLYPH);
+                const containerScale = Math.min(width / REFERENCE_WIDTH, height / REFERENCE_HEIGHT);
+                const rawDotSize = REFERENCE_DOT_SIZE * containerScale;
+                const totalColumns = glyphs.reduce((sum, g, idx) => sum + g.width / PAPER_CELL_SIZE + (idx === glyphs.length - 1 ? 0 : PRESET.letterGap), 0);
+                const totalRows = PAPER_GLYPH_HEIGHT / PAPER_CELL_SIZE;
+                const maxTextWidth = width * PRESET.maxWidth;
+                const maxTextHeight = height * 0.72;
+                const cellSize = Math.min(rawDotSize * PRESET.cellScale, maxTextWidth / Math.max(1, totalColumns), maxTextHeight / totalRows);
+                const fillRatio = Math.min(0.72, Math.max(0.28, PRESET.fillRatio));
+                const dotSize = Math.min(rawDotSize, cellSize * fillRatio);
+
+                const positionScale = cellSize / PAPER_CELL_SIZE;
+                const markScale = dotSize / PAPER_DOT_SIZE;
+                const rawTargets = [];
+                let cursorColumn = 0;
+
+                for (let li = 0; li < glyphs.length; li++) {
+                    const g = glyphs[li];
+                    for (const m of g.marks) {
+                        rawTargets.push({
+                            x: (cursorColumn * cellSize) + (m.x + m.width / 2) * positionScale,
+                            y: (m.y + m.height / 2) * positionScale,
+                            w: m.width * markScale,
+                            s: m.height * markScale,
+                            letterIndex: li
+                        });
+                    }
+                    cursorColumn += g.width / PAPER_CELL_SIZE + PRESET.letterGap;
+                }
+
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                for (const t of rawTargets) {
+                    minX = Math.min(minX, t.x - t.w / 2);
+                    maxX = Math.max(maxX, t.x + t.w / 2);
+                    minY = Math.min(minY, t.y - t.s / 2);
+                    maxY = Math.max(maxY, t.y + t.s / 2);
+                }
+                const textCx = (minX + maxX) / 2;
+                const textCy = (minY + maxY) / 2;
+
+                return rawTargets.map(t => ({
+                    x: t.x - textCx + width / 2,
+                    y: t.y - textCy + height / 2,
+                    w: t.w,
+                    s: t.s,
+                    letterIndex: t.letterIndex
+                }));
+            }
+
+            function pickScatterDestination(target, bandCy, bandHeight, markW, markH, rng) {
+                const u1 = Math.max(1e-6, rng());
+                const u2 = rng();
+                const gx = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+                let gy = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+                if (target.y <= bandCy) gy -= 0.35;
+                else gy += 0.35;
+
+                const spreadX = Math.max(10, markH * 4.8);
+                const spreadY = Math.max(10, markH * 6.5);
+                let dx = gx * spreadX;
+                let dy = gy * spreadY;
+
+                const maxRx = spreadX * 2.15;
+                const maxRy = Math.min(bandHeight * 0.48, spreadY * 2.35);
+                const nx = dx / maxRx;
+                const ny = dy / maxRy;
+                const r2 = nx * nx + ny * ny;
+                if (r2 > 1) {
+                    const s = 1 / Math.sqrt(r2);
+                    dx *= s;
+                    dy *= s;
+                }
+                return { x: target.x - markW / 2 + dx, y: target.y - markH / 2 + dy };
+            }
+
+            const overlay = document.getElementById('whiteCurtainOverlay');
+            const stage = document.getElementById('scatterStage');
+            const svg = document.getElementById('scatterSvg');
+
+            let particles = [];
+            let stageW = window.innerWidth || 1280;
+            let stageH = window.innerHeight || 720;
+            let curtainOpened = false;
+
+            function buildScatterScene(withEntryAnimation = false) {
+                stageW = Math.max(300, window.innerWidth);
+                stageH = Math.max(300, window.innerHeight);
+                svg.setAttribute('viewBox', `0 0 ${stageW} ${stageH}`);
+                svg.setAttribute('width', stageW);
+                svg.setAttribute('height', stageH);
+                svg.innerHTML = '';
+
+                const targets = generateTextTargets(PRESET.text, stageW, stageH);
+                const bandHeight = Math.max(40, stageH * 0.2);
+
+                particles = targets.map((t, index) => {
+                    const isDot = t.w <= t.s * 1.15;
+                    const w = isDot ? t.s : t.w;
+                    const h = t.s;
+                    const radius = t.s / 2;
+                    const homeX = t.x - w / 2;
+                    const homeY = t.y - h / 2;
+
+                    // Para que al inicio se vea la animación de las letras armándose
+                    const rng = mulberry32((index * 9973 + 12345) >>> 0);
+                    const startX = withEntryAnimation ? homeX + (rng() - 0.5) * 280 : homeX;
+                    const startY = withEntryAnimation ? homeY + (rng() - 0.5) * 220 : homeY;
+
+                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    rect.setAttribute('fill', PRESET.color);
+                    rect.setAttribute('width', w.toFixed(2));
+                    rect.setAttribute('height', h.toFixed(2));
+                    rect.setAttribute('rx', radius.toFixed(2));
+                    rect.setAttribute('ry', radius.toFixed(2));
+                    rect.setAttribute('x', startX.toFixed(2));
+                    rect.setAttribute('y', startY.toFixed(2));
+                    svg.appendChild(rect);
+
+                    return {
+                        el: rect,
+                        target: t,
+                        index,
+                        w, h,
+                        homeX, homeY,
+                        x: startX, y: startY,
+                        vx: 0, vy: 0,
+                        anchorX: homeX, anchorY: homeY,
+                        scattered: false,
+                        bandHeight
+                    };
+                });
+            }
+
+            // Construye las letras con una animación inicial donde los puntos se juntan para formar el nombre
+            buildScatterScene(true);
+
+            window.addEventListener('resize', () => {
+                if (!curtainOpened) buildScatterScene(false);
+            });
+
+            // Dispersión al mover el mouse sobre las letras
+            overlay.addEventListener('pointermove', (e) => {
+                if (curtainOpened) return;
+                const px = e.clientX;
+                const py = e.clientY;
+                const r2 = PRESET.cursorRadius * PRESET.cursorRadius;
+                const bandCy = stageH / 2;
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    const dx = p.target.x - px;
+                    const dy = p.target.y - py;
+                    const shouldScatter = (dx * dx + dy * dy) <= r2;
+
+                    if (shouldScatter && !p.scattered) {
+                        p.scattered = true;
+                        const rng = mulberry32((Date.now() ^ (p.index * 10007)) >>> 0);
+                        const dest = pickScatterDestination(p.target, bandCy, p.bandHeight, p.w, p.h, rng);
+                        p.anchorX = dest.x;
+                        p.anchorY = dest.y;
+                        p.vx += (rng() - 0.5) * 6;
+                        p.vy += (rng() - 0.5) * 6;
+                    } else if (!shouldScatter && p.scattered) {
+                        p.scattered = false;
+                        p.anchorX = p.homeX;
+                        p.anchorY = p.homeY;
+                    }
+                }
+            });
+
+            // Bucle de física usando atributos nativos x/y de SVG (100% compatible con todos los navegadores)
+            let lastTime = performance.now();
+            function tickScatter(now) {
+                if (curtainOpened && overlay.style.display === 'none') return;
+                requestAnimationFrame(tickScatter);
+
+                const dt = Math.min((now - lastTime) / 1000, 0.034);
+                lastTime = now;
+
+                const stiffness = 135;
+                const damping = 15;
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    if (p.scattered) {
+                        p.vx += (Math.random() - 0.5) * 18 * dt;
+                        p.vy += (Math.random() - 0.5) * 18 * dt;
+                    }
+
+                    const forceX = (p.anchorX - p.x) * stiffness;
+                    const forceY = (p.anchorY - p.y) * stiffness;
+
+                    p.vx = (p.vx + forceX * dt) * Math.exp(-damping * dt);
+                    p.vy = (p.vy + forceY * dt) * Math.exp(-damping * dt);
+
+                    p.x += p.vx * dt;
+                    p.y += p.vy * dt;
+
+                    p.el.setAttribute('x', p.x.toFixed(2));
+                    p.el.setAttribute('y', p.y.toFixed(2));
+                }
+            }
+            requestAnimationFrame(tickScatter);
+
+            // Al hacer clic sobre las letras: se hacen pequeñas, van arriba a la izquierda y se abre el telón blanco
+            overlay.addEventListener('click', () => {
+                if (curtainOpened) return;
+                curtainOpened = true;
+
+                // 1. Regresar todas las partículas a su posición de letra limpia
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].scattered = false;
+                    particles[i].anchorX = particles[i].homeX;
+                    particles[i].anchorY = particles[i].homeY;
+                }
+
+                // 2. Calcular la posición del logo superior izquierdo para llevar las letras hacia allá
+                const logoEl = document.getElementById('brandLogoTarget');
+                let targetX = 160;
+                let targetY = 42;
+                if (logoEl) {
+                    const rect = logoEl.getBoundingClientRect();
+                    targetX = rect.left + rect.width / 2;
+                    targetY = rect.top + rect.height / 2;
+                }
+
+                const dx = targetX - (window.innerWidth / 2);
+                const dy = targetY - (window.innerHeight / 2);
+
+                // Las letras se achican (scale 0.14) y viajan a la parte superior izquierda
+                stage.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(0.14)`;
+                stage.style.opacity = '0';
+
+                // 3. Abrir el telón blanco (fade from white) y activar la transición suave de la princesa y capas
+                overlay.classList.add('curtain-open');
+                document.body.classList.remove('intro-locked');
+                document.body.classList.add('curtain-opening');
+
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 1750);
+            });
+        })();
+
+        /* ==========================================================
+           B. TRANSICIÓN LIGERA DE TARJETAS AL HACER SCROLL
+           ========================================================== */
+        const scrollFadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.soft-scroll-fade').forEach(el => {
+            scrollFadeObserver.observe(el);
+        });
+
+        /* ==========================================================
