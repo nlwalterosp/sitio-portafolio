@@ -45,6 +45,11 @@
             position: relative;
         }
 
+        /* Bloquea el scroll de fondo mientras la intro blanca está activa */
+        body.intro-locked {
+            overflow: hidden;
+        }
+
         /* Barra de scroll personalizada */
         ::-webkit-scrollbar {
             width: 8px;
@@ -61,6 +66,139 @@
         }
 
         /* ==========================================================
+           0. PANTALLA DE INTRO BLANCA (DOT SCATTER + ZOOM OUT)
+           ========================================================== */
+        .scatter-intro-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #EFECEC;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            user-select: none;
+            touch-action: manipulation;
+            cursor: pointer;
+            clip-path: inset(0% 0% 0% 0% round 0px);
+            transition:
+                clip-path 1.25s cubic-bezier(0.77, 0, 0.175, 1) 0.25s,
+                opacity 0.95s ease 0.55s,
+                visibility 0s linear 1.55s;
+        }
+
+        /* Estado cuando se activa el Zoom Out y se abre la página */
+        .scatter-intro-overlay.zoom-out-open {
+            clip-path: inset(50% 50% 50% 50% round 40px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .scatter-svg-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform: scale(1);
+            transform-origin: center center;
+            transition: transform 1.15s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.9s ease 0.2s;
+            will-change: transform, opacity;
+        }
+
+        /* El texto se hace más pequeño (Zoom Out) antes de abrirse la página */
+        .scatter-intro-overlay.zoom-out-open .scatter-svg-stage {
+            transform: scale(0.28);
+            opacity: 0;
+        }
+
+        .scatter-svg-stage svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .scatter-enter-cta {
+            position: absolute;
+            bottom: 42px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid rgba(0, 0, 0, 0.18);
+            padding: 12px 26px;
+            border-radius: 30px;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+            transition: all 0.35s ease;
+            z-index: 5;
+        }
+
+        .scatter-enter-cta:hover {
+            background: #000000;
+            color: #EFECEC;
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .scatter-intro-overlay.zoom-out-open .scatter-enter-cta {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.8);
+        }
+
+        /* ==========================================================
+           TRANSICIÓN SUAVE DE IMÁGENES AL ENTRAR Y AL HACER SCROLL
+           ========================================================== */
+        .landing-stage img {
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Cuando se abre la intro, las capas del paisaje aparecen escalonadas suavemente */
+        body.page-revealed #layer-mountains img { opacity: 1; transform: scale(1); transition-delay: 0.10s; }
+        body.page-revealed #layer-canyon-rim img { opacity: 1; transform: scale(1); transition-delay: 0.22s; }
+        body.page-revealed #layer-temples img { opacity: 1; transform: scale(1); transition-delay: 0.34s; }
+        body.page-revealed #layer-canyon-stream img { opacity: 1; transform: scale(1); transition-delay: 0.44s; }
+        body.page-revealed #layer-mecha img { opacity: 1; transform: scale(1); transition-delay: 0.56s; }
+        body.page-revealed #layer-princess-hero img { opacity: 1; transform: scale(1); transition-delay: 0.68s; }
+        body.page-revealed #layer-midground-caverns img,
+        body.page-revealed #layer-foreground-rocks img,
+        body.page-revealed #layer-metal-part img {
+            opacity: 1;
+            transform: scale(1);
+            transition-delay: 0.3s;
+        }
+
+        /* Aparición suave de tarjetas HUD y elementos interactivos cuando entran en pantalla */
+        .smooth-reveal-item {
+            opacity: 0;
+            transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+
+        .smooth-reveal-item.is-visible {
+            opacity: 1;
+        }
+
+        .smooth-reveal-item.is-visible img {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ==========================================================
            2. HEADER ORGÁNICO SUPERIOR (ESTILO REFERENCIA)
            ========================================================== */
         .site-header {
@@ -70,7 +208,14 @@
             width: 100%;
             z-index: 1000;
             pointer-events: none;
-            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s, opacity 0.9s ease 0.4s;
+        }
+
+        body.page-revealed .site-header {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .header-curve-bg {
@@ -190,6 +335,12 @@
             align-items: flex-end;
             gap: 16px;
             pointer-events: auto;
+            opacity: 0;
+            transition: opacity 1s ease 0.6s;
+        }
+
+        body.page-revealed .depth-meter {
+            opacity: 1;
         }
 
         .depth-track {
@@ -348,7 +499,7 @@
             filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.85));
         }
 
-        /* AJUSTE 1: Bajamos segundo_plano_cascada_transparente.png de 3200px a 3680px para tapar el hueco negro */
+        /* Segundo plano cascada bajado a 3680px para tapar el hueco negro */
         #layer-midground-caverns {
             top: 3680px;
             z-index: 7;
@@ -394,8 +545,7 @@
             pointer-events: auto;
             cursor: pointer;
             z-index: 20;
-            will-change: transform;
-            transition: box-shadow 0.35s ease, border-color 0.35s ease;
+            will-change: transform, opacity;
         }
 
         .hud-card:hover {
@@ -469,7 +619,7 @@
             z-index: 20;
         }
 
-        /* AJUSTE 2: Agrandamos la princesa con motocicleta y la subimos ligeramente */
+        /* Princesa con motocicleta agrandada */
         #speeder-water-rush {
             position: absolute;
             top: 5080px;
@@ -495,7 +645,7 @@
         }
 
         /* ==========================================================
-           AJUSTE 3: DEPTH GALLERY (ORIGINKIT / CODROPS) EN VANILLA JS
+           DEPTH GALLERY (ORIGINKIT / CODROPS) EN VANILLA JS
            ========================================================== */
         .holo-wireframe-cluster {
             position: absolute;
@@ -508,7 +658,7 @@
             gap: 14px;
             z-index: 25;
             pointer-events: auto;
-            will-change: transform;
+            will-change: transform, opacity;
             width: clamp(340px, 68vw, 920px);
         }
 
@@ -543,7 +693,6 @@
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
         }
 
-        /* Contenedor principal de la Depth Gallery */
         .depth-gallery-stage {
             position: relative;
             width: 100%;
@@ -608,6 +757,8 @@
             object-fit: contain;
             padding: 18px;
             pointer-events: none;
+            opacity: 1 !important;
+            transform: none !important;
             filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.45));
         }
 
@@ -625,911 +776,4 @@
             color: var(--cyan-neon);
             text-transform: uppercase;
             text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
-            pointer-events: none;
-        }
-
-        /* Controles inferiores dentro del visor Depth Gallery */
-        .dg-hud-controls {
-            position: absolute;
-            bottom: 14px;
-            left: 18px;
-            right: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        .dg-hint {
-            font-family: var(--font-display);
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.65);
-            background: rgba(6, 16, 24, 0.75);
-            padding: 6px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 242, 254, 0.25);
-        }
-
-        .dg-btn-group {
-            display: flex;
-            gap: 8px;
-            pointer-events: auto;
-        }
-
-        .dg-btn {
-            background: rgba(10, 24, 36, 0.9);
-            border: 1px solid var(--cyan-neon);
-            color: var(--cyan-neon);
-            font-family: var(--font-display);
-            font-size: 0.72rem;
-            font-weight: 800;
-            padding: 6px 13px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .dg-btn:hover {
-            background: var(--cyan-neon);
-            color: #000;
-            box-shadow: 0 0 12px var(--cyan-neon);
-        }
-
-        #card-diapo-4 {
-            top: 6450px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(520px, 48vw, 760px);
-            padding: 14px;
-            border-radius: 22px;
-            z-index: 20;
-        }
-
-        #card-speeder-orange {
-            top: 7100px;
-            left: calc(50% - clamp(240px, 22vw, 340px));
-            transform: translateX(-50%);
-            width: clamp(400px, 34vw, 500px);
-            background: linear-gradient(135deg, #f26829 0%, #c9440c 100%);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 26px;
-            padding: 14px;
-            box-shadow: 0 20px 50px rgba(242, 104, 41, 0.5);
-            z-index: 20;
-        }
-
-        #render-nevera-ruins {
-            position: absolute;
-            top: 7080px;
-            left: calc(50% + clamp(150px, 14vw, 230px));
-            transform: translateX(-50%);
-            width: clamp(240px, 19vw, 320px);
-            z-index: 22;
-            pointer-events: auto;
-            cursor: pointer;
-            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95));
-            will-change: transform;
-            transition: transform 0.4s ease;
-        }
-
-        #render-nevera-ruins:hover {
-            transform: translateX(-50%) scale(1.06) translateY(-5px);
-        }
-
-        #render-nevera-ruins img {
-            width: 100%;
-            height: auto;
-            display: block;
-            pointer-events: none;
-        }
-
-        /* ==========================================================
-           7. MODAL LIGHTBOX
-           ========================================================== */
-        .lightbox-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(5, 12, 18, 0.94);
-            backdrop-filter: blur(16px);
-            z-index: 5000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .lightbox-container {
-            position: relative;
-            max-width: 90vw;
-            max-height: 88vh;
-            border: 2px solid var(--cyan-neon);
-            border-radius: 20px;
-            padding: 12px;
-            background: rgba(10, 20, 30, 0.9);
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.45);
-            transform: scale(0.92);
-            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .lightbox-modal.active .lightbox-container {
-            transform: scale(1);
-        }
-
-        .lightbox-img {
-            max-width: 100%;
-            max-height: 80vh;
-            object-fit: contain;
-            border-radius: 14px;
-            display: block;
-        }
-
-        .lightbox-caption {
-            margin-top: 10px;
-            text-align: center;
-            font-family: var(--font-display);
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--cyan-neon);
-            letter-spacing: 1px;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: -18px;
-            right: -18px;
-            width: 40px;
-            height: 40px;
-            background: var(--cyan-neon);
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--cyan-neon);
-            transition: transform 0.2s ease, background 0.2s ease;
-        }
-
-        .lightbox-close:hover {
-            transform: scale(1.15) rotate(90deg);
-            background: #ffffff;
-        }
-
-        .site-footer {
-            position: relative;
-            z-index: 100;
-            width: 100%;
-            padding: 90px 20px 120px;
-            text-align: center;
-            background: linear-gradient(180deg, #0c1219 0%, #05080c 100%);
-            border-top: 1.5px solid rgba(0, 242, 254, 0.25);
-        }
-
-        .site-footer h2 {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: #ffffff;
-            margin-bottom: 24px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--cyan-neon);
-            border: 1.5px solid var(--cyan-neon);
-            padding: 10px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            background: var(--cyan-neon);
-            color: #000;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 860px) {
-            .main-nav { display: none; }
-            .depth-meter { display: none; }
-            .hud-card { position: relative !important; width: 92% !important; margin: 30px auto !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; }
-            #card-pose-thumbnail { clip-path: none !important; border-radius: 20px !important; width: 85% !important; }
-            .holo-wireframe-cluster { position: relative !important; top: auto !important; left: auto !important; transform: none !important; margin: 40px auto !important; width: 94% !important; }
-            .depth-gallery-stage { height: 420px; }
-            #layer-mecha { position: relative !important; width: 95% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
-            #layer-princess-hero { position: relative !important; width: 75% !important; height: auto !important; margin: -120px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
-            #layer-metal-part { position: relative !important; width: 92% !important; margin: 20px auto !important; top: auto !important; left: auto !important; transform: none !important; }
-            #render-nevera-ruins { position: relative !important; width: 65% !important; margin: -110px auto 30px !important; top: auto !important; left: auto !important; transform: none !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- 1. HEADER ORGÁNICO SUPERIOR -->
-    <header class="site-header">
-        <div class="header-curve-bg"></div>
-        <div class="header-content">
-            <a href="index.html" class="brand-logo">
-                <img src="images/LOGO-UNIDO.png" alt="Logo El Canto del Quetzal">
-                <div class="brand-title">
-                    <h1 class="kpr-hack" data-value="El Canto">El Canto</h1>
-                    <span class="kpr-hack" data-value="Del Quetzal">Del Quetzal</span>
-                </div>
-            </a>
-
-            <nav class="main-nav">
-                <a href="#cumbre" class="kpr-hack" data-value="Cumbre Maya" onclick="scrollToY(0); return false;">Cumbre Maya</a>
-                <a href="#cascada" class="kpr-hack" data-value="Cascada" onclick="scrollToY(2100); return false;">Cascada</a>
-                <a href="#laguna" class="kpr-hack" data-value="Laguna 3D" onclick="scrollToY(5250); return false;">Laguna 3D</a>
-                <a href="#santuario" class="kpr-hack" data-value="Santuario" onclick="scrollToY(6450); return false;">Santuario</a>
-                <a href="Ilustracion.html" class="kpr-hack" data-value="Ilustración">Ilustración</a>
-                <a href="bio.html" class="kpr-hack" data-value="Bio">Bio</a>
-                <a href="index.html" class="btn-back">&#8592; Menú Principal</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- 2. HUD LATERAL DE PROFUNDIDAD -->
-    <aside class="depth-meter">
-        <div class="depth-track">
-            <div class="depth-fill" id="depthFill"></div>
-        </div>
-        <button type="button" class="depth-node active" onclick="scrollToY(0)">
-            <span class="kpr-hack" data-value="01 // CUMBRE">01 // CUMBRE</span>
-            <div class="dot"></div>
-        </button>
-        <button type="button" class="depth-node" onclick="scrollToY(2100)">
-            <span class="kpr-hack" data-value="02 // CASCADA">02 // CASCADA</span>
-            <div class="dot"></div>
-        </button>
-        <button type="button" class="depth-node" onclick="scrollToY(5250)">
-            <span class="kpr-hack" data-value="03 // LAGUNA HUD">03 // LAGUNA HUD</span>
-            <div class="dot"></div>
-        </button>
-        <button type="button" class="depth-node" onclick="scrollToY(6450)">
-            <span class="kpr-hack" data-value="04 // SANTUARIO">04 // SANTUARIO</span>
-            <div class="dot"></div>
-        </button>
-    </aside>
-
-    <!-- 3. ESCENARIO VERTICAL FULL-WIDTH -->
-    <main class="landing-stage" id="landingStage">
-
-        <!-- A. CAPAS DEL PAISAJE -->
-        <div class="full-bleed-layer" id="layer-mountains">
-            <img src="images/montañas-del-fondo1.png" alt="Montañas lejanas">
-        </div>
-
-        <div class="full-bleed-layer" id="layer-canyon-rim">
-            <img src="images/fondo20.png" alt="Paredes superiores del cañón">
-        </div>
-
-        <div class="full-bleed-layer" id="layer-temples">
-            <img src="images/Ruinas mayas luminosas en la selva.png" alt="Ruinas mayas luminosas en la selva">
-        </div>
-
-        <div class="full-bleed-layer" id="layer-canyon-stream">
-            <img src="images/Cascada glaciar entre rocas estilizadas.png" alt="Cascada glaciar entre rocas estilizadas">
-        </div>
-
-        <div id="layer-mecha">
-            <img src="images/Mecha industrial oxidado cubierto de enredaderas.png" alt="Mecha industrial oxidado cubierto de enredaderas">
-        </div>
-
-        <div id="layer-princess-hero">
-            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk y Quetzal">
-        </div>
-
-        <!-- AJUSTE 1: Segundo plano cascada más abajo para eliminar el hueco negro -->
-        <div class="full-bleed-layer" id="layer-midground-caverns">
-            <img src="images/segundo_plano_cascada_transparente.png" alt="Cavernas intermedias">
-        </div>
-
-        <div class="full-bleed-layer" id="layer-foreground-rocks">
-            <img src="images/primer_plano_cascada_transparente.png" alt="Rocas del primer plano">
-        </div>
-
-        <!-- B. CONTENIDO CRONOLÓGICO: HERO HUD Y DIAPOSITIVAS -->
-        <div class="hud-card center-x" id="card-pose-thumbnail" data-float-speed="0.12" onclick="openLightbox('images/princesa dibujo quetzal sin fondo1.png', 'Princesa Ixk\'uk // Ilustración Oficial')">
-            <img src="images/princesa dibujo quetzal sin fondo1.png" alt="Princesa Ixk'uk">
-        </div>
-
-        <div class="hud-card center-x" id="card-kaya-calla" data-float-speed="0.12" onclick="openLightbox('images/kaya3.png', 'Kaya // Ficha Conceptual Oficial y Estudio de Expresiones')">
-            <img src="images/kaya3.png" alt="Kaya Ficha Conceptual Oficial">
-        </div>
-
-        <div class="hud-card center-x" id="card-diapo-1" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo1.png', 'Princesa Ixk\'uk // Diapositiva 1: Hoja de Modelo, Paleta y Accesorios')">
-            <img src="images/princesa-diapo1.png" alt="Princesa Diapositiva 1">
-        </div>
-
-        <div class="hud-card center-x" id="card-diapo-2" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo2.png', 'Princesa Ixk\'uk // Diapositiva 2: Expresiones Faciales y Bocetos de Vestuario')">
-            <img src="images/princesa-diapo2.png" alt="Princesa Diapositiva 2">
-        </div>
-
-        <div class="hud-card center-x" id="card-diapo-3" data-float-speed="0.22" onclick="openLightbox('images/princesa-diapo3.png', 'Princesa Ixk\'uk // Diapositiva 3: Sello del Quetzal y Lore Ancestral')">
-            <img src="images/princesa-diapo3.png" alt="Princesa Diapositiva 3">
-        </div>
-
-        <!-- SECCIÓN 3: LAGUNA 3D (MOTO AGRANDADA + DEPTH GALLERY 3D) -->
-        <div id="speeder-water-rush" data-float-speed="0.28">
-            <img src="images/render de moto5.png" alt="Speeder en el agua">
-        </div>
-
-        <div class="holo-wireframe-cluster" data-float-speed="0.18">
-            <div class="holo-cluster-nav">
-                <button type="button" class="holo-tab active kpr-hack" data-value="Kaya // Renders 3D" onclick="switchHoloSet('renders')">Kaya // Renders 3D</button>
-                <button type="button" class="holo-tab kpr-hack" data-value="Blueprints Wireframe" onclick="switchHoloSet('wireframes')">Blueprints Wireframe</button>
-                <button type="button" class="holo-tab kpr-hack" data-value="Todos en Corredor 3D" onclick="switchHoloSet('all')">Todos en Corredor 3D</button>
-            </div>
-
-            <!-- Escenario de la Depth Gallery (Originkit) -->
-            <div class="depth-gallery-stage" id="depthGalleryStage">
-                <div class="dg-ground" id="dgGround"></div>
-                <div class="dg-grain" id="dgGrain"></div>
-                <div class="dg-corridor" id="dgCorridor"></div>
-                
-                <div class="dg-hud-controls">
-                    <span class="dg-hint">RUEDA DEL RATÓN O ARRASTRAR PARA VOLAR POR LA GALERÍA 3D</span>
-                    <div class="dg-btn-group">
-                        <button type="button" class="dg-btn" onclick="stepDepthGallery(-1)">&#8592; ANT</button>
-                        <button type="button" class="dg-btn" onclick="stepDepthGallery(1)">SIG &#8594;</button>
-                        <button type="button" class="dg-btn" onclick="zoomFocusedPlate()">&#10530; AMPLIAR</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 4: DIAPOSITIVA 4 -->
-        <div class="hud-card center-x" id="card-diapo-4" data-float-speed="0.20" onclick="openLightbox('images/princesa-diapo4.png', 'Princesa Ixk\'uk // Diapositiva 4: Ficha Técnica y Renders 3D')">
-            <img src="images/princesa-diapo4.png" alt="Princesa Diapositiva 4">
-        </div>
-
-        <div class="hud-card center-x" id="card-speeder-orange" data-float-speed="0.20" onclick="openLightbox('images/render de moto6.png', 'Speeder Biomecánico // Render de Estudio')">
-            <img src="images/render de moto6.png" alt="Speeder Studio Render">
-        </div>
-
-        <div id="layer-metal-part">
-            <img src="images/parte de metal.png" alt="Estructura metálica del primer plano">
-        </div>
-
-        <div class="center-x" id="render-nevera-ruins" data-float-speed="0.18" onclick="openLightbox('images/RENDER_PRINCESA_NEVERA.png', 'Exploración de las Ruinas Subterráneas')">
-            <img src="images/RENDER_PRINCESA_NEVERA.png" alt="Princesa en Ruinas">
-        </div>
-
-    </main>
-
-    <!-- FOOTER DE NAVEGACIÓN -->
-    <footer class="site-footer">
-        <h2 class="kpr-hack" data-value="El Canto del Quetzal">El Canto del Quetzal</h2>
-        <div class="footer-links">
-            <a href="#cumbre" onclick="scrollToY(0); return false;">↑ Volver Arriba</a>
-            <a href="Ilustracion.html">Ilustración</a>
-            <a href="bio.html">Biografía</a>
-            <a href="index.html">Menú Principal</a>
-        </div>
-    </footer>
-
-    <!-- 4. MODAL LIGHTBOX INTERACTIVO -->
-    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
-        <div class="lightbox-container" onclick="event.stopPropagation()">
-            <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
-            <img class="lightbox-img" id="lightboxImg" src="" alt="Vista ampliada">
-            <div class="lightbox-caption" id="lightboxCaption"></div>
-        </div>
-    </div>
-
-    <!-- ==========================================================
-       5. MOTOR JAVASCRIPT DEL PARALLAX 3D + DEPTH GALLERY (ORIGINKIT)
-       ========================================================== -->
-    <script>
-        const layerMountains = document.getElementById('layer-mountains');
-        const layerRim = document.getElementById('layer-canyon-rim');
-        const layerTemples = document.getElementById('layer-temples');
-        const layerMecha = document.getElementById('layer-mecha');
-        const layerPrincess = document.getElementById('layer-princess-hero');
-        const layerCanyonStream = document.getElementById('layer-canyon-stream');
-        const layerMidgroundCaverns = document.getElementById('layer-midground-caverns');
-        const layerForegroundRocks = document.getElementById('layer-foreground-rocks');
-        const layerMetalPart = document.getElementById('layer-metal-part');
-
-        const floatCards = document.querySelectorAll('[data-float-speed]');
-        const depthFill = document.getElementById('depthFill');
-        const depthNodes = document.querySelectorAll('.depth-node');
-        const landingStage = document.getElementById('landingStage');
-
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetMouseX = 0;
-        let targetMouseY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            const halfW = window.innerWidth / 2;
-            const halfH = window.innerHeight / 2;
-            targetMouseX = (e.clientX - halfW) / halfW;
-            targetMouseY = (e.clientY - halfH) / halfH;
-        });
-
-        function updateParallax() {
-            mouseX += (targetMouseX - mouseX) * 0.08;
-            mouseY += (targetMouseY - mouseY) * 0.08;
-
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const windowH = window.innerHeight;
-            const totalScroll = landingStage.scrollHeight - windowH;
-            const progress = Math.min(Math.max(scrollY / (totalScroll || 1), 0), 1);
-
-            if (depthFill) {
-                depthFill.style.height = `${progress * 100}%`;
-            }
-
-            const checkpoints = [0, 2100, 5250, 6450];
-            depthNodes.forEach((node, i) => {
-                const targetY = checkpoints[i];
-                if (Math.abs(scrollY - targetY) < 700) {
-                    node.classList.add('active');
-                } else {
-                    node.classList.remove('active');
-                }
-            });
-
-            if (layerMountains) {
-                const moveY = scrollY * 0.72;
-                const shiftX = mouseX * 28;
-                const shiftY = mouseY * 12;
-                layerMountains.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
-            }
-
-            if (layerRim) {
-                const moveY = scrollY * 0.44;
-                const shiftX = mouseX * 20;
-                const shiftY = mouseY * 8;
-                layerRim.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
-            }
-
-            if (layerTemples) {
-                const moveY = scrollY * 0.22;
-                const shiftX = mouseX * 16;
-                const shiftY = mouseY * 6;
-                layerTemples.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
-            }
-
-            if (layerMecha) {
-                const moveY = scrollY * 0.10;
-                const shiftX = mouseX * 14;
-                const shiftY = mouseY * 5;
-                layerMecha.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
-            }
-
-            if (layerPrincess) {
-                const moveY = scrollY * 0.10;
-                const shiftX = mouseX * 14;
-                const shiftY = mouseY * 5;
-                layerPrincess.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
-            }
-
-            if (layerCanyonStream) {
-                const moveY = scrollY * 0.32;
-                const shiftX = mouseX * 12;
-                layerCanyonStream.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
-            }
-
-            if (layerMidgroundCaverns) {
-                const rect = layerMidgroundCaverns.getBoundingClientRect();
-                if (rect.top < windowH + 600 && rect.bottom > -600) {
-                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
-                    const moveY = offsetFromCenter * 0.20;
-                    const shiftX = mouseX * 18;
-                    layerMidgroundCaverns.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
-                }
-            }
-
-            if (layerForegroundRocks) {
-                const rect = layerForegroundRocks.getBoundingClientRect();
-                if (rect.top < windowH + 600 && rect.bottom > -600) {
-                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
-                    const moveY = offsetFromCenter * 0.42;
-                    const shiftX = mouseX * 26;
-                    layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
-                }
-            }
-
-            if (layerMetalPart) {
-                const rect = layerMetalPart.getBoundingClientRect();
-                if (rect.top < windowH + 600 && rect.bottom > -600) {
-                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
-                    const moveY = offsetFromCenter * 0.22;
-                    const shiftX = mouseX * 18;
-                    layerMetalPart.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
-                }
-            }
-
-            floatCards.forEach(el => {
-                const speed = parseFloat(el.getAttribute('data-float-speed')) || 0.22;
-                const rect = el.getBoundingClientRect();
-
-                if (rect.top < windowH + 500 && rect.bottom > -500) {
-                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
-                    const translateY = offsetFromCenter * speed;
-
-                    const isCentered = el.classList.contains('center-x') || el.id === 'speeder-water-rush' || el.classList.contains('holo-wireframe-cluster');
-                    const xBase = isCentered ? '-50%' : '0px';
-                    const mouseShiftX = (mouseX * speed * 45).toFixed(1);
-
-                    el.style.transform = `translate3d(calc(${xBase} + ${mouseShiftX}px), ${translateY.toFixed(1)}px, 0)`;
-                }
-            });
-
-            requestAnimationFrame(updateParallax);
-        }
-
-        requestAnimationFrame(updateParallax);
-
-        function scrollToY(y) {
-            window.scrollTo({
-                top: y,
-                behavior: 'smooth'
-            });
-        }
-
-        // ==========================================================
-        // MOTOR DEPTH GALLERY (ORIGINKIT) PORTADO A VANILLA JS
-        // ==========================================================
-        const DG_SETS = {
-            renders: [
-                { src: 'images/Render0.5.png', tag: 'FRONT 0.5', caption: 'Render 0.5 // Frontal T-Pose', tint: { r: 0, g: 210, b: 255 } },
-                { src: 'images/Render1.png', tag: 'SIDE 1.0', caption: 'Render 1.0 // Perfil Lateral', tint: { r: 0, g: 165, b: 235 } },
-                { src: 'images/Render1.5.png', tag: 'SIDE 1.5', caption: 'Render 1.5 // Perfil Tres Cuartos', tint: { r: 30, g: 230, b: 210 } },
-                { src: 'images/Render2.png', tag: 'BACK 2.0', caption: 'Render 2.0 // Posterior T-Pose', tint: { r: 0, g: 140, b: 220 } }
-            ],
-            wireframes: [
-                { src: 'images/render amiga1w.png', tag: 'WIRE FRONT', caption: 'Proyección Holográfica // Vista Frontal', tint: { r: 0, g: 242, b: 254 } },
-                { src: 'images/render amiga2w.png', tag: 'WIRE BACK', caption: 'Proyección Holográfica // Vista Posterior', tint: { r: 20, g: 185, b: 255 } },
-                { src: 'images/render amiga3w.png', tag: 'WIRE SIDE', caption: 'Proyección Holográfica // Vista Lateral', tint: { r: 0, g: 220, b: 190 } }
-            ]
-        };
-        DG_SETS.all = [...DG_SETS.renders, ...DG_SETS.wireframes];
-
-        const dgStage = document.getElementById('depthGalleryStage');
-        const dgCorridor = document.getElementById('dgCorridor');
-        const dgGround = document.getElementById('dgGround');
-        const dgGrain = document.getElementById('dgGrain');
-
-        // Constantes exactas del componente DepthGallery
-        const VIEW_LEAD = 1;
-        const PERSPECTIVE_RATIO = 3.2;
-        const GAP_MIN = 0.26, GAP_RANGE = 0.9;
-        const SPREAD_RANGE = 0.6;
-        const WHEEL_SPAN = 650, WHEEL_MIN = 0.4, WHEEL_RANGE = 1.6;
-        const DRAG_GAIN = 1.8;
-        const VELOCITY_MAX = 0.03, VELOCITY_DAMPING = 0.12;
-        const POINTER_SMOOTHING = 0.08, BREATH_SMOOTHING = 0.14, DRIFT_SMOOTHING = 0.05, BREATH_GAIN = 1.1;
-        const BREATH_TILT_DEG = 2.6, BREATH_SCALE = 0.03, DEPTH_INFLUENCE = 0.05;
-
-        const dgConfig = {
-            depth: 5,
-            spread: 4.5,
-            cardWidth: 320,
-            cardHeight: 400,
-            radius: 16,
-            sensitivity: 5,
-            smoothing: 6,
-            pointer: 5,
-            breath: 5,
-            drift: 5
-        };
-
-        let dgItems = DG_SETS.renders;
-        let dgNodes = [];
-        let dgTarget = 0;
-        let dgCurrent = 0;
-        let dgPrevious = 0;
-        let dgVelocity = 0;
-        let dgBreath = 0;
-        let dgDrift = 0;
-        let dgPointer = { x: 0, y: 0 };
-        let dgPointerTarget = { x: 0, y: 0 };
-        let dgCurrentFocusIndex = 0;
-
-        function dgClamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
-        function dgWrap(v, span) { return ((v % span) + span) % span; }
-        function dgMix(a, b, t) { return a + (b - a) * t; }
-
-        // Generar textura de grano (film grain) como en el useEffect original
-        (function initGrain() {
-            const c = document.createElement('canvas');
-            c.width = 128; c.height = 128;
-            const ctx = c.getContext('2d');
-            if (!ctx || !dgGrain) return;
-            const noise = ctx.createImageData(128, 128);
-            for (let i = 0; i < noise.data.length; i += 4) {
-                const v = Math.round(Math.random() * 255);
-                noise.data[i] = v; noise.data[i+1] = v; noise.data[i+2] = v; noise.data[i+3] = 255;
-            }
-            ctx.putImageData(noise, 0, 0);
-            dgGrain.style.backgroundImage = `url(${c.toDataURL()})`;
-        })();
-
-        function buildDepthGalleryPlates(list) {
-            dgItems = list.length === 1 ? [list[0], { ...list[0] }] : list;
-            dgCorridor.innerHTML = '';
-            dgNodes = [];
-
-            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
-            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
-            const scaleK = (perspective + gap) / perspective;
-            const plateWidth = Math.max(dgConfig.cardWidth, 1) * scaleK;
-            const plateHeight = Math.max(dgConfig.cardHeight, 1) * scaleK;
-
-            dgCorridor.style.perspective = `${perspective}px`;
-
-            dgItems.forEach((item, i) => {
-                const el = document.createElement('div');
-                el.className = 'dg-plate';
-                el.style.width = `${plateWidth}px`;
-                el.style.height = `${plateHeight}px`;
-                el.style.marginLeft = `${-plateWidth / 2}px`;
-                el.style.marginTop = `${-plateHeight / 2}px`;
-                el.style.borderRadius = `${dgConfig.radius * scaleK}px`;
-                el.innerHTML = `
-                    <div class="dg-plate-tag">
-                        <span>// 0${i + 1}</span>
-                        <span>${item.tag}</span>
-                    </div>
-                    <img src="${item.src}" alt="${item.caption}" draggable="false">
-                `;
-                dgCorridor.appendChild(el);
-                dgNodes.push(el);
-            });
-        }
-
-        function tickDepthGallery(now) {
-            requestAnimationFrame(tickDepthGallery);
-            const count = dgItems.length;
-            if (count < 2) return;
-
-            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
-            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
-            const scaleK = (perspective + gap) / perspective;
-            const spreadPx = (dgClamp(dgConfig.spread, 0, 10) / 10) * SPREAD_RANGE * dgConfig.cardWidth;
-            const ease = 0.16 - (dgClamp(dgConfig.smoothing, 0, 10) / 10) * 0.135;
-            const pointerAmount = (dgClamp(dgConfig.pointer, 0, 10) / 10) * 0.11 * dgConfig.cardWidth;
-            const driftAmount = (dgClamp(dgConfig.drift, 0, 10) / 10) * 0.035 * dgConfig.cardHeight;
-            const breathTilt = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_TILT_DEG;
-            const breathScale = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_SCALE;
-
-            dgCurrent += (dgTarget - dgCurrent) * ease;
-
-            const span = count % 2 === 0 ? count : count * 2;
-            if (dgCurrent < -span || dgCurrent > span) {
-                const laps = Math.floor(dgCurrent / span) * span;
-                dgCurrent -= laps;
-                dgTarget -= laps;
-                dgPrevious -= laps;
-            }
-
-            const position = dgCurrent;
-            const raw = position - dgPrevious;
-            dgPrevious = position;
-            dgVelocity += (raw - dgVelocity) * VELOCITY_DAMPING;
-            if (Math.abs(dgVelocity) < 1e-6) dgVelocity = 0;
-
-            const speed = dgClamp(Math.abs(dgVelocity) / VELOCITY_MAX, 0, 1);
-            const signed = dgClamp(dgVelocity / VELOCITY_MAX, -1, 1);
-
-            dgBreath += (speed * BREATH_GAIN - dgBreath) * BREATH_SMOOTHING;
-            dgDrift += (signed - dgDrift) * DRIFT_SMOOTHING;
-            dgPointer.x += (dgPointerTarget.x - dgPointer.x) * POINTER_SMOOTHING;
-            dgPointer.y += (dgPointerTarget.y - dgPointer.y) * POINTER_SMOOTHING;
-
-            const slot = Math.floor(position);
-            const blend = position - slot;
-            const focus = dgWrap(slot, count);
-            const following = dgWrap(slot + 1, count);
-            dgCurrentFocusIndex = blend < 0.5 ? focus : following;
-
-            for (let i = 0; i < count; i++) {
-                if (i === focus || i === following) continue;
-                const node = dgNodes[i];
-                if (node && node.style.visibility !== 'hidden') {
-                    node.style.visibility = 'hidden';
-                    node.style.opacity = '0';
-                }
-            }
-
-            const placePlate = (index, s, opacity, ahead) => {
-                const node = dgNodes[index];
-                if (!node) return;
-                const distance = ahead + VIEW_LEAD;
-                const z = -distance * gap;
-                const influence = opacity * (1 + distance * DEPTH_INFLUENCE);
-                const side = dgWrap(s, 2) === 0 ? -1 : 1;
-                const x = side * spreadPx * scaleK + dgPointer.x * pointerAmount * influence;
-                const y = dgPointer.y * pointerAmount * 0.5 * influence + dgDrift * driftAmount;
-                const lean = dgBreath * opacity;
-                const tiltX = -dgPointer.y * breathTilt * lean;
-                const tiltY = dgPointer.x * breathTilt * lean;
-                const pulse = 1 + breathScale * lean;
-
-                node.style.visibility = 'visible';
-                node.style.opacity = opacity.toFixed(3);
-                node.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scale(${pulse.toFixed(4)})`;
-            };
-
-            placePlate(focus, slot, 1 - blend, -blend);
-            placePlate(following, slot + 1, blend, 1 - blend);
-
-            // Atmósfera dinámica de fondo (Mood Blobs)
-            if (dgGround) {
-                const tA = dgItems[focus].tint || { r: 0, g: 242, b: 254 };
-                const tB = dgItems[following].tint || { r: 0, g: 160, b: 255 };
-                const r = Math.round(dgMix(tA.r, tB.r, blend));
-                const g = Math.round(dgMix(tA.g, tB.g, blend));
-                const b = Math.round(dgMix(tA.b, tB.b, blend));
-                const t = now * 0.0004;
-                const b1x = (50 + Math.sin(t) * 22).toFixed(1);
-                const b1y = (50 + Math.cos(t * 0.8) * 18).toFixed(1);
-                dgGround.style.backgroundImage = `radial-gradient(ellipse 65% 65% at ${b1x}% ${b1y}%, rgba(${r},${g},${b},0.26) 0%, rgba(8,19,29,0.95) 75%)`;
-            }
-        }
-
-        // Eventos de rueda, arrastre y puntero en el contenedor Depth Gallery
-        if (dgStage) {
-            const wheelToSlot = (WHEEL_MIN + (dgClamp(dgConfig.sensitivity, 0, 10) / 10) * WHEEL_RANGE) / WHEEL_SPAN;
-            const dragToSlot = wheelToSlot * DRAG_GAIN;
-
-            dgStage.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
-                dgTarget += delta * wheelToSlot;
-            }, { passive: false });
-
-            let activePointer = null;
-            let lastY = 0;
-            let dragDistance = 0;
-
-            dgStage.addEventListener('pointerdown', (e) => {
-                if (e.target.closest('.dg-btn')) return;
-                activePointer = e.pointerId;
-                lastY = e.clientY;
-                dragDistance = 0;
-                dgStage.setPointerCapture(e.pointerId);
-            });
-
-            dgStage.addEventListener('pointermove', (e) => {
-                const box = dgStage.getBoundingClientRect();
-                if (box.width && box.height) {
-                    dgPointerTarget.x = ((e.clientX - box.left) / box.width) * 2 - 1;
-                    dgPointerTarget.y = -(((e.clientY - box.top) / box.height) * 2 - 1);
-                }
-                if (activePointer !== e.pointerId) return;
-                const dy = e.clientY - lastY;
-                lastY = e.clientY;
-                dragDistance += Math.abs(dy);
-                dgTarget -= dy * dragToSlot;
-            });
-
-            const releaseDrag = (e) => {
-                if (activePointer !== e.pointerId) return;
-                activePointer = null;
-                if (dgStage.hasPointerCapture(e.pointerId)) dgStage.releasePointerCapture(e.pointerId);
-                // Si fue un clic rápido sin arrastrar, abre la imagen enfocada en el Lightbox
-                if (dragDistance < 6 && !e.target.closest('.dg-btn')) {
-                    zoomFocusedPlate();
-                }
-            };
-
-            dgStage.addEventListener('pointerup', releaseDrag);
-            dgStage.addEventListener('pointercancel', releaseDrag);
-            dgStage.addEventListener('pointerleave', () => {
-                dgPointerTarget.x = 0;
-                dgPointerTarget.y = 0;
-            });
-        }
-
-        function stepDepthGallery(dir) {
-            dgTarget = Math.round(dgTarget + dir);
-        }
-
-        function zoomFocusedPlate() {
-            const item = dgItems[dgCurrentFocusIndex];
-            if (item) openLightbox(item.src, item.caption);
-        }
-
-        function switchHoloSet(setName) {
-            const tabs = document.querySelectorAll('.holo-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            if (setName === 'renders') {
-                tabs[0]?.classList.add('active');
-                buildDepthGalleryPlates(DG_SETS.renders);
-            } else if (setName === 'wireframes') {
-                tabs[1]?.classList.add('active');
-                buildDepthGalleryPlates(DG_SETS.wireframes);
-            } else {
-                tabs[2]?.classList.add('active');
-                buildDepthGalleryPlates(DG_SETS.all);
-            }
-            dgTarget = 0;
-            dgCurrent = 0;
-            dgPrevious = 0;
-        }
-
-        // Inicializar Depth Gallery
-        buildDepthGalleryPlates(DG_SETS.renders);
-        requestAnimationFrame(tickDepthGallery);
-
-        // ==========================================================
-        // MODAL LIGHTBOX Y EFECTO HACKY-TEXT KPR
-        // ==========================================================
-        const modal = document.getElementById('lightboxModal');
-        const modalImg = document.getElementById('lightboxImg');
-        const modalCaption = document.getElementById('lightboxCaption');
-
-        function openLightbox(src, caption) {
-            if (!modal || !modalImg) return;
-            modalImg.src = src;
-            modalCaption.textContent = caption || '';
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            if (!modal) return;
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-            setTimeout(() => {
-                if (modalImg) modalImg.src = '';
-            }, 300);
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeLightbox();
-            }
-        });
-
-        const kprGlyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//<>[]";
-        function runKprHack(el) {
-            const original = el.getAttribute('data-value') || el.textContent;
-            let iter = 0;
-            clearInterval(el._kprInterval);
-            el._kprInterval = setInterval(() => {
-                el.textContent = original.split('').map((c, i) => {
-                    if (i < iter || c === ' ') return original[i];
-                    return kprGlyphs[Math.floor(Math.random() * kprGlyphs.length)];
-                }).join('');
-                if (iter >= original.length) clearInterval(el._kprInterval);
-                iter += 0.5;
-            }, 25);
-        }
-
-        document.querySelectorAll('.kpr-hack').forEach(el => {
-            el.addEventListener('mouseenter', () => runKprHack(el));
-        });
-    </script>
-</body>
-</html>
+            pointer-events
