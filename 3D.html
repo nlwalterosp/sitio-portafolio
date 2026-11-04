@@ -74,7 +74,7 @@
             width: 100vw;
             height: 100vh;
             background-color: #EFECEC;
-            z-index: 9999;
+            z-index: 99999;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -82,7 +82,7 @@
             user-select: none;
             cursor: pointer;
             opacity: 1;
-            /* El telón blanco se desvanece suavemente después de que el texto empieza a encogerse hacia la esquina */
+            /* Fade from white (telón blanco suave) después de que las letras viajan a la esquina */
             transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.55s;
         }
 
@@ -96,14 +96,13 @@
             width: 100vw;
             height: 100vh;
             transform-origin: center center;
-            /* Transición suave para achicarse y ubicarse arriba a la izquierda */
             transition:
                 transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
                 opacity 0.65s ease 0.5s;
             will-change: transform, opacity;
         }
 
-        #scatterSvg {
+        #scatterCanvas {
             width: 100%;
             height: 100%;
             display: block;
@@ -120,12 +119,18 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: #2c2923;
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(0, 0, 0, 0.2);
+            padding: 12px 28px;
             border-radius: 30px;
-            pointer-events: none;
-            transition: opacity 0.35s ease, transform 0.35s ease;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .intro-click-hint:hover {
+            background: #000000;
+            color: #ffffff;
         }
 
         #whiteCurtainOverlay.curtain-open .intro-click-hint {
@@ -136,20 +141,6 @@
         /* ==========================================================
            TRANSICIÓN LIGERA Y SUAVE DE LAS IMÁGENES AL ABRIR EL TELÓN
            ========================================================== */
-        @keyframes softHeroReveal {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(18px) scale(1.02);
-                filter: brightness(1.6) blur(4px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0px) scale(1);
-                filter: brightness(1) blur(0px);
-            }
-        }
-
-        /* Cuando se abre el telón blanco, cada imagen del inicio hace un fade ligero escalonado */
         body.curtain-opening #layer-mountains img,
         body.curtain-opening #layer-canyon-rim img,
         body.curtain-opening #layer-temples img,
@@ -159,17 +150,17 @@
             animation: softImgFadeIn 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
-        body.curtain-opening #layer-mountains img { animation-delay: 0.25s; }
-        body.curtain-opening #layer-canyon-rim img { animation-delay: 0.38s; }
-        body.curtain-opening #layer-temples img { animation-delay: 0.50s; }
-        body.curtain-opening #layer-canyon-stream img { animation-delay: 0.60s; }
-        body.curtain-opening #layer-mecha img { animation-delay: 0.72s; }
-        body.curtain-opening #layer-princess-hero img { animation-delay: 0.85s; }
+        body.curtain-opening #layer-mountains img { animation-delay: 0.20s; }
+        body.curtain-opening #layer-canyon-rim img { animation-delay: 0.34s; }
+        body.curtain-opening #layer-temples img { animation-delay: 0.46s; }
+        body.curtain-opening #layer-canyon-stream img { animation-delay: 0.58s; }
+        body.curtain-opening #layer-mecha img { animation-delay: 0.70s; }
+        body.curtain-opening #layer-princess-hero img { animation-delay: 0.82s; }
 
         @keyframes softImgFadeIn {
             0% {
                 opacity: 0;
-                transform: scale(1.035) translateY(12px);
+                transform: scale(1.04) translateY(14px);
                 filter: brightness(1.5);
             }
             100% {
@@ -499,7 +490,7 @@
         }
 
         /* ==========================================================
-           6. TARJETAS HUD FLOTANTES (CON TRANSICIÓN SUAVE AL BAJAR)
+           6. TARJETAS HUD FLOTANTES (CON TRANSICIÓN LIGERA AL BAJAR)
            ========================================================== */
         .hud-card {
             position: absolute;
@@ -530,7 +521,6 @@
             pointer-events: none;
         }
 
-        /* Clase suave para las imágenes a medida que se hace scroll */
         .soft-scroll-fade {
             opacity: 0;
             transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
@@ -997,13 +987,15 @@
 <body class="intro-locked">
 
     <!-- ==========================================================
-         0. TELÓN BLANCO INICIAL CON LAS LETRAS ANIMADAS (DOT SCATTER)
+         0. TELÓN BLANCO INICIAL CON LAS LETRAS EN CANVAS 2D (GARANTIZADO)
          ========================================================== -->
-    <div id="whiteCurtainOverlay" title="Haz clic sobre las letras para entrar">
+    <div id="whiteCurtainOverlay" onclick="openQuetzalCurtain()">
         <div id="scatterStage">
-            <svg id="scatterSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+            <canvas id="scatterCanvas"></canvas>
         </div>
-        <div class="intro-click-hint">HAZ CLIC SOBRE LAS LETRAS PARA ENTRAR</div>
+        <button type="button" class="intro-click-hint" onclick="openQuetzalCurtain(); event.stopPropagation();">
+            HAZ CLIC SOBRE LAS LETRAS PARA ENTRAR
+        </button>
     </div>
 
     <!-- 1. HEADER ORGÁNICO SUPERIOR -->
@@ -1179,21 +1171,75 @@
     </div>
 
     <!-- ==========================================================
-       5. JAVASCRIPT: INTRO DOT SCATTER + PARALLAX + DEPTH GALLERY
+       SCRIPT 1: FUNCIÓN GLOBAL DE CLIC Y MOTOR CANVAS DOT SCATTER
        ========================================================== -->
     <script>
-        /* ==========================================================
-           A. PANTALLA BLANCA + DOT SCATTER QUE VIAJA ARRIBA A LA IZQUIERDA
-           ========================================================== */
-        (function() {
-            const PAPER_CELL_SIZE = 13;
-            const PAPER_DOT_SIZE = 9;
-            const PAPER_GLYPH_HEIGHT = 132;
-            const REFERENCE_WIDTH = 720;
-            const REFERENCE_HEIGHT = 405;
-            const REFERENCE_DOT_SIZE = 8.6;
+        var quetzalCurtainOpened = false;
+        var scatterParticles = [];
 
-            const PRESET = {
+        // Función global directa conectada al onclick del HTML (nunca falla)
+        function openQuetzalCurtain() {
+            if (quetzalCurtainOpened) return;
+            quetzalCurtainOpened = true;
+
+            var overlay = document.getElementById('whiteCurtainOverlay');
+            var stage = document.getElementById('scatterStage');
+            var logoEl = document.getElementById('brandLogoTarget');
+
+            // 1. Devolver todos los puntos a su letra exacta
+            for (var i = 0; i < scatterParticles.length; i++) {
+                scatterParticles[i].scattered = false;
+                scatterParticles[i].anchorX = scatterParticles[i].homeX;
+                scatterParticles[i].anchorY = scatterParticles[i].homeY;
+            }
+
+            // 2. Calcular la esquina superior izquierda (donde está el logo)
+            var targetX = 160;
+            var targetY = 42;
+            if (logoEl) {
+                var rect = logoEl.getBoundingClientRect();
+                if (rect.width > 0) {
+                    targetX = rect.left + rect.width / 2;
+                    targetY = rect.top + rect.height / 2;
+                }
+            }
+
+            var dx = targetX - (window.innerWidth / 2);
+            var dy = targetY - (window.innerHeight / 2);
+
+            // 3. Achicar las letras y enviarlas arriba a la izquierda
+            if (stage) {
+                stage.style.transform = 'translate3d(' + dx.toFixed(1) + 'px, ' + dy.toFixed(1) + 'px, 0) scale(0.14)';
+                stage.style.opacity = '0';
+            }
+
+            // 4. Desvanecer el telón blanco (fade from white) y revelar suavemente a la princesa
+            if (overlay) {
+                overlay.classList.add('curtain-open');
+            }
+            document.body.classList.remove('intro-locked');
+            document.body.classList.add('curtain-opening');
+
+            setTimeout(function() {
+                if (overlay) overlay.style.display = 'none';
+            }, 1750);
+        }
+
+        // Inicializador del Canvas Dot Scatter ("el canto del Quetzal")
+        (function initCanvasDotScatter() {
+            var canvas = document.getElementById('scatterCanvas');
+            var overlay = document.getElementById('whiteCurtainOverlay');
+            if (!canvas || !overlay) return;
+            var ctx = canvas.getContext('2d');
+
+            var PAPER_CELL_SIZE = 13;
+            var PAPER_DOT_SIZE = 9;
+            var PAPER_GLYPH_HEIGHT = 132;
+            var REFERENCE_WIDTH = 720;
+            var REFERENCE_HEIGHT = 405;
+            var REFERENCE_DOT_SIZE = 8.6;
+
+            var PRESET = {
                 text: "el canto del Quetzal",
                 cursorRadius: 115,
                 color: "#000000",
@@ -1203,219 +1249,168 @@
                 maxWidth: 0.94
             };
 
-            const mark = (x, y, width = PAPER_DOT_SIZE, height = PAPER_DOT_SIZE) => ({ x, y, width, height });
-            const glyph = (marks) => ({
-                width: Math.max(...marks.map(m => m.x + m.width)),
-                marks
-            });
+            function m(x, y, w, h) {
+                return { x: x, y: y, width: w || PAPER_DOT_SIZE, height: h || PAPER_DOT_SIZE };
+            }
+            function g(marks) {
+                var maxW = 0;
+                for (var i = 0; i < marks.length; i++) {
+                    var right = marks[i].x + marks[i].width;
+                    if (right > maxW) maxW = right;
+                }
+                return { width: maxW, marks: marks };
+            }
 
-            const GLYPHS = {
+            var GLYPHS = {
                 " ": { width: PAPER_CELL_SIZE * 2, marks: [] },
-                a: glyph([mark(10,27,28,9),mark(0,41,10,9),mark(38,41,10,9),mark(29,54,18,9),mark(38,67,9,10),mark(10,68,19,9),mark(0,81,10,10),mark(38,81,9,10),mark(9,95,29,9),mark(47,95,10,9)]),
-                b: glyph([mark(0,0,9,9),mark(0,13,9,10),mark(0,27,9,10),mark(19,27,28,9),mark(0,41,19,9),mark(47,41,10,9),mark(0,54,9,10),mark(47,54,10,10),mark(0,68,9,9),mark(47,68,10,9),mark(0,81,19,10),mark(47,81,10,10),mark(0,95,9,9),mark(19,95,28,9)]),
-                c: glyph([mark(10,27,28,9),mark(0,41,9,9),mark(38,41,9,9),mark(0,54,9,9),mark(0,68,9,9),mark(0,81,9,10),mark(38,81,9,10),mark(10,95,27,9)]),
-                d: glyph([mark(48,0,9,9),mark(48,13,9,10),mark(48,27,9,10),mark(10,27,28,9),mark(38,41,19,9),mark(0,41,10,9),mark(48,54,9,10),mark(0,54,10,10),mark(48,68,9,9),mark(0,68,10,9),mark(38,81,19,10),mark(0,81,10,10),mark(48,95,9,9),mark(10,95,28,9)]),
-                e: glyph([mark(9,27,38,9),mark(0,41,9,9),mark(47,41,10,9),mark(0,54,56,9),mark(0,68,9,9),mark(0,81,9,10),mark(47,81,10,10),mark(10,95,37,9)]),
-                f: glyph([mark(10,0,28,9),mark(0,13,9,9),mark(0,27,9,9),mark(10,27,38,9),mark(0,41,9,9),mark(0,54,38,9),mark(0,67,9,9),mark(0,81,9,9),mark(0,95,9,9)]),
-                g: glyph([mark(10,27,38,9),mark(0,41,9,9),mark(48,41,9,9),mark(0,54,9,9),mark(48,54,9,9),mark(0,67,9,9),mark(48,67,9,9),mark(10,81,38,9),mark(48,95,9,9),mark(48,108,9,9),mark(20,122,28,9)]),
-                h: glyph([mark(0,0,9,9),mark(0,13,9,9),mark(0,27,9,9),mark(19,27,28,9),mark(0,41,9,9),mark(47,41,9,9),mark(0,54,9,9),mark(47,54,9,9),mark(0,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(47,81,9,9),mark(0,95,9,9),mark(47,95,9,9)]),
-                i: glyph([mark(0,0,19,9),mark(0,27,19,9),mark(10,41,9,9),mark(10,54,9,9),mark(10,67,9,10),mark(10,81,9,10),mark(10,95,9,9)]),
-                j: glyph([mark(0,0,19,9),mark(0,27,19,9),mark(10,41,9,9),mark(10,54,9,9),mark(10,67,9,10),mark(10,81,9,10),mark(10,95,9,9),mark(0,108,9,9),mark(0,122,19,9)]),
-                k: glyph([mark(0,0,9,9),mark(0,13,9,9),mark(0,27,9,9),mark(0,41,9,9),mark(0,54,9,9),mark(0,67,9,9),mark(0,81,9,9),mark(0,95,9,9),mark(38,27,9,9),mark(19,41,19,9),mark(0,54,28,9),mark(19,67,19,9),mark(38,81,9,9),mark(57,95,9,9)]),
-                l: glyph([mark(0,0,10,9),mark(1,13,9,10),mark(0,27,10,10),mark(1,41,9,9),mark(0,54,10,9),mark(0,67,10,10),mark(0,81,10,10),mark(10,95,10,9)]),
-                m: glyph([mark(19,27,9,10),mark(38,27,18,10),mark(66,27,28,9),mark(19,41,19,9),mark(57,41,19,9),mark(94,41,10,9),mark(18,54,10,9),mark(56,54,10,10),mark(94,54,10,9),mark(18,67,10,10),mark(56,67,10,10),mark(95,67,9,10),mark(18,81,10,10),mark(56,81,10,10),mark(95,81,9,10),mark(18,95,10,9),mark(56,95,10,9),mark(94,95,10,9)]),
-                n: glyph([mark(0,27,9,9),mark(19,27,28,9),mark(0,41,9,9),mark(47,41,9,9),mark(0,54,9,9),mark(47,54,9,9),mark(0,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(47,81,9,9),mark(0,95,9,9),mark(47,95,9,9)]),
-                o: glyph([mark(10,27,38,9),mark(0,41,10,9),mark(48,41,10,9),mark(0,54,10,9),mark(48,54,10,10),mark(1,67,9,10),mark(48,67,10,10),mark(0,81,10,10),mark(48,81,10,10),mark(10,95,38,9)]),
-                p: glyph([mark(0,27,9,10),mark(19,27,28,9),mark(0,41,19,9),mark(47,41,10,9),mark(0,54,9,10),mark(47,54,10,10),mark(0,68,9,9),mark(47,68,10,9),mark(0,81,19,10),mark(47,81,10,10),mark(0,95,9,9),mark(19,95,28,9),mark(0,108,9,9),mark(0,122,9,9)]),
-                q: glyph([mark(48,27,9,10),mark(10,27,28,9),mark(38,41,19,9),mark(0,41,10,9),mark(48,54,9,10),mark(0,54,10,10),mark(48,68,9,9),mark(0,68,10,9),mark(38,81,19,10),mark(0,81,10,10),mark(48,95,9,9),mark(10,95,28,9),mark(48,108,9,9),mark(48,122,9,9)]),
-                r: glyph([mark(1,27,9,10),mark(20,27,18,10),mark(1,41,18,9),mark(1,54,9,10),mark(0,67,10,10),mark(1,81,9,10),mark(0,95,10,9)]),
-                s: glyph([mark(10,27,28,10),mark(0,40,10,10),mark(38,40,10,10),mark(10,54,19,10),mark(29,67,19,10),mark(0,81,10,10),mark(38,81,10,10),mark(10,95,28,9)]),
-                t: glyph([mark(19,0,9,9),mark(19,13,9,9),mark(0,27,57,9),mark(19,41,9,9),mark(19,54,9,9),mark(19,67,9,9),mark(19,81,9,9),mark(19,95,28,9),mark(57,95,9,9)]),
-                u: glyph([mark(0,27,10,10),mark(48,27,9,9),mark(0,40,10,10),mark(48,41,9,9),mark(0,54,10,9),mark(48,54,9,9),mark(48,67,9,10),mark(0,68,10,9),mark(0,81,10,10),mark(38,81,19,10),mark(10,95,28,9),mark(48,95,9,9)]),
-                v: glyph([mark(0,27,9,9),mark(48,27,9,9),mark(0,41,9,9),mark(48,41,9,9),mark(0,54,9,9),mark(48,54,9,9),mark(0,67,9,9),mark(48,67,9,9),mark(10,81,9,9),mark(38,81,9,9),mark(19,95,19,9)]),
-                w: glyph([mark(0,27,9,9),mark(76,27,9,9),mark(0,41,9,9),mark(76,41,9,9),mark(0,54,9,9),mark(38,54,9,9),mark(76,54,9,9),mark(0,67,9,9),mark(19,67,9,9),mark(57,67,9,9),mark(76,67,9,9),mark(10,81,28,9),mark(48,81,28,9),mark(19,95,9,9),mark(57,95,9,9)]),
-                x: glyph([mark(0,27,9,9),mark(57,27,9,9),mark(10,41,9,9),mark(47,41,9,9),mark(19,54,28,9),mark(10,67,9,9),mark(47,67,9,9),mark(0,81,9,9),mark(57,81,9,9),mark(0,95,9,9),mark(57,95,9,9)]),
-                y: glyph([mark(0,27,10,10),mark(48,27,10,10),mark(0,40,10,10),mark(48,40,9,10),mark(0,54,10,10),mark(48,54,10,10),mark(0,67,10,10),mark(48,67,10,10),mark(10,81,9,10),mark(38,81,10,10),mark(19,95,19,9),mark(19,108,10,10),mark(0,122,19,9)]),
-                z: glyph([mark(10,27,28,9),mark(38,41,9,9),mark(29,54,19,9),mark(10,67,19,9),mark(0,81,9,9),mark(10,95,28,9)])
+                a: g([m(10,27,28,9),m(0,41,10,9),m(38,41,10,9),m(29,54,18,9),m(38,67,9,10),m(10,68,19,9),m(0,81,10,10),m(38,81,9,10),m(9,95,29,9),m(47,95,10,9)]),
+                c: g([m(10,27,28,9),m(0,41,9,9),m(38,41,9,9),m(0,54,9,9),m(0,68,9,9),m(0,81,9,10),m(38,81,9,10),m(10,95,27,9)]),
+                d: g([m(48,0,9,9),m(48,13,9,10),m(48,27,9,10),m(10,27,28,9),m(38,41,19,9),m(0,41,10,9),m(48,54,9,10),m(0,54,10,10),m(48,68,9,9),m(0,68,10,9),m(38,81,19,10),m(0,81,10,10),m(48,95,9,9),m(10,95,28,9)]),
+                e: g([m(9,27,38,9),m(0,41,9,9),m(47,41,10,9),m(0,54,56,9),m(0,68,9,9),m(0,81,9,10),m(47,81,10,10),m(10,95,37,9)]),
+                l: g([m(0,0,10,9),m(1,13,9,10),m(0,27,10,10),m(1,41,9,9),m(0,54,10,9),m(0,67,10,10),m(0,81,10,10),m(10,95,10,9)]),
+                n: g([m(0,27,9,9),m(19,27,28,9),m(0,41,9,9),m(47,41,9,9),m(0,54,9,9),m(47,54,9,9),m(0,67,9,9),m(47,67,9,9),m(0,81,9,9),m(47,81,9,9),m(0,95,9,9),m(47,95,9,9)]),
+                o: g([m(10,27,38,9),m(0,41,10,9),m(48,41,10,9),m(0,54,10,9),m(48,54,10,10),m(1,67,9,10),m(48,67,10,10),m(0,81,10,10),m(48,81,10,10),m(10,95,38,9)]),
+                q: g([m(48,27,9,10),m(10,27,28,9),m(38,41,19,9),m(0,41,10,9),m(48,54,9,10),m(0,54,10,10),m(48,68,9,9),m(0,68,10,9),m(38,81,19,10),m(0,81,10,10),m(48,95,9,9),m(10,95,28,9),m(48,108,9,9),m(48,122,9,9)]),
+                t: g([m(19,0,9,9),m(19,13,9,9),m(0,27,57,9),m(19,41,9,9),m(19,54,9,9),m(19,67,9,9),m(19,81,9,9),m(19,95,28,9),m(57,95,9,9)]),
+                u: g([m(0,27,10,10),m(48,27,9,9),m(0,40,10,10),m(48,41,9,9),m(0,54,10,9),m(48,54,9,9),m(48,67,9,10),m(0,68,10,9),m(0,81,10,10),m(38,81,19,10),m(10,95,28,9),m(48,95,9,9)]),
+                z: g([m(10,27,28,9),m(38,41,9,9),m(29,54,19,9),m(10,67,19,9),m(0,81,9,9),m(10,95,28,9)])
             };
-            const FALLBACK_GLYPH = glyph([mark(10,27,28),mark(38,41),mark(29,54,19),mark(19,81)]);
+            var FALLBACK = g([m(10,27,28),m(38,41),m(29,54,19),m(19,81)]);
 
-            const mulberry32 = (seed) => {
-                let state = seed >>> 0;
-                return () => {
+            function mulberry32(seed) {
+                var state = seed >>> 0;
+                return function() {
                     state = (state + 0x6d2b79f5) >>> 0;
-                    let t = state;
+                    var t = state;
                     t = Math.imul(t ^ (t >>> 15), t | 1);
                     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
                     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
                 };
-            };
+            }
 
-            function generateTextTargets(word, width, height) {
-                const characters = [...word.toLowerCase()];
-                const glyphs = characters.map(ch => GLYPHS[ch] || FALLBACK_GLYPH);
-                const containerScale = Math.min(width / REFERENCE_WIDTH, height / REFERENCE_HEIGHT);
-                const rawDotSize = REFERENCE_DOT_SIZE * containerScale;
-                const totalColumns = glyphs.reduce((sum, g, idx) => sum + g.width / PAPER_CELL_SIZE + (idx === glyphs.length - 1 ? 0 : PRESET.letterGap), 0);
-                const totalRows = PAPER_GLYPH_HEIGHT / PAPER_CELL_SIZE;
-                const maxTextWidth = width * PRESET.maxWidth;
-                const maxTextHeight = height * 0.72;
-                const cellSize = Math.min(rawDotSize * PRESET.cellScale, maxTextWidth / Math.max(1, totalColumns), maxTextHeight / totalRows);
-                const fillRatio = Math.min(0.72, Math.max(0.28, PRESET.fillRatio));
-                const dotSize = Math.min(rawDotSize, cellSize * fillRatio);
+            var stageW = window.innerWidth || 1280;
+            var stageH = window.innerHeight || 720;
 
-                const positionScale = cellSize / PAPER_CELL_SIZE;
-                const markScale = dotSize / PAPER_DOT_SIZE;
-                const rawTargets = [];
-                let cursorColumn = 0;
+            function buildScene(animateEntry) {
+                stageW = Math.max(320, window.innerWidth);
+                stageH = Math.max(320, window.innerHeight);
+                var dpr = window.devicePixelRatio || 1;
+                canvas.width = stageW * dpr;
+                canvas.height = stageH * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-                for (let li = 0; li < glyphs.length; li++) {
-                    const g = glyphs[li];
-                    for (const m of g.marks) {
+                var chars = PRESET.text.toLowerCase().split('');
+                var glyphs = [];
+                var totalCols = 0;
+                for (var i = 0; i < chars.length; i++) {
+                    var gl = GLYPHS[chars[i]] || FALLBACK;
+                    glyphs.push(gl);
+                    totalCols += (gl.width / PAPER_CELL_SIZE) + (i === chars.length - 1 ? 0 : PRESET.letterGap);
+                }
+
+                var containerScale = Math.min(stageW / REFERENCE_WIDTH, stageH / REFERENCE_HEIGHT);
+                var rawDotSize = REFERENCE_DOT_SIZE * containerScale;
+                var totalRows = PAPER_GLYPH_HEIGHT / PAPER_CELL_SIZE;
+                var cellSize = Math.min(
+                    rawDotSize * PRESET.cellScale,
+                    (stageW * PRESET.maxWidth) / Math.max(1, totalCols),
+                    (stageH * 0.72) / totalRows
+                );
+                var dotSize = Math.min(rawDotSize, cellSize * PRESET.fillRatio);
+                var posScale = cellSize / PAPER_CELL_SIZE;
+                var markScale = dotSize / PAPER_DOT_SIZE;
+
+                var rawTargets = [];
+                var cursorCol = 0;
+                for (var li = 0; li < glyphs.length; li++) {
+                    var curG = glyphs[li];
+                    for (var mi = 0; mi < curG.marks.length; mi++) {
+                        var mk = curG.marks[mi];
                         rawTargets.push({
-                            x: (cursorColumn * cellSize) + (m.x + m.width / 2) * positionScale,
-                            y: (m.y + m.height / 2) * positionScale,
-                            w: m.width * markScale,
-                            s: m.height * markScale,
-                            letterIndex: li
+                            x: (cursorCol * cellSize) + (mk.x + mk.width / 2) * posScale,
+                            y: (mk.y + mk.height / 2) * posScale,
+                            w: mk.width * markScale,
+                            s: mk.height * markScale
                         });
                     }
-                    cursorColumn += g.width / PAPER_CELL_SIZE + PRESET.letterGap;
+                    cursorCol += (curG.width / PAPER_CELL_SIZE) + PRESET.letterGap;
                 }
 
-                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-                for (const t of rawTargets) {
-                    minX = Math.min(minX, t.x - t.w / 2);
-                    maxX = Math.max(maxX, t.x + t.w / 2);
-                    minY = Math.min(minY, t.y - t.s / 2);
-                    maxY = Math.max(maxY, t.y + t.s / 2);
+                var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                for (var k = 0; k < rawTargets.length; k++) {
+                    var rt = rawTargets[k];
+                    if (rt.x - rt.w / 2 < minX) minX = rt.x - rt.w / 2;
+                    if (rt.x + rt.w / 2 > maxX) maxX = rt.x + rt.w / 2;
+                    if (rt.y - rt.s / 2 < minY) minY = rt.y - rt.s / 2;
+                    if (rt.y + rt.s / 2 > maxY) maxY = rt.y + rt.s / 2;
                 }
-                const textCx = (minX + maxX) / 2;
-                const textCy = (minY + maxY) / 2;
+                var textCx = (minX + maxX) / 2;
+                var textCy = (minY + maxY) / 2;
+                var bandHeight = Math.max(40, stageH * 0.2);
 
-                return rawTargets.map(t => ({
-                    x: t.x - textCx + width / 2,
-                    y: t.y - textCy + height / 2,
-                    w: t.w,
-                    s: t.s,
-                    letterIndex: t.letterIndex
-                }));
-            }
+                scatterParticles = [];
+                for (var idx = 0; idx < rawTargets.length; idx++) {
+                    var t = rawTargets[idx];
+                    var cx = t.x - textCx + stageW / 2;
+                    var cy = t.y - textCy + stageH / 2;
+                    var isDot = t.w <= t.s * 1.15;
+                    var w = isDot ? t.s : t.w;
+                    var h = t.s;
+                    var homeX = cx - w / 2;
+                    var homeY = cy - h / 2;
 
-            function pickScatterDestination(target, bandCy, bandHeight, markW, markH, rng) {
-                const u1 = Math.max(1e-6, rng());
-                const u2 = rng();
-                const gx = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-                let gy = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
-                if (target.y <= bandCy) gy -= 0.35;
-                else gy += 0.35;
+                    var rng = mulberry32((idx * 9973 + 54321) >>> 0);
+                    var sx = animateEntry ? homeX + (rng() - 0.5) * 360 : homeX;
+                    var sy = animateEntry ? homeY + (rng() - 0.5) * 260 : homeY;
 
-                const spreadX = Math.max(10, markH * 4.8);
-                const spreadY = Math.max(10, markH * 6.5);
-                let dx = gx * spreadX;
-                let dy = gy * spreadY;
-
-                const maxRx = spreadX * 2.15;
-                const maxRy = Math.min(bandHeight * 0.48, spreadY * 2.35);
-                const nx = dx / maxRx;
-                const ny = dy / maxRy;
-                const r2 = nx * nx + ny * ny;
-                if (r2 > 1) {
-                    const s = 1 / Math.sqrt(r2);
-                    dx *= s;
-                    dy *= s;
-                }
-                return { x: target.x - markW / 2 + dx, y: target.y - markH / 2 + dy };
-            }
-
-            const overlay = document.getElementById('whiteCurtainOverlay');
-            const stage = document.getElementById('scatterStage');
-            const svg = document.getElementById('scatterSvg');
-
-            let particles = [];
-            let stageW = window.innerWidth || 1280;
-            let stageH = window.innerHeight || 720;
-            let curtainOpened = false;
-
-            function buildScatterScene(withEntryAnimation = false) {
-                stageW = Math.max(300, window.innerWidth);
-                stageH = Math.max(300, window.innerHeight);
-                svg.setAttribute('viewBox', `0 0 ${stageW} ${stageH}`);
-                svg.setAttribute('width', stageW);
-                svg.setAttribute('height', stageH);
-                svg.innerHTML = '';
-
-                const targets = generateTextTargets(PRESET.text, stageW, stageH);
-                const bandHeight = Math.max(40, stageH * 0.2);
-
-                particles = targets.map((t, index) => {
-                    const isDot = t.w <= t.s * 1.15;
-                    const w = isDot ? t.s : t.w;
-                    const h = t.s;
-                    const radius = t.s / 2;
-                    const homeX = t.x - w / 2;
-                    const homeY = t.y - h / 2;
-
-                    // Para que al inicio se vea la animación de las letras armándose
-                    const rng = mulberry32((index * 9973 + 12345) >>> 0);
-                    const startX = withEntryAnimation ? homeX + (rng() - 0.5) * 280 : homeX;
-                    const startY = withEntryAnimation ? homeY + (rng() - 0.5) * 220 : homeY;
-
-                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    rect.setAttribute('fill', PRESET.color);
-                    rect.setAttribute('width', w.toFixed(2));
-                    rect.setAttribute('height', h.toFixed(2));
-                    rect.setAttribute('rx', radius.toFixed(2));
-                    rect.setAttribute('ry', radius.toFixed(2));
-                    rect.setAttribute('x', startX.toFixed(2));
-                    rect.setAttribute('y', startY.toFixed(2));
-                    svg.appendChild(rect);
-
-                    return {
-                        el: rect,
-                        target: t,
-                        index,
-                        w, h,
-                        homeX, homeY,
-                        x: startX, y: startY,
+                    scatterParticles.push({
+                        cx: cx, cy: cy,
+                        w: w, h: h, r: h / 2,
+                        homeX: homeX, homeY: homeY,
+                        x: sx, y: sy,
                         vx: 0, vy: 0,
                         anchorX: homeX, anchorY: homeY,
                         scattered: false,
-                        bandHeight
-                    };
-                });
+                        bandHeight: bandHeight,
+                        index: idx
+                    });
+                }
             }
 
-            // Construye las letras con una animación inicial donde los puntos se juntan para formar el nombre
-            buildScatterScene(true);
-
-            window.addEventListener('resize', () => {
-                if (!curtainOpened) buildScatterScene(false);
+            buildScene(true);
+            window.addEventListener('resize', function() {
+                if (!quetzalCurtainOpened) buildScene(false);
             });
 
-            // Dispersión al mover el mouse sobre las letras
-            overlay.addEventListener('pointermove', (e) => {
-                if (curtainOpened) return;
-                const px = e.clientX;
-                const py = e.clientY;
-                const r2 = PRESET.cursorRadius * PRESET.cursorRadius;
-                const bandCy = stageH / 2;
+            overlay.addEventListener('pointermove', function(e) {
+                if (quetzalCurtainOpened) return;
+                var px = e.clientX;
+                var py = e.clientY;
+                var r2 = PRESET.cursorRadius * PRESET.cursorRadius;
+                var bandCy = stageH / 2;
 
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-                    const dx = p.target.x - px;
-                    const dy = p.target.y - py;
-                    const shouldScatter = (dx * dx + dy * dy) <= r2;
+                for (var i = 0; i < scatterParticles.length; i++) {
+                    var p = scatterParticles[i];
+                    var dx = p.cx - px;
+                    var dy = p.cy - py;
+                    var hit = (dx * dx + dy * dy) <= r2;
 
-                    if (shouldScatter && !p.scattered) {
+                    if (hit && !p.scattered) {
                         p.scattered = true;
-                        const rng = mulberry32((Date.now() ^ (p.index * 10007)) >>> 0);
-                        const dest = pickScatterDestination(p.target, bandCy, p.bandHeight, p.w, p.h, rng);
-                        p.anchorX = dest.x;
-                        p.anchorY = dest.y;
+                        var rng = mulberry32((Date.now() ^ (p.index * 10007)) >>> 0);
+                        var u1 = Math.max(1e-6, rng());
+                        var u2 = rng();
+                        var gx = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+                        var gy = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+                        gy += (p.cy <= bandCy ? -0.35 : 0.35);
+
+                        var spreadX = Math.max(10, p.h * 4.8);
+                        var spreadY = Math.max(10, p.h * 6.5);
+                        p.anchorX = p.homeX + gx * spreadX;
+                        p.anchorY = p.homeY + gy * spreadY;
                         p.vx += (rng() - 0.5) * 6;
                         p.vy += (rng() - 0.5) * 6;
-                    } else if (!shouldScatter && p.scattered) {
+                    } else if (!hit && p.scattered) {
                         p.scattered = false;
                         p.anchorX = p.homeX;
                         p.anchorY = p.homeY;
@@ -1423,83 +1418,64 @@
                 }
             });
 
-            // Bucle de física usando atributos nativos x/y de SVG (100% compatible con todos los navegadores)
-            let lastTime = performance.now();
-            function tickScatter(now) {
-                if (curtainOpened && overlay.style.display === 'none') return;
-                requestAnimationFrame(tickScatter);
+            function drawRoundedPill(x, y, w, h, r) {
+                var radius = Math.min(r, w / 2, h / 2);
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+                ctx.fill();
+            }
 
-                const dt = Math.min((now - lastTime) / 1000, 0.034);
+            var lastTime = performance.now();
+            function tickCanvas(now) {
+                if (quetzalCurtainOpened && overlay.style.display === 'none') return;
+                requestAnimationFrame(tickCanvas);
+
+                var dt = Math.min((now - lastTime) / 1000, 0.034);
                 lastTime = now;
 
-                const stiffness = 135;
-                const damping = 15;
+                ctx.clearRect(0, 0, stageW, stageH);
+                ctx.fillStyle = PRESET.color;
 
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
+                var stiffness = 130;
+                var damping = 14;
+
+                for (var i = 0; i < scatterParticles.length; i++) {
+                    var p = scatterParticles[i];
                     if (p.scattered) {
                         p.vx += (Math.random() - 0.5) * 18 * dt;
                         p.vy += (Math.random() - 0.5) * 18 * dt;
                     }
 
-                    const forceX = (p.anchorX - p.x) * stiffness;
-                    const forceY = (p.anchorY - p.y) * stiffness;
+                    var fx = (p.anchorX - p.x) * stiffness;
+                    var fy = (p.anchorY - p.y) * stiffness;
 
-                    p.vx = (p.vx + forceX * dt) * Math.exp(-damping * dt);
-                    p.vy = (p.vy + forceY * dt) * Math.exp(-damping * dt);
+                    p.vx = (p.vx + fx * dt) * Math.exp(-damping * dt);
+                    p.vy = (p.vy + fy * dt) * Math.exp(-damping * dt);
 
                     p.x += p.vx * dt;
                     p.y += p.vy * dt;
 
-                    p.el.setAttribute('x', p.x.toFixed(2));
-                    p.el.setAttribute('y', p.y.toFixed(2));
+                    drawRoundedPill(p.x, p.y, p.w, p.h, p.r);
                 }
             }
-            requestAnimationFrame(tickScatter);
-
-            // Al hacer clic sobre las letras: se hacen pequeñas, van arriba a la izquierda y se abre el telón blanco
-            overlay.addEventListener('click', () => {
-                if (curtainOpened) return;
-                curtainOpened = true;
-
-                // 1. Regresar todas las partículas a su posición de letra limpia
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].scattered = false;
-                    particles[i].anchorX = particles[i].homeX;
-                    particles[i].anchorY = particles[i].homeY;
-                }
-
-                // 2. Calcular la posición del logo superior izquierdo para llevar las letras hacia allá
-                const logoEl = document.getElementById('brandLogoTarget');
-                let targetX = 160;
-                let targetY = 42;
-                if (logoEl) {
-                    const rect = logoEl.getBoundingClientRect();
-                    targetX = rect.left + rect.width / 2;
-                    targetY = rect.top + rect.height / 2;
-                }
-
-                const dx = targetX - (window.innerWidth / 2);
-                const dy = targetY - (window.innerHeight / 2);
-
-                // Las letras se achican (scale 0.14) y viajan a la parte superior izquierda
-                stage.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(0.14)`;
-                stage.style.opacity = '0';
-
-                // 3. Abrir el telón blanco (fade from white) y activar la transición suave de la princesa y capas
-                overlay.classList.add('curtain-open');
-                document.body.classList.remove('intro-locked');
-                document.body.classList.add('curtain-opening');
-
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 1750);
-            });
+            requestAnimationFrame(tickCanvas);
         })();
+    </script>
 
-        /* ==========================================================
-           B. TRANSICIÓN LIGERA DE TARJETAS AL HACER SCROLL
-           ========================================================== */
+    <!-- ==========================================================
+       SCRIPT 2: MOTOR ORIGINAL DEL PARALLAX 3D Y DEPTH GALLERY
+       ========================================================== -->
+    <script>
+        // Transición suave de tarjetas al hacer scroll
         const scrollFadeObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1512,4 +1488,480 @@
             scrollFadeObserver.observe(el);
         });
 
-        /* ==========================================================
+        // Capas del Parallax Original
+        const layerMountains = document.getElementById('layer-mountains');
+        const layerRim = document.getElementById('layer-canyon-rim');
+        const layerTemples = document.getElementById('layer-temples');
+        const layerMecha = document.getElementById('layer-mecha');
+        const layerPrincess = document.getElementById('layer-princess-hero');
+        const layerCanyonStream = document.getElementById('layer-canyon-stream');
+        const layerMidgroundCaverns = document.getElementById('layer-midground-caverns');
+        const layerForegroundRocks = document.getElementById('layer-foreground-rocks');
+        const layerMetalPart = document.getElementById('layer-metal-part');
+
+        const floatCards = document.querySelectorAll('[data-float-speed]');
+        const depthFill = document.getElementById('depthFill');
+        const depthNodes = document.querySelectorAll('.depth-node');
+        const landingStage = document.getElementById('landingStage');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetMouseX = 0;
+        let targetMouseY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            const halfW = window.innerWidth / 2;
+            const halfH = window.innerHeight / 2;
+            targetMouseX = (e.clientX - halfW) / halfW;
+            targetMouseY = (e.clientY - halfH) / halfH;
+        });
+
+        function updateParallax() {
+            mouseX += (targetMouseX - mouseX) * 0.08;
+            mouseY += (targetMouseY - mouseY) * 0.08;
+
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const windowH = window.innerHeight;
+            const totalScroll = landingStage.scrollHeight - windowH;
+            const progress = Math.min(Math.max(scrollY / (totalScroll || 1), 0), 1);
+
+            if (depthFill) {
+                depthFill.style.height = `${progress * 100}%`;
+            }
+
+            const checkpoints = [0, 2100, 5250, 6450];
+            depthNodes.forEach((node, i) => {
+                const targetY = checkpoints[i];
+                if (Math.abs(scrollY - targetY) < 700) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+            });
+
+            if (layerMountains) {
+                const moveY = scrollY * 0.72;
+                const shiftX = mouseX * 28;
+                const shiftY = mouseY * 12;
+                layerMountains.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
+            if (layerRim) {
+                const moveY = scrollY * 0.44;
+                const shiftX = mouseX * 20;
+                const shiftY = mouseY * 8;
+                layerRim.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
+            if (layerTemples) {
+                const moveY = scrollY * 0.22;
+                const shiftX = mouseX * 16;
+                const shiftY = mouseY * 6;
+                layerTemples.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
+            if (layerMecha) {
+                const moveY = scrollY * 0.10;
+                const shiftX = mouseX * 14;
+                const shiftY = mouseY * 5;
+                layerMecha.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
+            if (layerPrincess) {
+                const moveY = scrollY * 0.10;
+                const shiftX = mouseX * 14;
+                const shiftY = mouseY * 5;
+                layerPrincess.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${(moveY + shiftY).toFixed(1)}px, 0)`;
+            }
+
+            if (layerCanyonStream) {
+                const moveY = scrollY * 0.32;
+                const shiftX = mouseX * 12;
+                layerCanyonStream.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+            }
+
+            if (layerMidgroundCaverns) {
+                const rect = layerMidgroundCaverns.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.20;
+                    const shiftX = mouseX * 18;
+                    layerMidgroundCaverns.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            if (layerForegroundRocks) {
+                const rect = layerForegroundRocks.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.42;
+                    const shiftX = mouseX * 26;
+                    layerForegroundRocks.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            if (layerMetalPart) {
+                const rect = layerMetalPart.getBoundingClientRect();
+                if (rect.top < windowH + 600 && rect.bottom > -600) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const moveY = offsetFromCenter * 0.22;
+                    const shiftX = mouseX * 18;
+                    layerMetalPart.style.transform = `translate3d(calc(-50% + ${shiftX.toFixed(1)}px), ${moveY.toFixed(1)}px, 0)`;
+                }
+            }
+
+            floatCards.forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-float-speed')) || 0.22;
+                const rect = el.getBoundingClientRect();
+
+                if (rect.top < windowH + 500 && rect.bottom > -500) {
+                    const offsetFromCenter = (windowH / 2) - (rect.top + rect.height / 2);
+                    const translateY = offsetFromCenter * speed;
+
+                    const isCentered = el.classList.contains('center-x') || el.id === 'speeder-water-rush' || el.classList.contains('holo-wireframe-cluster');
+                    const xBase = isCentered ? '-50%' : '0px';
+                    const mouseShiftX = (mouseX * speed * 45).toFixed(1);
+
+                    el.style.transform = `translate3d(calc(${xBase} + ${mouseShiftX}px), ${translateY.toFixed(1)}px, 0)`;
+                }
+            });
+
+            requestAnimationFrame(updateParallax);
+        }
+
+        requestAnimationFrame(updateParallax);
+
+        function scrollToY(y) {
+            window.scrollTo({
+                top: y,
+                behavior: 'smooth'
+            });
+        }
+
+        // Depth Gallery
+        const DG_SETS = {
+            renders: [
+                { src: 'images/Render0.5.png', tag: 'FRONT 0.5', caption: 'Render 0.5 // Frontal T-Pose', tint: { r: 0, g: 210, b: 255 } },
+                { src: 'images/Render1.png', tag: 'SIDE 1.0', caption: 'Render 1.0 // Perfil Lateral', tint: { r: 0, g: 165, b: 235 } },
+                { src: 'images/Render1.5.png', tag: 'SIDE 1.5', caption: 'Render 1.5 // Perfil Tres Cuartos', tint: { r: 30, g: 230, b: 210 } },
+                { src: 'images/Render2.png', tag: 'BACK 2.0', caption: 'Render 2.0 // Posterior T-Pose', tint: { r: 0, g: 140, b: 220 } }
+            ],
+            wireframes: [
+                { src: 'images/render amiga1w.png', tag: 'WIRE FRONT', caption: 'Proyección Holográfica // Vista Frontal', tint: { r: 0, g: 242, b: 254 } },
+                { src: 'images/render amiga2w.png', tag: 'WIRE BACK', caption: 'Proyección Holográfica // Vista Posterior', tint: { r: 20, g: 185, b: 255 } },
+                { src: 'images/render amiga3w.png', tag: 'WIRE SIDE', caption: 'Proyección Holográfica // Vista Lateral', tint: { r: 0, g: 220, b: 190 } }
+            ]
+        };
+        DG_SETS.all = [...DG_SETS.renders, ...DG_SETS.wireframes];
+
+        const dgStage = document.getElementById('depthGalleryStage');
+        const dgCorridor = document.getElementById('dgCorridor');
+        const dgGround = document.getElementById('dgGround');
+        const dgGrain = document.getElementById('dgGrain');
+
+        const VIEW_LEAD = 1;
+        const PERSPECTIVE_RATIO = 3.2;
+        const GAP_MIN = 0.26, GAP_RANGE = 0.9;
+        const SPREAD_RANGE = 0.6;
+        const WHEEL_SPAN = 650, WHEEL_MIN = 0.4, WHEEL_RANGE = 1.6;
+        const DRAG_GAIN = 1.8;
+        const VELOCITY_MAX = 0.03, VELOCITY_DAMPING = 0.12;
+        const POINTER_SMOOTHING = 0.08, BREATH_SMOOTHING = 0.14, DRIFT_SMOOTHING = 0.05, BREATH_GAIN = 1.1;
+        const BREATH_TILT_DEG = 2.6, BREATH_SCALE = 0.03, DEPTH_INFLUENCE = 0.05;
+
+        const dgConfig = {
+            depth: 5,
+            spread: 4.5,
+            cardWidth: 320,
+            cardHeight: 400,
+            radius: 16,
+            sensitivity: 5,
+            smoothing: 6,
+            pointer: 5,
+            breath: 5,
+            drift: 5
+        };
+
+        let dgItems = DG_SETS.renders;
+        let dgNodes = [];
+        let dgTarget = 0;
+        let dgCurrent = 0;
+        let dgPrevious = 0;
+        let dgVelocity = 0;
+        let dgBreath = 0;
+        let dgDrift = 0;
+        let dgPointer = { x: 0, y: 0 };
+        let dgPointerTarget = { x: 0, y: 0 };
+        let dgCurrentFocusIndex = 0;
+
+        function dgClamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+        function dgWrap(v, span) { return ((v % span) + span) % span; }
+        function dgMix(a, b, t) { return a + (b - a) * t; }
+
+        (function initGrain() {
+            const c = document.createElement('canvas');
+            c.width = 128; c.height = 128;
+            const ctx = c.getContext('2d');
+            if (!ctx || !dgGrain) return;
+            const noise = ctx.createImageData(128, 128);
+            for (let i = 0; i < noise.data.length; i += 4) {
+                const v = Math.round(Math.random() * 255);
+                noise.data[i] = v; noise.data[i+1] = v; noise.data[i+2] = v; noise.data[i+3] = 255;
+            }
+            ctx.putImageData(noise, 0, 0);
+            dgGrain.style.backgroundImage = `url(${c.toDataURL()})`;
+        })();
+
+        function buildDepthGalleryPlates(list) {
+            dgItems = list.length === 1 ? [list[0], { ...list[0] }] : list;
+            dgCorridor.innerHTML = '';
+            dgNodes = [];
+
+            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
+            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
+            const scaleK = (perspective + gap) / perspective;
+            const plateWidth = Math.max(dgConfig.cardWidth, 1) * scaleK;
+            const plateHeight = Math.max(dgConfig.cardHeight, 1) * scaleK;
+
+            dgCorridor.style.perspective = `${perspective}px`;
+
+            dgItems.forEach((item, i) => {
+                const el = document.createElement('div');
+                el.className = 'dg-plate';
+                el.style.width = `${plateWidth}px`;
+                el.style.height = `${plateHeight}px`;
+                el.style.marginLeft = `${-plateWidth / 2}px`;
+                el.style.marginTop = `${-plateHeight / 2}px`;
+                el.style.borderRadius = `${dgConfig.radius * scaleK}px`;
+                el.innerHTML = `
+                    <div class="dg-plate-tag">
+                        <span>// 0${i + 1}</span>
+                        <span>${item.tag}</span>
+                    </div>
+                    <img src="${item.src}" alt="${item.caption}" draggable="false">
+                `;
+                dgCorridor.appendChild(el);
+                dgNodes.push(el);
+            });
+        }
+
+        function tickDepthGallery(now) {
+            requestAnimationFrame(tickDepthGallery);
+            const count = dgItems.length;
+            if (count < 2) return;
+
+            const perspective = Math.max(dgConfig.cardWidth, 120) * PERSPECTIVE_RATIO;
+            const gap = perspective * (GAP_MIN + (dgClamp(dgConfig.depth, 0, 10) / 10) * GAP_RANGE);
+            const scaleK = (perspective + gap) / perspective;
+            const spreadPx = (dgClamp(dgConfig.spread, 0, 10) / 10) * SPREAD_RANGE * dgConfig.cardWidth;
+            const ease = 0.16 - (dgClamp(dgConfig.smoothing, 0, 10) / 10) * 0.135;
+            const pointerAmount = (dgClamp(dgConfig.pointer, 0, 10) / 10) * 0.11 * dgConfig.cardWidth;
+            const driftAmount = (dgClamp(dgConfig.drift, 0, 10) / 10) * 0.035 * dgConfig.cardHeight;
+            const breathTilt = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_TILT_DEG;
+            const breathScale = (dgClamp(dgConfig.breath, 0, 10) / 5) * BREATH_SCALE;
+
+            dgCurrent += (dgTarget - dgCurrent) * ease;
+
+            const span = count % 2 === 0 ? count : count * 2;
+            if (dgCurrent < -span || dgCurrent > span) {
+                const laps = Math.floor(dgCurrent / span) * span;
+                dgCurrent -= laps;
+                dgTarget -= laps;
+                dgPrevious -= laps;
+            }
+
+            const position = dgCurrent;
+            const raw = position - dgPrevious;
+            dgPrevious = position;
+            dgVelocity += (raw - dgVelocity) * VELOCITY_DAMPING;
+            if (Math.abs(dgVelocity) < 1e-6) dgVelocity = 0;
+
+            const speed = dgClamp(Math.abs(dgVelocity) / VELOCITY_MAX, 0, 1);
+            const signed = dgClamp(dgVelocity / VELOCITY_MAX, -1, 1);
+
+            dgBreath += (speed * BREATH_GAIN - dgBreath) * BREATH_SMOOTHING;
+            dgDrift += (signed - dgDrift) * DRIFT_SMOOTHING;
+            dgPointer.x += (dgPointerTarget.x - dgPointer.x) * POINTER_SMOOTHING;
+            dgPointer.y += (dgPointerTarget.y - dgPointer.y) * POINTER_SMOOTHING;
+
+            const slot = Math.floor(position);
+            const blend = position - slot;
+            const focus = dgWrap(slot, count);
+            const following = dgWrap(slot + 1, count);
+            dgCurrentFocusIndex = blend < 0.5 ? focus : following;
+
+            for (let i = 0; i < count; i++) {
+                if (i === focus || i === following) continue;
+                const node = dgNodes[i];
+                if (node && node.style.visibility !== 'hidden') {
+                    node.style.visibility = 'hidden';
+                    node.style.opacity = '0';
+                }
+            }
+
+            const placePlate = (index, s, opacity, ahead) => {
+                const node = dgNodes[index];
+                if (!node) return;
+                const distance = ahead + VIEW_LEAD;
+                const z = -distance * gap;
+                const influence = opacity * (1 + distance * DEPTH_INFLUENCE);
+                const side = dgWrap(s, 2) === 0 ? -1 : 1;
+                const x = side * spreadPx * scaleK + dgPointer.x * pointerAmount * influence;
+                const y = dgPointer.y * pointerAmount * 0.5 * influence + dgDrift * driftAmount;
+                const lean = dgBreath * opacity;
+                const tiltX = -dgPointer.y * breathTilt * lean;
+                const tiltY = dgPointer.x * breathTilt * lean;
+                const pulse = 1 + breathScale * lean;
+
+                node.style.visibility = 'visible';
+                node.style.opacity = opacity.toFixed(3);
+                node.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scale(${pulse.toFixed(4)})`;
+            };
+
+            placePlate(focus, slot, 1 - blend, -blend);
+            placePlate(following, slot + 1, blend, 1 - blend);
+
+            if (dgGround) {
+                const tA = dgItems[focus].tint || { r: 0, g: 242, b: 254 };
+                const tB = dgItems[following].tint || { r: 0, g: 160, b: 255 };
+                const r = Math.round(dgMix(tA.r, tB.r, blend));
+                const g = Math.round(dgMix(tA.g, tB.g, blend));
+                const b = Math.round(dgMix(tA.b, tB.b, blend));
+                const t = now * 0.0004;
+                const b1x = (50 + Math.sin(t) * 22).toFixed(1);
+                const b1y = (50 + Math.cos(t * 0.8) * 18).toFixed(1);
+                dgGround.style.backgroundImage = `radial-gradient(ellipse 65% 65% at ${b1x}% ${b1y}%, rgba(${r},${g},${b},0.26) 0%, rgba(8,19,29,0.95) 75%)`;
+            }
+        }
+
+        if (dgStage) {
+            const wheelToSlot = (WHEEL_MIN + (dgClamp(dgConfig.sensitivity, 0, 10) / 10) * WHEEL_RANGE) / WHEEL_SPAN;
+            const dragToSlot = wheelToSlot * DRAG_GAIN;
+
+            dgStage.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+                dgTarget += delta * wheelToSlot;
+            }, { passive: false });
+
+            let activePointer = null;
+            let lastY = 0;
+            let dragDistance = 0;
+
+            dgStage.addEventListener('pointerdown', (e) => {
+                if (e.target.closest('.dg-btn')) return;
+                activePointer = e.pointerId;
+                lastY = e.clientY;
+                dragDistance = 0;
+                dgStage.setPointerCapture(e.pointerId);
+            });
+
+            dgStage.addEventListener('pointermove', (e) => {
+                const box = dgStage.getBoundingClientRect();
+                if (box.width && box.height) {
+                    dgPointerTarget.x = ((e.clientX - box.left) / box.width) * 2 - 1;
+                    dgPointerTarget.y = -(((e.clientY - box.top) / box.height) * 2 - 1);
+                }
+                if (activePointer !== e.pointerId) return;
+                const dy = e.clientY - lastY;
+                lastY = e.clientY;
+                dragDistance += Math.abs(dy);
+                dgTarget -= dy * dragToSlot;
+            });
+
+            const releaseDrag = (e) => {
+                if (activePointer !== e.pointerId) return;
+                activePointer = null;
+                if (dgStage.hasPointerCapture(e.pointerId)) dgStage.releasePointerCapture(e.pointerId);
+                if (dragDistance < 6 && !e.target.closest('.dg-btn')) {
+                    zoomFocusedPlate();
+                }
+            };
+
+            dgStage.addEventListener('pointerup', releaseDrag);
+            dgStage.addEventListener('pointercancel', releaseDrag);
+            dgStage.addEventListener('pointerleave', () => {
+                dgPointerTarget.x = 0;
+                dgPointerTarget.y = 0;
+            });
+        }
+
+        function stepDepthGallery(dir) {
+            dgTarget = Math.round(dgTarget + dir);
+        }
+
+        function zoomFocusedPlate() {
+            const item = dgItems[dgCurrentFocusIndex];
+            if (item) openLightbox(item.src, item.caption);
+        }
+
+        function switchHoloSet(setName) {
+            const tabs = document.querySelectorAll('.holo-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            if (setName === 'renders') {
+                tabs[0]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.renders);
+            } else if (setName === 'wireframes') {
+                tabs[1]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.wireframes);
+            } else {
+                tabs[2]?.classList.add('active');
+                buildDepthGalleryPlates(DG_SETS.all);
+            }
+            dgTarget = 0;
+            dgCurrent = 0;
+            dgPrevious = 0;
+        }
+
+        buildDepthGalleryPlates(DG_SETS.renders);
+        requestAnimationFrame(tickDepthGallery);
+
+        // Lightbox y Hacky-Text
+        const modal = document.getElementById('lightboxModal');
+        const modalImg = document.getElementById('lightboxImg');
+        const modalCaption = document.getElementById('lightboxCaption');
+
+        function openLightbox(src, caption) {
+            if (!modal || !modalImg) return;
+            modalImg.src = src;
+            modalCaption.textContent = caption || '';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                if (modalImg) modalImg.src = '';
+            }, 300);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+
+        const kprGlyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//<>[]";
+        function runKprHack(el) {
+            const original = el.getAttribute('data-value') || el.textContent;
+            let iter = 0;
+            clearInterval(el._kprInterval);
+            el._kprInterval = setInterval(() => {
+                el.textContent = original.split('').map((c, i) => {
+                    if (i < iter || c === ' ') return original[i];
+                    return kprGlyphs[Math.floor(Math.random() * kprGlyphs.length)];
+                }).join('');
+                if (iter >= original.length) clearInterval(el._kprInterval);
+                iter += 0.5;
+            }, 25);
+        }
+
+        document.querySelectorAll('.kpr-hack').forEach(el => {
+            el.addEventListener('mouseenter', () => runKprHack(el));
+        });
+    </script>
+</body>
+</html>
